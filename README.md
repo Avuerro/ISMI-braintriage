@@ -7,8 +7,8 @@
 -  [ ] Combine LSTM and CNN in one notebook
 -  [ ] GPU fix on Cartesius
 -  [ ] Presentation:
-    - Pre-Processing
-    - Explain our Network
-    - Intermediate Results
+    - [ ] Pre-Processing
+    - [ ] Explain our Network
+    - [ ] Intermediate Results
 
 
