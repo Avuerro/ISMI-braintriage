@@ -2,4 +2,4 @@
 
 ### Todo list
 + Split notebook into different scripts [ ]
-- [ ]
+- []
