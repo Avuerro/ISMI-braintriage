@@ -16,7 +16,7 @@
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
 | Split notebook into different scripts   |  | <ul><li>- [ ] </li></ul>
-| ResNet-50 too complex: try to train ResNet-34| Jordy| <ul><li>- [ ] </li></ul>
+| ResNet-50 too complex: try to train ResNet-34| Jordy| <ul><li>- [x] </li></ul>
 | ResNet-50 too complex: try to train ResNet-18| Max | <ul><li>- [ ] </li></ul>
 | Dataloader fix| Freek | <ul><li>- [ ] </li></ul>
 | Combine LSTM and CNN in one notebook | Marlous | <ul><li>- [ ] </li></ul>
