@@ -1,4 +1,4 @@
 # ISMI-braintriage
 
-* Todo list
+### Todo list
 + Split notebook into different scripts
