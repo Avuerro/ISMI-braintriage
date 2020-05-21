@@ -12,3 +12,9 @@
     - [ ] Intermediate Results
 
 
+## alternative To do List
+| Task           | Owner  | Finished | 
+|----------------|---------------|---------------|
+| Split notebook into different scripts   |  | <ul><li>- [x] </li></ul>
+| ResNet-50 too complex: try to train ResNet-34| | <ul><li>- [x] </li></ul>
+| ResNet-50 too complex: try to train ResNet-18| | <ul><li>- [x] </li></ul>
