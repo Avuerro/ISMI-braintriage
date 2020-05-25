@@ -1,17 +1,5 @@
 # ISMI-braintriage
 
-### Todo list
--  [ ] Split notebook into different scripts
--  [ ] ResNet-50 too complex: try to train ResNet-34 or ResNet-18       Jordy + Max
--  [x] Dataloader fix: CNN's only use central slice now     Freek
--  [ ] Combine LSTM and CNN in one notebook     Marlous
--  [x] GPU fix on Cartesius     Chihab
--  [ ] Presentation:
-    - [ ] Pre-Processing
-    - [ ] Explain our Network
-    - [ ] Intermediate Results
-
-
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
@@ -24,3 +12,7 @@
 | Presentation: Pre Processing | | <ul><li>- [ ] </li></ul>
 | Presentation: Explain our Network | | <ul><li>- [ ] </li></ul>
 | Presentation: Intermediate Results| | <ul><li>- [ ] </li></ul>
+
+
+### Presentation 
+The presentation can be found on the following link [click here](https://docs.google.com/presentation/d/1yUGkOMMU637ivkhVN_geklRppa8NqIvNW7mUkztQ098/edit?usp=sharing).
