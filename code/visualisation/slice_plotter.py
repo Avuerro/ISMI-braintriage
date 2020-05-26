@@ -2,7 +2,7 @@ import torch
 import matplotlib.pyplot as plt
 
 
-def plot_slices(patient,range_of_slices,DATA_DIR):
+def plot_slices(patient,range_of_slices,DATA_DIR,row_col_number):
 
     if type(range_of_slices) == tuple:
         assert range_of_slices[0] < range_of_slices[1]
@@ -27,6 +27,28 @@ def plot_slices(patient,range_of_slices,DATA_DIR):
             fig.delaxes(axs[nr_of_rows-1][empty_subplot])
         fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
                     wspace=0.35)
+    elif type(range_of_slices) == list:
+        size_of_range = len(range_of_slices)
+        nr_of_rows = size_of_range // row_col_number + 1
+        nr_of_cols = row_col_number # max 4 plots per row 
+
+        subplots_to_delete = (row_col_number - size_of_range%row_col_number) ## subplots of last row that will turn out empty..
+        fig,axs = plt.subplots(nr_of_rows,nr_of_cols, figsize=(16,16))
+        for index,slice_number in enumerate(range_of_slices): #inclusive..
+            X = torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
+            if nr_of_rows > 1:
+                axes = axs[ index//row_col_number , index%row_col_number ]
+            else:
+                axes = axs[index]
+            axes.imshow(X.data.numpy()[2,:,:])
+            axes.set_title("Patient {} slice number {}".format(patient,slice_number))
+            
+        # make sure we don't have these empty white subplots
+        for empty_subplot in range(row_col_number-1, row_col_number - subplots_to_delete - 1, -1):
+            fig.delaxes(axs[nr_of_rows-1][empty_subplot])
+        fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
+                    wspace=0.35)
+        fig.tight_layout()
     else:
         slice_number =range_of_slices
         X=torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
