@@ -26,6 +26,7 @@ Cartesius How To:
 	- In your browser go to http://localhost:5850/
 	- If you get asked for a password/token, you can find it in the slurm file with the corresponding JOBID
 		- Use ls to see the files and nano slurm-JOBID.out to open it
+		- You will see the following line somewhere at the bottom:
 		- The Jupyter Notebook is running at: http://localhost:5850/?token=52af886bcc9ec7030271098c8a800f48bd7dc2106b039060
 		- Copy the token that is in the file	
 	- Finished! Run a notebook! 
