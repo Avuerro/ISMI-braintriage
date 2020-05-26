@@ -2,19 +2,20 @@ import torch
 
 from tqdm.notebook import tqdm
 
-import np as np
+import numpy as np
 
 
 class Trainer(object):
     
-    def __init__(self,model,loss, optimizer, criterion, train_loader, val_loader,loss_history, acc_history, n_epochs,model_dir):
+    def __init__(self,model,criterion, optimizer,  train_loader, val_loader, n_epochs,model_dir):
         self.model = model
         self.optimizer = optimizer
         self.criterion = criterion
         self.train_loader = train_loader
         self.val_loader = val_loader
-        self.loss_history = loss_history
-        self.acc_history = acc_history
+        ### Training and validation ###
+        self.loss_history = {'training': [], 'validation': []}
+        self.acc_history = {'training': [], 'validation': []}
         self.n_epochs = n_epochs
         self.model_dir = model_dir
 
@@ -71,12 +72,10 @@ class Trainer(object):
         acc_history['validation'][-1] /= batch_idx + 1
 
 
-    def train_and_validate(self,model):
+    def train_and_validate(self):
         print(f'Running {self.model.name}')
 
-        ### Training and validation ###
-        self.loss_history = {'training': [], 'validation': []}
-        self.acc_history = {'training': [], 'validation': []}
+
         best_val_loss = 9999999
 
         for epoch in tqdm(range(self.n_epochs), desc="#epochs"):
