@@ -12,7 +12,7 @@ def generate_slice_data(IN_DIR,DATA_DIR):
     patients = []
      
     for klass in os.listdir(IN_DIR):
-        for patient in tqdm(os.listdir(os.path.join(IN_DIR, klass))[:50], desc="Patients"):
+        for patient in tqdm(os.listdir(os.path.join(IN_DIR, klass)), desc="Patients"):
             
             ## Check if patient has not been processed yet
             if patient not in patients:
