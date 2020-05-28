@@ -3,6 +3,7 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| Implement Weights and Biases | | <ul><li>- [ ] </li></ul>
 | ResNet34 + LSTM | | <ul><li>- [ ] </li></ul>
 | Labels & Slices vs Patients & Labels | | <ul><li>- [ ] </li></ul>
 | EDA | | <ul><li>- [ ] </li></ul>
