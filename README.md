@@ -11,14 +11,14 @@
 | CrossValidation | | <ul><li>- [ ] </li></ul>
 | Bidirectional LSTM | | <ul><li>- [ ] </li></ul>
 | Split notebook into different scripts   |  | <ul><li>- [ ] </li></ul>
-| ResNet-50 too complex: try to train ResNet-34| Jordy| <ul><li>- [x] </li></ul>
+| ~~ResNet-50 too complex: try to train ResNet-34~~| Jordy| <ul><li>- [x] </li></ul>
 | ResNet-50 too complex: try to train ResNet-18| Max | <ul><li>- [ ] </li></ul>
-| Dataloader fix| Freek | <ul><li>- [x] </li></ul>
+| ~~Dataloader fix~~| Freek | <ul><li>- [x] </li></ul>
 | Combine LSTM and CNN in one notebook | Marlous | <ul><li>- [ ] </li></ul>
-| GPU fix on Cartesius| Chihab | <ul><li>- [x] </li></ul>
-| Presentation: Pre Processing | | <ul><li>- [x] </li></ul>
-| Presentation: Explain our Network | | <ul><li>- [x] </li></ul>
-| Presentation: Intermediate Results| | <ul><li>- [x] </li></ul>
+| ~~GPU fix on Cartesius~~| Chihab | <ul><li>- [x] </li></ul>
+| ~~Presentation: Pre Processing~~| | <ul><li>- [x] </li></ul>
+| ~~Presentation: Explain our Network~~ | | <ul><li>- [x] </li></ul>
+| ~~Presentation: Intermediate Results~~| | <ul><li>- [x] </li></ul>
 
 
 ### Presentation 
