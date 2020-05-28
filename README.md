@@ -3,6 +3,7 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| ResNet34 + LSTM | | <ul><li>- [ ] </li></ul>
 | Labels & Slices vs Patients & Labels | | <ul><li>- [ ] </li></ul>
 | EDA | | <ul><li>- [ ] </li></ul>
 | Failure Analysis | | <ul><li>- [ ] </li></ul> 
