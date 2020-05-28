@@ -11,7 +11,7 @@
 | Run Networks Longer | | <ul><li>- [ ] </li></ul>
 | CrossValidation | | <ul><li>- [ ] </li></ul>
 | Bidirectional LSTM | | <ul><li>- [ ] </li></ul>
-| Split notebook into different scripts   |  | <ul><li>- [ ] </li></ul>
+| ~~Split notebook into different scripts~~   | Chihab | <ul><li>- [x] </li></ul>
 | ~~ResNet-50 too complex: try to train ResNet-34~~| Jordy| <ul><li>- [x] </li></ul>
 | ~~ResNet-50 too complex: try to train ResNet-18~~| Max | <ul><li>- [x] </li></ul>
 | ~~Dataloader fix~~| Freek | <ul><li>- [x] </li></ul>
