@@ -17,21 +17,23 @@ parser.add_argument('--train', dest="do_train", action='store_true',
 parser.add_argument('--test', dest="do_test", action='store_true',
                     help='whether to extract slices for test data')
 
-def generate_slice_data(IN_DIR,DATA_DIR):
-    if not os.path.exists(DATA_DIR):
-        os.makedirs(DATA_DIR)
+def generate_slice_data(in_dir,out_dir, test=False):
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
         
     patients = []
-     
-    for klass in os.listdir(IN_DIR):
-        for patient in tqdm(os.listdir(os.path.join(IN_DIR, klass)), desc="Patients"):
+    
+    # Work-around for different folder structure of test data
+    class_dirs = ["final_test_set"] if test else os.listdir(in_dir)
+    for klass in class_dirs:
+        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients"):
             
             ## Check if patient has not been processed yet
             if patient not in patients:
                 ## Paths to the image files
-                t1_path = os.path.join(IN_DIR, klass, patient,'T1.mha')
-                t2_path = os.path.join(IN_DIR, klass, patient,'T2.mha')
-                t2_flair_path = os.path.join(IN_DIR, klass, patient,'T2-FLAIR.mha')
+                t1_path = os.path.join(in_dir, klass, patient,'T1.mha')
+                t2_path = os.path.join(in_dir, klass, patient,'T2.mha')
+                t2_flair_path = os.path.join(in_dir, klass, patient,'T2-FLAIR.mha')
 
                 ## Load all images as numpy arrays
                 t1_array = sitk.GetArrayFromImage(sitk.ReadImage(t1_path))
@@ -42,7 +44,7 @@ def generate_slice_data(IN_DIR,DATA_DIR):
                 
                 for slice_number in range(n_slices):
 
-                    with open(DATA_DIR+'/labels_slices.csv', 'a') as csvfile:      
+                    with open(out_dir+'/labels_slices.csv', 'a') as csvfile:      
                         w = csv.writer(csvfile, delimiter=',')
                         ## Write 0 if "normal", 1 if "abnormal"
                         w.writerow([patient, slice_number, klass == "abnormal"])
@@ -53,7 +55,7 @@ def generate_slice_data(IN_DIR,DATA_DIR):
                     comb_data = np.array([t1_slice, t2_slice, t2_flair_slice])
 
                     ## Save as torch tensor for quick loading during training
-                    torch.save(torch.from_numpy(comb_data.astype('float32')), os.path.join(DATA_DIR, f"{patient}_{slice_number}.pt"))
+                    torch.save(torch.from_numpy(comb_data.astype('float32')), os.path.join(out_dir, f"{patient}_{slice_number}.pt"))
             else:
                 continue
                 
@@ -67,5 +69,5 @@ if __name__ == "__main__":
         generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))
     if args.do_test:
         print("Extracting test slice data")
-        generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "test/full"), os.path.join(args.out_path, "test"))
+        generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
     print("Done")
