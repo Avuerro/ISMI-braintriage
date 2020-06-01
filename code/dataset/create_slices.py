@@ -12,9 +12,9 @@ CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage"
 parser = argparse.ArgumentParser(description='Extract slices for train/test data.')
 parser.add_argument('-o', type=str, nargs='?', dest="out_path",
                     default = "../data/", help='output directory')
-parser.add_argument('--train', dest="do_test", action='store_true',
+parser.add_argument('--train', dest="do_train", action='store_true',
                     help='whether to extract slices for train data')
-parser.add_argument('--test', dest="do_train", action='store_true',
+parser.add_argument('--test', dest="do_test", action='store_true',
                     help='whether to extract slices for test data')
 
 def generate_slice_data(IN_DIR,DATA_DIR):
