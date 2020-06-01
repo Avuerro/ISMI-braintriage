@@ -5,6 +5,8 @@ from tqdm.notebook import tqdm
 import csv
 import os
 
+CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage/train/full"
+
 def generate_slice_data(IN_DIR,DATA_DIR):
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR)
@@ -46,3 +48,6 @@ def generate_slice_data(IN_DIR,DATA_DIR):
                 continue
                 
             patients.append(patient)
+
+if __name__ == "__main__":
+    generate_slice_data(CARTESIUS_TRAIN_BRAINTRIAGE, '../../../data')
