@@ -1,3 +1,5 @@
+import os
+os.system("wandb login 541cc3d65fb749240afcff4f21aa48ad1e2135b3")
 ### Import packages ###
 import torch
 import torch.nn as nn
@@ -6,7 +8,8 @@ from torch.utils import data
 from torchvision import models
 import pandas as pd
 import numpy as np
-import os, argparse
+import wandb
+import argparse
 
 ### Local imports ###
 from dataset.slice_dataframes import get_slice_train_val_dataframes
@@ -27,11 +30,14 @@ N_FEATURES = 128                                         # The length of feature
 ### Train parameters ###
 EPOCHS = 50
 BATCH_SIZE = 16
+LR = 0.000001
 
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
 parser.add_argument('name', type=str, help="Name of the pre-trained model")
+parser.add_argument('-lr', type=float, nargs='?', dest="learning_rate",
+                    default = LR, help='Learning rate')
 parser.add_argument('-e', type=int, nargs='?', dest="epochs",
                     default = EPOCHS, help='Number of epochs')
 parser.add_argument('-b', type=int, nargs='?', dest="batch_size",
@@ -72,9 +78,11 @@ if __name__ == "__main__":
     # Change the Pre-Trained Model to our own Defined Model
     model = Net(model, args.name, args.n_features)
 
+    wandb.init(project="braintriage")
+
     ### Loss and optimizer ###
     criterion = nn.BCEWithLogitsLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=0.000001)
+    optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     ### Create data generator ###
     train_df, val_df = get_slice_train_val_dataframes(label_df, train_percentage = TRAIN_PERCENTAGE)
@@ -89,6 +97,10 @@ if __name__ == "__main__":
 
     train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle = True)
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle = False)
+
+    # Initialise W&B settings
+    wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size,
+                         "n_features":args.n_features, "target_slices":args.target_slices})
 
     trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, 
                     train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir)
