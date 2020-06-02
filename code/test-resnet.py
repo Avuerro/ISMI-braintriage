@@ -1,5 +1,6 @@
 import os
 os.system("wandb login 541cc3d65fb749240afcff4f21aa48ad1e2135b3")
+os.system("python -m wandb.cli login 541cc3d65fb749240afcff4f21aa48ad1e2135b3")
 ### Import packages ###
 import torch
 import torch.nn as nn
@@ -20,7 +21,8 @@ from train.train import Trainer
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = '/Users/fbergh/Documents/Radboud/master/1/ISMI/project/ISMI-braintriage/data/BrainTriage/sliced_data'
+DATA_DIR = '../data/train'
+print(os.listdir('.'))
 TARGET_SLICES = (0,31)                                   # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9                                   # Percentage of data that will be used for training
 ### Model parameters ###
@@ -100,8 +102,8 @@ if __name__ == "__main__":
 
     # Initialise W&B settings
     wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size,
-                         "n_features":args.n_features, "target_slices":args.target_slices})
+                         "n_features":args.n_features, "target_slices":args.target_slices, "is_target_tuple":args.is_target_tuple})
 
-    trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, 
+    trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, device=DEVICE,
                     train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir)
     trainer.train_and_validate()

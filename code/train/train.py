@@ -39,7 +39,7 @@ class Trainer(object):
 
             #Accuracy
             accuracy_predictions = (torch.sigmoid(predictions.detach().cpu())>0.5).float()
-            correct = (accuracy_predictions == targets).float().sum()/accuracy_predictions.shape[0]
+            correct = (accuracy_predictions == targets.detach().cpu()).float().sum()/accuracy_predictions.shape[0]
 
             self.loss_history['training'][-1] += float(loss.detach().cpu().data)
             self.acc_history['training'][-1] += float(correct)
@@ -62,7 +62,7 @@ class Trainer(object):
 
             #Accuracy
             accuracy_predictions = (torch.sigmoid(predictions.detach().cpu())>0.5).float()
-            correct = (accuracy_predictions == targets).float().sum()/accuracy_predictions.shape[0]
+            correct = (accuracy_predictions == targets.detach().cpu()).float().sum()/accuracy_predictions.shape[0]
 
             loss_history['validation'][-1] += float(loss.detach().cpu().data)
             acc_history['validation'][-1] += float(correct)
