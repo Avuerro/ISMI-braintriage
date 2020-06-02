@@ -6,6 +6,7 @@ import SimpleITK as sitk
 from tqdm.notebook import tqdm
 import csv
 import os
+import pandas as pd
 
 CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage"
 
@@ -67,7 +68,24 @@ if __name__ == "__main__":
     if args.do_train:
         print("Extracting train slice data")
         generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))
+
+        label_df = pd.read_csv(os.path.join(args.out_path,"train","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
+        label_df["class"] = label_df["class"].astype("int8")
+        patient_list = np.unique(label_df["patient_nr"])
+        print(label_df.head(), f"Dataframe shape: {label_df.shape}", sep="\n")
+        print(f"\nNumber of unique patient numbers: {len(np.unique(label_df['patient_nr']))}")
+        print(f"Number of unique slice numbers:   {len(np.unique(label_df['slice_nr']))}")
+        print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
     if args.do_test:
         print("Extracting test slice data")
         generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
+
+        label_df = pd.read_csv(os.path.join(args.out_path,"test","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
+        label_df["class"] = label_df["class"].astype("int8")
+        patient_list = np.unique(label_df["patient_nr"])
+        print(label_df.head(), f"Dataframe shape: {label_df.shape}", sep="\n")
+        print(f"\nNumber of unique patient numbers: {len(np.unique(label_df['patient_nr']))}")
+        print(f"Number of unique slice numbers:   {len(np.unique(label_df['slice_nr']))}")
+        print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
+    
     print("Done")
