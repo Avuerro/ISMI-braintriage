@@ -18,10 +18,8 @@ class Net(nn.Module):
 
     def forward(self, x):
         x = self.model(x)
-        print(x.shape)
         # Turn x into the right shape
         x = x.view(x.size(0), -1)
-        print(x.shape)
         
         # Put output x through our self defined layers
         x = self.fc1(x)
