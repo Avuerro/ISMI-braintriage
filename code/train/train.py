@@ -1,8 +1,7 @@
 import torch
-
 from tqdm.notebook import tqdm
-
 import numpy as np
+import wandb
 
 
 class Trainer(object):
@@ -86,6 +85,8 @@ class Trainer(object):
             if self.loss_history['validation'][-1] < best_val_loss:
                 best_val_loss = self.loss_history['validation'][-1]
                 torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.npz'.format(self.model_dir, self.model.name, epoch))
+
+            wandb.log({"Training Loss":self.loss_history['training'][-1],"Training Accuracy":self.acc_history['training'][-1],"Validation Loss":self.loss_history['validation'][-1],"Validation Accuracy":self.acc_history['validation'][-1]})
 
             print('epoch: {:3d} / {:03d}, training loss: {:.4f}, validation loss: {:.4f}, training accuracy: {:.3f}, validation accuracy: {:.3f}.'.format(epoch + 1, self.n_epochs, self.loss_history['training'][-1], self.loss_history['validation'][-1], self.acc_history['training'][-1], self.acc_history['validation'][-1]))
             np.savez('{:s}/{:s}_loss_history_{:03d}.npz'.format(self.model_dir, self.model.name, epoch), self.loss_history)
