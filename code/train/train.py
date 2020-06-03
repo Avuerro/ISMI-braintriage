@@ -2,6 +2,7 @@ import torch
 from tqdm.notebook import tqdm
 import numpy as np
 import wandb
+import os
 
 
 class Trainer(object):
@@ -18,6 +19,8 @@ class Trainer(object):
         self.acc_history = {'training': [], 'validation': []}
         self.n_epochs = n_epochs
         self.model_dir = model_dir
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
 
 
     def train(self,loss_history,acc_history):
