@@ -21,8 +21,8 @@ from train.train import Trainer
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = '/scratch-local/ccurs003/data/train/'
-print(os.listdir('.'))
+DATA_DIR = 'data/train'
+print(f"Files in curwd: {os.listdir('.')}")
 TARGET_SLICES = (0,31)                                   # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9                                   # Percentage of data that will be used for training
 ### Model parameters ###
