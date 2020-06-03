@@ -3,6 +3,7 @@ from tqdm.notebook import tqdm
 import numpy as np
 import wandb
 import os
+import gc
 
 
 class Trainer(object):
@@ -47,6 +48,10 @@ class Trainer(object):
             self.loss_history['training'][-1] += float(loss.detach().cpu().data)
             self.acc_history['training'][-1] += float(correct)
 
+        # Garbage collection
+        del images, targets; gc.collect()
+        torch.cuda.empty_cache()
+
         self.loss_history['training'][-1] /= batch_idx + 1
         self.acc_history['training'][-1] /= batch_idx + 1
     
@@ -69,6 +74,10 @@ class Trainer(object):
 
             loss_history['validation'][-1] += float(loss.detach().cpu().data)
             acc_history['validation'][-1] += float(correct)
+
+         # Garbage collection
+        del images, targets; gc.collect()
+        torch.cuda.empty_cache()
 
         loss_history['validation'][-1] /= batch_idx + 1
         acc_history['validation'][-1] /= batch_idx + 1
