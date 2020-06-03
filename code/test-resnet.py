@@ -21,7 +21,7 @@ from train.train import Trainer
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = '../data/train'
+DATA_DIR = '../../../../scratch-local/ccurs003/data/train/'
 print(os.listdir('.'))
 TARGET_SLICES = (0,31)                                   # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9                                   # Percentage of data that will be used for training
@@ -38,6 +38,8 @@ LR = 0.000001
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
 parser.add_argument('name', type=str, help="Name of the pre-trained model")
+parser.add_argument('-d', type=str, nargs='?', dest="data_dir",
+                    default = DATA_DIR, help="Path to directory with data")
 parser.add_argument('-lr', type=float, nargs='?', dest="learning_rate",
                     default = LR, help='Learning rate')
 parser.add_argument('-e', type=int, nargs='?', dest="epochs",
@@ -59,7 +61,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load and check data
-    label_df = pd.read_csv(os.path.join(DATA_DIR,"labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
+    label_df = pd.read_csv(os.path.join(args.data_dir,"labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
     label_df["class"] = label_df["class"].astype("int8")
     patient_list = np.unique(label_df["patient_nr"])
     print(label_df.head(), f"Dataframe shape: {label_df.shape}", sep="\n")
@@ -94,8 +96,8 @@ if __name__ == "__main__":
         args.target_slices = tuple(args.target_slices)
 
     # Set train/validation loaders and train    
-    train_set = SliceDataset(train_df, args.target_slices, DATA_DIR)
-    val_set = SliceDataset(val_df, args.target_slices, DATA_DIR)
+    train_set = SliceDataset(train_df, args.target_slices, args.data_dir)
+    val_set = SliceDataset(val_df, args.target_slices, args.data_dir)
 
     train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle = True)
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle = False)
