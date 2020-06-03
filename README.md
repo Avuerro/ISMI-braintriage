@@ -4,7 +4,7 @@
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
 | Implement Weights and Biases | Freek | <ul><li>- [ ] </li></ul>
-| ResNet34 + LSTM | Marlous | <ul><li>- [ ] </li></ul>
+| ResNet34 + LSTM | Marlous | <ul><li>- [x] </li></ul>
 | Labels & Slices vs Patients & Labels | | <ul><li>- [ ] </li></ul>
 | EDA | | <ul><li>- [ ] </li></ul>
 | Failure Analysis | | <ul><li>- [ ] </li></ul> 
