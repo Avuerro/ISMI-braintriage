@@ -12,7 +12,7 @@
 | Compare Networks | | <ul><li>- [ ] </li></ul>
 | Run Networks Longer | Freek | <ul><li>- [ ] </li></ul>
 | CrossValidation | Jordy| <ul><li>- [ ] </li></ul>
-| Bidirectional LSTM | Marlous | <ul><li>- [ ] </li></ul>
+| Bidirectional LSTM | Marlous | <ul><li>- [x] </li></ul>
 | ~~Split notebook into different scripts~~   | Chihab | <ul><li>- [x] </li></ul>
 | ~~ResNet-50 too complex: try to train ResNet-34~~| Jordy| <ul><li>- [x] </li></ul>
 | ~~ResNet-50 too complex: try to train ResNet-18~~| Max | <ul><li>- [x] </li></ul>
