@@ -50,6 +50,8 @@ parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default = N_FEATURES, help="Number of output features of last FC layer")
 parser.add_argument('-s', nargs='+', dest='target_slices',
                     default = TARGET_SLICES, help="Which slices to use for training")
+parser.add_argument('-tp', type=float, nargs='?', dest="train_percentage",
+                    default = TRAIN_PERCENTAGE, help="Percentage of data to use for training")
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
 parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
@@ -85,7 +87,7 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     ### Create data generator ###
-    train_df, val_df = get_slice_train_val_dataframes(label_df, train_percentage = TRAIN_PERCENTAGE)
+    train_df, val_df = get_slice_train_val_dataframes(label_df, train_percentage = args.train_percentage)
     
     # Set correct target slices
     if args.is_target_tuple:
@@ -100,8 +102,9 @@ if __name__ == "__main__":
 
     # Initialise W&B settings
     wandb.init(project="braintriage")
-    wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size,
-                         "n_features":args.n_features, "target_slices":args.target_slices, "is_target_tuple":args.is_target_tuple})
+    wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size, "learning_rate":args.learning_rate,
+                         "n_features":args.n_features, "target_slices":args.target_slices, "is_target_tuple":args.is_target_tuple,
+                         "train_percentage":args.train_percentage})
     wandb.watch(model)
     trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, device=DEVICE,
                     train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir)
