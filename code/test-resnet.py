@@ -1,5 +1,5 @@
 import os
-os.system("python -m wandb.cli login 541cc3d65fb749240afcff4f21aa48ad1e2135b3")
+os.system("python -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
 ### Import packages ###
 import torch
 import torch.nn as nn
@@ -30,7 +30,7 @@ N_FEATURES = 128                                         # The length of feature
 ### Train parameters ###
 EPOCHS = 30
 BATCH_SIZE = 64
-LR = 0.000001
+LR = 0.0001
 
 
 ### Argument parser ###
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     wandb.init(project="braintriage")
     wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size,
                          "n_features":args.n_features, "target_slices":args.target_slices, "is_target_tuple":args.is_target_tuple})
-
+    wandb.watch(model)
     trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, device=DEVICE,
                     train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir)
     trainer.train_and_validate()
