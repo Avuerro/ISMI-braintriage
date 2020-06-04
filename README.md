@@ -3,6 +3,7 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| Seed all function | | <ul><li>- [ ] </li></ul> 
 | Implement Weights and Biases | Freek | <ul><li>- [ ] </li></ul>
 | ResNet34 + LSTM | Marlous | <ul><li>- [x] </li></ul>
 | Label & Slices vs Patients & Labels | Chihab + ...| <ul><li>- [ ] </li></ul>
