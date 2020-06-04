@@ -1,5 +1,4 @@
 import os
-os.system("wandb login 541cc3d65fb749240afcff4f21aa48ad1e2135b3")
 os.system("python -m wandb.cli login 541cc3d65fb749240afcff4f21aa48ad1e2135b3")
 ### Import packages ###
 import torch
@@ -21,8 +20,7 @@ from train.train import Trainer
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = 'data/train'
-print(f"Files in curwd: {os.listdir('.')}")
+DATA_DIR = '../data/train'
 TARGET_SLICES = (0,31)                                   # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9                                   # Percentage of data that will be used for training
 ### Model parameters ###
@@ -30,8 +28,8 @@ MODEL_DIR = '../models'                                  # Directory where best 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
 N_FEATURES = 128                                         # The length of feature vectors that the CNN outputs/LSTM will use
 ### Train parameters ###
-EPOCHS = 50
-BATCH_SIZE = 16
+EPOCHS = 30
+BATCH_SIZE = 64
 LR = 0.000001
 
 
@@ -54,7 +52,7 @@ parser.add_argument('-s', nargs='+', dest='target_slices',
                     default = TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
-
+parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
 
 
 if __name__ == "__main__":
@@ -71,18 +69,16 @@ if __name__ == "__main__":
 
     # Load in correct model
     if args.name == "resnet50":
-        model = models.resnet50(pretrained=True)
+        model = models.resnet50(pretrained=args.pretrained)
     elif args.name == "resnet34":
-        model = models.resnet34(pretrained=True)
+        model = models.resnet34(pretrained=args.pretrained)
     elif args.name == "resnet18":
-        model = models.resnet18(pretrained=True)
+        model = models.resnet18(pretrained=args.pretrained)
     else:
         print(f'No model with name {args.name}')
         exit()
     # Change the Pre-Trained Model to our own Defined Model
     model = Net(model, args.name, args.n_features)
-
-    wandb.init(project="braintriage")
 
     ### Loss and optimizer ###
     criterion = nn.BCEWithLogitsLoss()
@@ -103,6 +99,7 @@ if __name__ == "__main__":
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle = False)
 
     # Initialise W&B settings
+    wandb.init(project="braintriage")
     wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size,
                          "n_features":args.n_features, "target_slices":args.target_slices, "is_target_tuple":args.is_target_tuple})
 
