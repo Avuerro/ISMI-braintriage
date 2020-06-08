@@ -2,7 +2,7 @@ import numpy as np
 from dataset.cross_validation import create_k_strat_folds
 from dataset.cross_validation import get_train_and_val
 
-def get_patient_train_val_dataframes(label_df, train_percentage=0.8, k = 5, val_fold = 4):
+def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 4):
     """
         Creates an evenly class-distributed train/val split for all patients in the dataset.
         Target slices are taken into account in the Dataset classes.
