@@ -4,6 +4,8 @@ import numpy as np
 import wandb
 import os
 import gc
+import time
+from sklearn.metrics import roc_auc_score
 
 
 class Trainer(object):
@@ -15,19 +17,17 @@ class Trainer(object):
         self.criterion = criterion
         self.train_loader = train_loader
         self.val_loader = val_loader
-        ### Training and validation ###
-        self.loss_history = {'training': [], 'validation': []}
-        self.acc_history = {'training': [], 'validation': []}
         self.n_epochs = n_epochs
         self.model_dir = model_dir
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
 
 
-    def train(self,loss_history,acc_history):
-        self.loss_history['training'].append(0)
-        self.acc_history['training'].append(0)
-        
+    def train(self):   
+        epoch_loss, epoch_acc, epoch_auc = 0., 0., 0.
+
+        start_time = time.time()
+
         for batch_idx, (images, targets) in tqdm(enumerate(self.train_loader), total=len(self.train_loader), desc="#train_batches", leave=False):
             self.model.train()
             self.optimizer.zero_grad()
@@ -35,29 +35,39 @@ class Trainer(object):
             images = images.float().to(self.device)
             targets = targets.float().to(self.device)
 
-            predictions = self.model(images)
-            loss = self.criterion(predictions, targets)
+            output = self.model(images)
+            loss = self.criterion(output, targets)
             loss.backward()
 
             self.optimizer.step()
 
-            #Accuracy
-            accuracy_predictions = (torch.sigmoid(predictions.detach().cpu())>0.5).float()
-            correct = (accuracy_predictions == targets.detach().cpu()).float().sum()/accuracy_predictions.shape[0]
+            # Metrics
+            targets = targets.detach().cpu()
+            probabilities = torch.sigmoid(output.detach().cpu())
+            predictions = (probabilities > 0.5).float()
 
-            self.loss_history['training'][-1] += float(loss.detach().cpu().data)
-            self.acc_history['training'][-1] += float(correct)
+            accuracy = _compute_accuracy(predictions, targets); epoch_acc += accuracy
+            auc = _compute_auc(probabilities, targets);         epoch_auc += auc
+            loss = loss.detach().cpu();                         epoch_loss += loss
+
+            wandb.log({"Training Loss (per iteration)": loss,
+                       "Training Accuracy (per iteration)": accuracy,
+                       "Training AUC Score (per iteration)": auc})
+
+        print(f"One epoch (training) took {time.time()-start_time} seconds")
 
         # Garbage collection
         del images, targets; gc.collect()
         torch.cuda.empty_cache()
 
-        self.loss_history['training'][-1] /= batch_idx + 1
-        self.acc_history['training'][-1] /= batch_idx + 1
+        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1; epoch_auc /= batch_idx + 1
+
+        return epoch_loss, epoch_acc, epoch_auc
     
-    def validate(self,loss_history,acc_history):
-        loss_history['validation'].append(0)
-        acc_history['validation'].append(0)
+    def validate(self):
+        epoch_loss, epoch_acc, epoch_auc = 0., 0., 0.
+
+        start_time = time.time()
 
         for batch_idx, (images, targets) in tqdm(enumerate(self.val_loader), total=len(self.val_loader), desc="#test_batches", leave=False):
             self.model.eval()
@@ -65,22 +75,31 @@ class Trainer(object):
             images = images.float().to(self.device)
             targets = targets.float().to(self.device)
 
-            predictions = self.model(images)
-            loss = self.criterion(predictions, targets)
+            output = self.model(images)
+            loss = self.criterion(output, targets)
 
-            #Accuracy
-            accuracy_predictions = (torch.sigmoid(predictions.detach().cpu())>0.5).float()
-            correct = (accuracy_predictions == targets.detach().cpu()).float().sum()/accuracy_predictions.shape[0]
+            # Metrics
+            targets = targets.detach().cpu()
+            probabilities = torch.sigmoid(output.detach().cpu())
+            predictions = (probabilities > 0.5).float()
 
-            loss_history['validation'][-1] += float(loss.detach().cpu().data)
-            acc_history['validation'][-1] += float(correct)
+            accuracy = _compute_accuracy(predictions, targets); epoch_acc += accuracy
+            auc = _compute_auc(probabilities, targets);         epoch_auc += auc
+            loss = loss.detach().cpu();                         epoch_loss += loss
 
-         # Garbage collection
+            wandb.log({"Validation Loss (per iteration)": loss,
+                       "Validation Accuracy (per iteration)": accuracy,
+                       "Validation AUC Score (per iteration)": auc})
+
+        print(f"One epoch (validation) took {time.time()-start_time} seconds")
+
+        # Garbage collection
         del images, targets; gc.collect()
         torch.cuda.empty_cache()
 
-        loss_history['validation'][-1] /= batch_idx + 1
-        acc_history['validation'][-1] /= batch_idx + 1
+        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1; epoch_auc /= batch_idx + 1
+
+        return epoch_loss, epoch_acc, epoch_auc
 
 
     def train_and_validate(self):
@@ -88,19 +107,24 @@ class Trainer(object):
         best_val_loss = 9999999
 
         for epoch in tqdm(range(self.n_epochs), desc="#epochs"):
-            self.train(self.loss_history, self.acc_history)
+            train_loss, train_acc, train_auc = self.train()
 
-            self.validate(self.loss_history, self.acc_history)
+            val_loss, val_acc, val_auc = self.validate()
             
-            if self.loss_history['validation'][-1] < best_val_loss:
-                best_val_loss = self.loss_history['validation'][-1]
+            if val_loss < best_val_loss:
+                best_val_loss = val_loss
                 torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.npz'.format(self.model_dir, self.model.name, epoch))
 
-            wandb.log({"Training Loss":self.loss_history['training'][-1],
-                       "Training Accuracy":self.acc_history['training'][-1],
-                       "Validation Loss":self.loss_history['validation'][-1],
-                       "Validation Accuracy":self.acc_history['validation'][-1]})
+            wandb.log({"Training Loss": train_loss,
+                       "Training Accuracy": train_acc,
+                       "Training AUC Score": train_auc,
+                       "Validation Loss": val_loss,
+                       "Validation Accuracy": val_acc,
+                       "Validation AUC Score": val_auc})
 
-            print('epoch: {:3d} / {:03d}, training loss: {:.4f}, validation loss: {:.4f}, training accuracy: {:.3f}, validation accuracy: {:.3f}.'\
-                .format(epoch + 1, self.n_epochs, self.loss_history['training'][-1], self.loss_history['validation'][-1], self.acc_history['training'][-1], self.acc_history['validation'][-1]))
-            np.savez('{:s}/{:s}_loss_history_{:03d}.npz'.format(self.model_dir, self.model.name, epoch), self.loss_history)
+
+def _compute_accuracy(predictions, targets):
+    return (predictions == targets).float().sum() / predictions.shape[0]
+
+def _compute_auc(probabilities, targets):
+    return roc_auc_score(targets, probabilities)
