@@ -10,7 +10,7 @@ from sklearn.metrics import roc_auc_score
 
 class Trainer(object):
     
-    def __init__(self,model,criterion, optimizer,  train_loader, val_loader, n_epochs, model_dir, device):
+    def __init__(self,model,criterion, optimizer,  train_loader, val_loader, n_epochs, model_dir, device, verbose = False):
         self.device = device
         self.model = model.to(device)
         self.optimizer = optimizer
@@ -21,27 +21,41 @@ class Trainer(object):
         self.model_dir = model_dir
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
+        self.verbose = verbose
 
 
     def train(self):   
         epoch_loss, epoch_acc, epoch_auc = 0., 0., 0.
 
-        start_time = time.time()
+        epoch_start_time = batch_start_time = time.time()
+        avg_component_times = {"load-batch" : 0., "forward" : 0., "backward" : 0., "metrics" : 0.}
 
         for batch_idx, (images, targets) in tqdm(enumerate(self.train_loader), total=len(self.train_loader), desc="#train_batches", leave=False):
+            if self.verbose:
+                avg_component_times["load-batch"] += batch_start_time - time.time()
+
             self.model.train()
             self.optimizer.zero_grad()
 
             images = images.float().to(self.device)
             targets = targets.float().to(self.device)
 
+            forward_start_time = time.time()
             output = self.model(images)
+            if self.verbose:
+                avg_component_times["forward"] += forward_start_time - time.time()
+
             loss = self.criterion(output, targets)
+
+            backward_start_time = time.time()
             loss.backward()
+            if self.verbose:
+                avg_component_times["backward"] += backward_start_time - time.time()
 
             self.optimizer.step()
 
             # Metrics
+            metrics_start_time = time.time()
             targets = targets.detach().cpu()
             probabilities = torch.sigmoid(output.detach().cpu())
             predictions = (probabilities > 0.5).float()
@@ -50,11 +64,17 @@ class Trainer(object):
             auc = _compute_auc(probabilities, targets);         epoch_auc += auc
             loss = loss.detach().cpu();                         epoch_loss += loss
 
+            if self.verbose:
+                avg_component_times["metrics"] += metrics_start_time - time.time()
+
             wandb.log({"Training Loss (per iteration)": loss,
                        "Training Accuracy (per iteration)": accuracy,
                        "Training AUC Score (per iteration)": auc})
 
-        print(f"One epoch (training) took {time.time()-start_time} seconds")
+        print(f"One epoch (training) took {time.time()-epoch_start_time} seconds")
+        if self.verbose:
+            for component in avg_component_times.keys():
+                print(f"{component} took on average {avg_component_times[component] / batch_idx + 1} seconds")
 
         # Garbage collection
         del images, targets; gc.collect()
