@@ -97,8 +97,8 @@ if __name__ == "__main__":
     train_set = SliceDataset(train_df, args.target_slices, args.data_dir)
     val_set = SliceDataset(val_df, args.target_slices, args.data_dir)
 
-    train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle = True)
-    val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle = False)
+    train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True, num_workers=os.cpu_count())
+    val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False, num_workers=os.cpu_count())
 
     # Initialise W&B settings
     wandb.init(project="braintriage")
