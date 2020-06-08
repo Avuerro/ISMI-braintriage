@@ -71,6 +71,8 @@ class Trainer(object):
                        "Training Accuracy (per iteration)": accuracy,
                        "Training AUC Score (per iteration)": auc})
 
+            batch_start_time = time.time()
+
         print(f"One epoch (training) took {time.time()-epoch_start_time} seconds")
         if self.verbose:
             for component in avg_component_times.keys():
