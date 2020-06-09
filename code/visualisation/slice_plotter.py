@@ -57,19 +57,17 @@ def plot_slices_helper(range_of_slices,row_col_number):
     if type(range_of_slices) == tuple:
         assert range_of_slices[0] < range_of_slices[1]
         size_of_range = range_of_slices[1] - range_of_slices[0]
-        nr_of_rows = size_of_range // row_col_number + 1
-        nr_of_cols = row_col_number # max 4 plots per row 
 
         subplots_to_delete = (row_col_number - size_of_range%row_col_number) - 1 
         slices = range(range_of_slices[0],range_of_slices[1]+1)
     
     if type(range_of_slices) == list:
         size_of_range = len(range_of_slices)
-        nr_of_rows = size_of_range // row_col_number + 1
-        nr_of_cols = row_col_number # max 4 plots per row 
 
         subplots_to_delete = (row_col_number - size_of_range%row_col_number)
 
         slices = range_of_slices
-    
+
+    nr_of_rows = size_of_range // row_col_number + 1
+    nr_of_cols = row_col_number # max 4 plots per row 
     return size_of_range, nr_of_rows, nr_of_cols, subplots_to_delete ,slices
