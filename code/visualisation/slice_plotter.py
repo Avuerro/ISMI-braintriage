@@ -45,6 +45,37 @@ def plot_slices(patient,range_of_slices,DATA_DIR,row_col_number):
     plt.show()
 
 
+def plot_slices_by_acquisition(patient,range_of_slices,DATA_DIR):
+
+    """
+        This function plots the acquisitions for each slice by calling 
+        the plot_slice_by_acquisition method which plots the aqcuisitions for each slice
+
+    """
+    if(type(range_of_slices) == int):
+        slice_number = range_of_slices
+        X = torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
+        plot_slice_by_acquisition(X, slice_number)
+    else:
+        size_of_range, nr_of_rows, nr_of_cols, subplots_to_delete ,slices = plot_slices_helper(range_of_slices,3) # cols are always three
+        for index,slice_number in enumerate(slices): #inclusive..
+            X = torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
+            plot_slice_by_acquisition(X, slice_number)
+
+def plot_slice_by_acquisition(data,slice_number):
+    """
+        This function plots the acquisitions for a single slice.
+    """
+    fig,axs = plt.subplots(1,3, figsize=(18,12))
+    acquisitions = ['T1','T2', 'T2_flair']
+    for index,acquisition in enumerate(acquisitions):
+        axs[index].imshow(data[index], cmap="gray")
+        axs[index].set_title("Acquisition {}".format(acquisition))
+    fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
+                    wspace=0.35)
+    fig.suptitle('Slice {}'.format(slice_number), fontsize=12, x=0, y = 0.5,ha='left' )
+
+
 def plot_slices_helper(range_of_slices,row_col_number):
 
     """
@@ -69,5 +100,5 @@ def plot_slices_helper(range_of_slices,row_col_number):
         slices = range_of_slices
 
     nr_of_rows = size_of_range // row_col_number + 1
-    nr_of_cols = row_col_number # max 4 plots per row 
+    nr_of_cols = row_col_number  
     return size_of_range, nr_of_rows, nr_of_cols, subplots_to_delete ,slices
