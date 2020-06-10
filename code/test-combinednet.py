@@ -99,7 +99,7 @@ if __name__ == "__main__":
                          "n_features": args.n_features, "target_slices": args.target_slices,
                          "is_target_tuple": args.is_target_tuple,
                          "train_percentage": args.train_percentage})
-    wandb.watch(model)
+    wandb.watch(combined_net)
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
                       train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
     trainer.train_and_validate()
