@@ -8,7 +8,7 @@
 | Gaussian Filter |  Jordy| <ul><li>- [ ] </li></ul>
 | Augmentatie |  | <ul><li>- [ ] </li></ul>
 | ResNet + LSTM Script | Marlous | <ul><li>- [ ] </li></ul>
-| Testcode | Freek | <ul><li>- [ ] </li></ul>
+| ~~Testcode~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~Add AUC metric~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~Seed all function~~ | Freek | <ul><li>- [x] </li></ul> 
 | ~~Implement Weights and Biases~~ | Freek | <ul><li>- [x] </li></ul>
