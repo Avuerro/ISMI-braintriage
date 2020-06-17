@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 #https://github.com/jcreinhold/intensity-normalization/blob/master/intensity_normalization/normalize/zscore.py
 
 def zscore_normalize(img):
+    """
+        Normalization of image based on mean and std.
+    """
     mean = img.mean()
     std = img.std()
     normalized_image = (img - mean) / std
@@ -15,17 +18,19 @@ def zscore_normalize(img):
 
 
 
-## this function will plot the histogram bins for each aquisition for a certain slice FOR ALL PATIENTS
 def get_acquisition_histogram(in_dir,klass,slices):
-    
-    nb_bins = 10
-    
-    
-    
-    
-    count_t1 = []#np.zeros(nb_bins)
-    count_t2 = [] #np.zeros(nb_bins)
-    count_t2_flair = [] #np.zeros(nb_bins)
+
+    """
+        this function will plot the histogram bins for each aquisition 
+        for a certain slice FOR ALL PATIENTS
+
+        it loops over the slices, sums the intensities and afterwards divides 
+        each intensity by the number of patients * the nr of slices
+        this way you will have the average intensity of each pixel
+    """
+    count_t1 = []
+    count_t2 = [] 
+    count_t2_flair = [] 
     
     patients_dir = os.path.join(in_dir, klass)
     patients = os.listdir(patients_dir)

@@ -32,6 +32,13 @@ def laplacian_of_gaussian(g):
 
 
 def get_brain(brain_slice):
+    """
+        The goal of this function is to make the bright areas stand out (more)
+        The function blurs the image and rescales it to 0 - 255 
+        then it applies a certain treshold, decided upon after trial and error
+        finally all values above threshold are set to color white, the rest is black
+    
+    """
  
     gaussian_blob = gaussian_2d(5, [0.5,0.5])[0]
     brain_slice_blurred = scipy.signal.convolve(brain_slice, gaussian_blob, method="fft", mode="same") 
@@ -52,6 +59,11 @@ def euclidean_dist(p1, p2):
 
 
 def bright_blobs_plotter(image,slices,seed_points=None):
+
+    """
+        This function plots blue blobs at the locations with high intensity
+        according to the get_brain() function.
+    """
     voxel_size = [0.5, 0.5]
     sigmas = [5,8,12,50] # We choose 5, 8 and 12 because trachea is 10 to 25mm wide 
                      # and 50 to weaken the effect of large irrelevant areas
