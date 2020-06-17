@@ -77,11 +77,38 @@ def get_acquisition_histogram(in_dir,klass,slices):
     count_t2_flair = count_t2_flair / (len(patients) *len(slices))
     fig,ax = plt.subplots(1,3, sharey=True, figsize=(14,14))
 
-    ax[0].hist(count_t1.flatten(), bins = 256, range=(0,count_t1.max()))
+
+
+
+    data = count_t1.flatten()
+    min_value = get_smallest_value(data)
+    max_value = data.max() 
+    counts,bins = remove_outliers(data)
+    
+
+    ax[0].hist(bins[3:-1], bins = bins, weights=counts[3:],range=(-0.5,max_value))
+    ax[0].set_xticks(np.arange(-0.5,max_value, 0.5))
     ax[0].set_title("Average pixel intensities for T1 Acquistion \n of all {} patients and {} slices".format(klass, str(len(slices))))
-    ax[1].hist(count_t2.flatten(), bins = 256, range=(0,count_t2.max()))
+    
+    data = count_t2.flatten()
+    min_value = get_smallest_value(data)
+    max_value = data.max() 
+
+    counts,bins = remove_outliers(data)
+    
+    ax[1].hist(bins[3:-1], bins = bins, weights=counts[3:],range=(-0.5,max_value))
+    ax[1].set_xticks(np.arange(-0.5,max_value, 0.5))
+
     ax[1].set_title("Average pixel intensities for T2 Acquistion \n of all {} patients and {} slices".format(klass, str(len(slices))))
-    ax[2].hist(count_t2_flair.flatten(), bins = 256, range=(0,count_t2_flair.max()))
+    
+    
+    data = count_t2_flair.flatten()
+    min_value = get_smallest_value(data)
+    max_value = data.max() 
+    counts,bins = remove_outliers(data)
+
+    ax[2].hist(bins[3:-1], bins = bins, weights=counts[3:],range=(-0.5,max_value))
+    ax[2].set_xticks(np.arange(-0.5,max_value, 0.5))
     ax[2].set_title("Average pixel intensities for T2 Flair Acquistion \n of all {} patients and {} slices".format(klass, str(len(slices))))
 
     fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
@@ -89,3 +116,13 @@ def get_acquisition_histogram(in_dir,klass,slices):
     fig.suptitle("Overview of Average Pixel Intensities \n of the three aquisitions for {} patients ".format(klass), y=1.06)
     fig.tight_layout()
     plt.show()
+
+
+def remove_outliers(data):
+    counts,bins = np.histogram(data,bins=256)
+    return counts,bins
+
+def get_smallest_value(data):
+    smallest_value = np.sort(data)[2:3]
+
+    return smallest_value[0]
