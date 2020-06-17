@@ -49,7 +49,7 @@ def get_acquisition_histogram(in_dir,klass,slices):
         t1_array = sitk.GetArrayFromImage(sitk.ReadImage(t1_path))
         t2_array = sitk.GetArrayFromImage(sitk.ReadImage(t2_path))
         t2_flair_array = sitk.GetArrayFromImage(sitk.ReadImage(t2_flair_path))
-        
+
         for slice_number in slices:
             ## obtain the slices
             t1_slice = t1_array[slice_number,:,:]
@@ -77,15 +77,15 @@ def get_acquisition_histogram(in_dir,klass,slices):
     count_t2_flair = count_t2_flair / (len(patients) *len(slices))
     fig,ax = plt.subplots(1,3, sharey=True, figsize=(14,14))
 
-    ax[0].hist(count_t1,range=(0,count_t1.max()))
+    ax[0].hist(count_t1.flatten(), bins = 256)
     ax[0].set_title("Average pixel intensities for T1 Acquistion \n of all {} patients and {} slices".format(klass, str(len(slices))))
-    ax[1].hist(count_t2,range=(0,count_t2.max()))
+    ax[1].hist(count_t2.flatten(), bins = 256)
     ax[1].set_title("Average pixel intensities for T2 Acquistion \n of all {} patients and {} slices".format(klass, str(len(slices))))
-    ax[2].hist(count_t2_flair,range=(0,count_t2_flair.max()))
+    ax[2].hist(count_t2_flair.flatten(), bins = 256)
     ax[2].set_title("Average pixel intensities for T2 Flair Acquistion \n of all {} patients and {} slices".format(klass, str(len(slices))))
 
     fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
                     wspace=0.35)
     fig.suptitle("Overview of Average Pixel Intensities \n of the three aquisitions for {} patients ".format(klass), y=1.06)
     fig.tight_layout()
-
+    plt.show()
