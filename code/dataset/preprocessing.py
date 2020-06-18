@@ -1,4 +1,5 @@
 import numpy as np
+import torch
 from torchvision import transforms
 from PIL import Image
 
@@ -20,6 +21,14 @@ def preprocess(X):
     # Scale Data
     X_img = (X_array / np.max(X_array) * 255).astype('uint8')
     
-    pil_img = Image.fromarray(X_img)
+    pil_img_T1 = Image.fromarray(X_img[0,:])
+    pil_img_T2 = Image.fromarray(X_img[1,:])
+    pil_img_T2_FLAIR = Image.fromarray(X_img[2,:])
     
-    return preprocessing(pil_img)
+    T1 = preprocessing(pil_img_T1)
+    T2 = preprocessing(pil_img_T2)
+    T2_FLAIR = preprocessing(pil_img_T2_FLAIR)
+    
+    preprocessed_slice = torch.stack([T1, T2, T2_FLAIR], dim=0)
+    
+    return preprocessed_slice
