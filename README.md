@@ -3,6 +3,7 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| Check LSTM |  | <ul><li>- [ ] </li></ul>
 | Set Verbose to True |  | <ul><li>- [ ] </li></ul>
 | Remove code change |  Marlous | <ul><li>- [ ] </li></ul>
 | Remove/fix auc |  | <ul><li>- [ ] </li></ul>
