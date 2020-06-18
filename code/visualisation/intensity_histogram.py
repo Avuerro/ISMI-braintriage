@@ -81,7 +81,6 @@ def get_acquisition_histogram(in_dir,klass,slices):
 
 
     data = count_t1.flatten()
-    min_value = get_smallest_value(data)
     max_value = data.max() 
     counts,bins = remove_outliers(data)
     
@@ -91,7 +90,6 @@ def get_acquisition_histogram(in_dir,klass,slices):
     ax[0].set_title("Average pixel intensities for T1 Acquistion \n of all {} patients and {} slices".format(klass, str(len(slices))))
     
     data = count_t2.flatten()
-    min_value = get_smallest_value(data)
     max_value = data.max() 
 
     counts,bins = remove_outliers(data)
@@ -103,7 +101,6 @@ def get_acquisition_histogram(in_dir,klass,slices):
     
     
     data = count_t2_flair.flatten()
-    min_value = get_smallest_value(data)
     max_value = data.max() 
     counts,bins = remove_outliers(data)
 
