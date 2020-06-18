@@ -82,7 +82,7 @@ class Trainer(object):
         del images, targets; gc.collect()
         torch.cuda.empty_cache()
 
-        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1;# epoch_auc /= batch_idx + 1
+        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1# epoch_auc /= batch_idx + 1
 
         return epoch_loss, epoch_acc #, epoch_auc
     
@@ -119,7 +119,7 @@ class Trainer(object):
         del images, targets; gc.collect()
         torch.cuda.empty_cache()
 
-        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1; # epoch_auc /= batch_idx + 1
+        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1 # epoch_auc /= batch_idx + 1
 
         return epoch_loss, epoch_acc #, epoch_auc
 
