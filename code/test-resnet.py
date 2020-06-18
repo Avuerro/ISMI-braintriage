@@ -107,5 +107,5 @@ if __name__ == "__main__":
                          "train_percentage":args.train_percentage})
     wandb.watch(model)
     trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, device=DEVICE,
-                    train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir)
+                    train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir, verbose=True)
     trainer.train_and_validate()
