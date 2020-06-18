@@ -5,7 +5,7 @@
 |----------------|---------------|---------------|
 | Set Verbose to True |  | <ul><li>- [ ] </li></ul>
 | Remove code change |  Marlous | <ul><li>- [ ] </li></ul>
-| Remove auc |  | <ul><li>- [ ] </li></ul>
+| Remove/fix auc |  | <ul><li>- [ ] </li></ul>
 | Apply our own Normalisation |  | <ul><li>- [ ] </li></ul>
 | ~~Center Crop~~ | Jordy | <ul><li>- [x] </li></ul>
 | Gaussian Filter |  Jordy| <ul><li>- [ ] </li></ul>
