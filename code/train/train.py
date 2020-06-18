@@ -37,8 +37,6 @@ class Trainer(object):
             self.model.train()
             self.optimizer.zero_grad()
 
-            images = torch.unsqueeze(images, 1)  # Make sure dimensions match
-
             images = images.float().to(self.device)
             targets = targets.float().to(self.device)
 
@@ -95,8 +93,6 @@ class Trainer(object):
 
         for batch_idx, (images, targets) in tqdm(enumerate(self.val_loader), total=len(self.val_loader), desc="#test_batches", leave=False):
             self.model.eval()
-
-            images = torch.unsqueeze(images, 1)  # Make sure dimensions match
 
             images = images.float().to(self.device)
             targets = targets.float().to(self.device)
