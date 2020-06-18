@@ -5,7 +5,7 @@
 |----------------|---------------|---------------|
 | Check LSTM |  | <ul><li>- [ ] </li></ul>
 | Set Verbose to True |  | <ul><li>- [ ] </li></ul>
-| Remove code change |  Marlous | <ul><li>- [ ] </li></ul>
+| ~~Remove code change~~ |  Marlous | <ul><li>- [x] </li></ul>
 | Remove/fix auc |  | <ul><li>- [ ] </li></ul>
 | ~~Apply our own Normalisation~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
 | ~~Center Crop~~ | Jordy | <ul><li>- [x] </li></ul>
