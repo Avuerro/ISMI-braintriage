@@ -25,7 +25,7 @@ class Trainer(object):
 
 
     def train(self):   
-        epoch_loss, epoch_acc, epoch_auc = 0., 0., 0.
+        epoch_loss, epoch_acc = 0., 0. #epoch_auc = 0.
 
         epoch_start_time = batch_start_time = time.time()
         avg_component_times = {"load-batch" : 0., "forward" : 0., "backward" : 0., "metrics" : 0.}
@@ -61,15 +61,15 @@ class Trainer(object):
             predictions = (probabilities > 0.5).float()
 
             accuracy = _compute_accuracy(predictions, targets); epoch_acc += accuracy
-            auc = _compute_auc(probabilities, targets);         epoch_auc += auc
+            # auc = _compute_auc(probabilities, targets);         epoch_auc += auc
             loss = loss.detach().cpu();                         epoch_loss += loss
 
             if self.verbose:
                 avg_component_times["metrics"] += metrics_start_time - time.time()
 
             wandb.log({"Training Loss (per iteration)": loss,
-                       "Training Accuracy (per iteration)": accuracy,
-                       "Training AUC Score (per iteration)": auc})
+                       "Training Accuracy (per iteration)": accuracy})
+                    #    "Training AUC Score (per iteration)": auc})
 
             batch_start_time = time.time()
 
@@ -82,12 +82,12 @@ class Trainer(object):
         del images, targets; gc.collect()
         torch.cuda.empty_cache()
 
-        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1; epoch_auc /= batch_idx + 1
+        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1;# epoch_auc /= batch_idx + 1
 
-        return epoch_loss, epoch_acc, epoch_auc
+        return epoch_loss, epoch_acc #, epoch_auc
     
     def validate(self):
-        epoch_loss, epoch_acc, epoch_auc = 0., 0., 0.
+        epoch_loss, epoch_acc = 0., 0. ## epoch_auc = 0.
 
         start_time = time.time()
 
@@ -106,12 +106,12 @@ class Trainer(object):
             predictions = (probabilities > 0.5).float()
 
             accuracy = _compute_accuracy(predictions, targets); epoch_acc += accuracy
-            auc = _compute_auc(probabilities, targets);         epoch_auc += auc
+            # auc = _compute_auc(probabilities, targets);         epoch_auc += auc
             loss = loss.detach().cpu();                         epoch_loss += loss
 
             wandb.log({"Validation Loss (per iteration)": loss,
-                       "Validation Accuracy (per iteration)": accuracy,
-                       "Validation AUC Score (per iteration)": auc})
+                       "Validation Accuracy (per iteration)": accuracy})
+                    #    "Validation AUC Score (per iteration)": auc})
 
         print(f"One epoch (validation) took {time.time()-start_time} seconds")
 
@@ -119,9 +119,9 @@ class Trainer(object):
         del images, targets; gc.collect()
         torch.cuda.empty_cache()
 
-        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1; epoch_auc /= batch_idx + 1
+        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1; # epoch_auc /= batch_idx + 1
 
-        return epoch_loss, epoch_acc, epoch_auc
+        return epoch_loss, epoch_acc #, epoch_auc
 
 
     def train_and_validate(self):
@@ -129,9 +129,9 @@ class Trainer(object):
         best_val_loss = 9999999
 
         for epoch in tqdm(range(self.n_epochs), desc="#epochs"):
-            train_loss, train_acc, train_auc = self.train()
+            train_loss, train_acc= self.train()  # train_auc 
 
-            val_loss, val_acc, val_auc = self.validate()
+            val_loss, val_acc = self.validate() # val_auc
             
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
@@ -139,10 +139,10 @@ class Trainer(object):
 
             wandb.log({"Training Loss": train_loss,
                        "Training Accuracy": train_acc,
-                       "Training AUC Score": train_auc,
+                     #  "Training AUC Score": train_auc,
                        "Validation Loss": val_loss,
-                       "Validation Accuracy": val_acc,
-                       "Validation AUC Score": val_auc})
+                       "Validation Accuracy": val_acc })
+                      # "Validation AUC Score": val_auc})
 
 
 def _compute_accuracy(predictions, targets):
