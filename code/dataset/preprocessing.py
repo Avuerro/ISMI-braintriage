@@ -25,9 +25,9 @@ def preprocess(X):
     pil_img_T2 = Image.fromarray(X_img[1,:])
     pil_img_T2_FLAIR = Image.fromarray(X_img[2,:])
     
-    T1 = preprocessing(pil_img_T1[0])
-    T2 = preprocessing(pil_img_T2[0])
-    T2_FLAIR = preprocessing(pil_img_T2_FLAIR[0])
+    T1 = torch.squeeze(preprocessing(pil_img_T1),0)
+    T2 = torch.squeeze(preprocessing(pil_img_T2),0)
+    T2_FLAIR = torch.squeeze(preprocessing(pil_img_T2_FLAIR),0)
     
     preprocessed_slice = torch.stack([T1, T2, T2_FLAIR], dim=0)
     
