@@ -32,7 +32,7 @@ class Trainer(object):
 
         for batch_idx, (images, targets) in tqdm(enumerate(self.train_loader), total=len(self.train_loader), desc="#train_batches", leave=False):
             if self.verbose:
-                avg_component_times["load-batch"] += batch_start_time - time.time()
+                avg_component_times["load-batch"] += time.time() - batch_start_time
 
             self.model.train()
             self.optimizer.zero_grad()
@@ -45,14 +45,14 @@ class Trainer(object):
             forward_start_time = time.time()
             output = self.model(images)
             if self.verbose:
-                avg_component_times["forward"] += forward_start_time - time.time()
+                avg_component_times["forward"] += time.time() - forward_start_time
 
             loss = self.criterion(output, targets)
 
             backward_start_time = time.time()
             loss.backward()
             if self.verbose:
-                avg_component_times["backward"] += backward_start_time - time.time()
+                avg_component_times["backward"] += time.time() - backward_start_time
 
             self.optimizer.step()
 
@@ -67,7 +67,7 @@ class Trainer(object):
             loss = loss.detach().cpu();                         epoch_loss += loss
 
             if self.verbose:
-                avg_component_times["metrics"] += metrics_start_time - time.time()
+                avg_component_times["metrics"] += time.time() - metrics_start_time
 
             wandb.log({"Training Loss (per iteration)": loss,
                        "Training Accuracy (per iteration)": accuracy,
