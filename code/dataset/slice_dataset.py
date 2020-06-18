@@ -1,6 +1,6 @@
 import torch
 from torch.utils import data
-
+from preprocessing import preprocess
 import os
 
 class SliceDataset(data.Dataset):
@@ -24,4 +24,4 @@ class SliceDataset(data.Dataset):
         y = cls
         X = torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"))
         
-        return X, y
+        return preprocess(X), y

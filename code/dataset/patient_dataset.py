@@ -1,5 +1,6 @@
 import torch
 from torch.utils import data
+from preprocessing import preprocess
 
 import os
 
@@ -23,11 +24,11 @@ class PatientDataset(data.Dataset):
         patient_nr = self.patient_list[index]
         
         if type(self.target_slices) == tuple:
-            slice_list = [self.get_slice_tensor(patient_nr, slice_nr) for slice_nr in range(*self.target_slices)]
+            slice_list = [preprocess(self.get_slice_tensor(patient_nr, slice_nr)) for slice_nr in range(*self.target_slices)]
         elif type(self.target_slices) == list:
-            slice_list = [self.get_slice_tensor(patient_nr, slice_nr) for slice_nr in self.target_slices]
+            slice_list = [preprocess(self.get_slice_tensor(patient_nr, slice_nr)) for slice_nr in self.target_slices]
         else: # If single integer
-            slice_list = [self.get_slice_tensor(patient_nr, self.target_slices)]
+            slice_list = [preprocess(self.get_slice_tensor(patient_nr, self.target_slices))]
         
         X = torch.stack(slice_list)
         y = self.label_df[self.label_df["patient_nr"] == patient_nr].iloc[0,2]
