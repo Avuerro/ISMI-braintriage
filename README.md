@@ -3,6 +3,9 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| Set Verbose to True |  | <ul><li>- [ ] </li></ul>
+| Remove code change |  Marlous | <ul><li>- [ ] </li></ul>
+| Remove auc |  | <ul><li>- [ ] </li></ul>
 | Apply our own Normalisation |  | <ul><li>- [ ] </li></ul>
 | ~~Center Crop~~ | Jordy | <ul><li>- [x] </li></ul>
 | Gaussian Filter |  Jordy| <ul><li>- [ ] </li></ul>
@@ -14,7 +17,7 @@
 | ~~Implement Weights and Biases~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~ResNet34 + LSTM~~ | Marlous | <ul><li>- [x] </li></ul>
 | Label & Slices vs Patients & Labels | Chihab + ...| <ul><li>- [ ] </li></ul>
-| EDA | Chihab | <ul><li>- [ ] </li></ul>
+| EDA | Chihab & friends | <ul><li>- [ ] </li></ul>
 | Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
 | ~~Compare Networks~~ | De hele mikmak | <ul><li>- [x] </li></ul>
 | ~~Run Networks Longer~~ | Freek | <ul><li>- [x] </li></ul>
