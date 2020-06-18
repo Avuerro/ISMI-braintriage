@@ -4,7 +4,7 @@
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
 | Apply our own Normalisation |  | <ul><li>- [ ] </li></ul>
-| Center Crop | Jordy | <ul><li>- [ ] </li></ul>
+| ~~Center Crop~~ | Jordy | <ul><li>- [x] </li></ul>
 | Gaussian Filter |  Jordy| <ul><li>- [ ] </li></ul>
 | Augmentatie |  | <ul><li>- [ ] </li></ul>
 | ResNet + LSTM Script | Marlous | <ul><li>- [ ] </li></ul>
