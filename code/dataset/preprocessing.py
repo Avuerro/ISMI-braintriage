@@ -8,35 +8,27 @@ from PIL import Image
 from tqdm import tqdm
 
 DATA_DIR = "../../data/train/"
+MEANS = [96.3782, 106.0149,  58.2791]
+STDS = [163.7764, 172.2486,  94.4285]
+IMG_SIZE = 512
 
-def preprocess(X):
-    
+def preprocess(X, center_crop_target = 425):
     '''
-    X = torch.load(...)'s output (hence, a Torch Tensor)
+    X = PyTorch Tensor
     '''
-    # Define transformations:
+    # NOTE: Maybe conversion to numpy is unnecessary?
+
+    # Transform Torch Tensor to NP Array (and convert to shape (512,512,3))
+    X_array = np.rollaxis(X.numpy(), 0, 3)
+    # Standardize data
+    X_standard = (X_array-MEANS)/STDS
+    # Roll axis back
+    X_standard = np.rollaxis(X_standard, 2, 0)
     
-    preprocessing = transforms.Compose([
-        transforms.CenterCrop(425),
-        transforms.ToTensor()
-    ])
-    # Transform Torch Tensor to NP Array
-    X_array = X.numpy()
-    
-    # Scale Data
-    X_img = (X_array / np.max(X_array) * 255).astype('uint8')
-    
-    pil_img_T1 = Image.fromarray(X_img[0,:])
-    pil_img_T2 = Image.fromarray(X_img[1,:])
-    pil_img_T2_FLAIR = Image.fromarray(X_img[2,:])
-    
-    T1 = torch.squeeze(preprocessing(pil_img_T1),0)
-    T2 = torch.squeeze(preprocessing(pil_img_T2),0)
-    T2_FLAIR = torch.squeeze(preprocessing(pil_img_T2_FLAIR),0)
-    
-    preprocessed_slice = torch.stack([T1, T2, T2_FLAIR], dim=0)
-    
-    return preprocessed_slice
+    # Center-crop image manually (PIL does not like floats)
+    crop_idx = (IMG_SIZE - center_crop_target)//2
+    X_cropped = X_standard[:, crop_idx:-crop_idx, crop_idx:-crop_idx]
+    return X_cropped
 
 
 def get_dataset_mean_std():
@@ -66,4 +58,15 @@ def get_dataset_mean_std():
     return mean / total_samples, std / total_samples
 
 if __name__ == "__main__":
-    print(get_dataset_mean_std())
+    X = torch.load(os.path.join(DATA_DIR, f"3_1.pt"))
+    print(X.shape)
+    out = preprocess(X)
+    print(out.min(), out.max(), out.shape)
+    import matplotlib.pyplot as plt
+    ax = plt.subplot(1, 3, 1)
+    ax.imshow(out[0], cmap="gray")
+    ax = plt.subplot(1, 3, 2)
+    ax.imshow(out[1], cmap="gray")
+    ax = plt.subplot(1, 3, 3)
+    ax.imshow(out[2], cmap="gray")
+    plt.show()
