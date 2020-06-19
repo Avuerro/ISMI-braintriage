@@ -1,8 +1,13 @@
 import numpy as np
+import pandas as pd
+import os
 import torch
+from torch.utils import data
 from torchvision import transforms
 from PIL import Image
+from tqdm import tqdm
 
+DATA_DIR = "../../data/train/"
 
 def preprocess(X):
     
@@ -32,3 +37,33 @@ def preprocess(X):
     preprocessed_slice = torch.stack([T1, T2, T2_FLAIR], dim=0)
     
     return preprocessed_slice
+
+
+def get_dataset_mean_std():
+    '''
+        Retrieves the mean and standard deviation per acquisition over the training set
+        Returns:
+        MEAN
+             T1       T2         T2-Flair
+            [96.3782, 106.0149,  58.2791]
+        STANDARD DEVIATION
+             T1        T2         T2-Flair
+            [163.7764, 172.2486,  94.4285]
+    '''
+    from .slice_dataset import SliceDataset # Might cause issue due to circular dependency with this file
+    label_df = pd.read_csv(os.path.join(DATA_DIR, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
+    dataloader = data.DataLoader(SliceDataset(label_df, (0,31), DATA_DIR, False), batch_size=1000, num_workers=0)
+
+    mean, std, total_samples = 0., 0., 0.
+    for batch,_ in tqdm(dataloader):
+        n_batch_samples = batch.size(0)
+        batch = batch.view(n_batch_samples, batch.size(1), -1)
+        mean += batch.mean(2).sum(0)
+        std += batch.std(2).sum(0)
+        total_samples += n_batch_samples
+    print(total_samples)
+
+    return mean / total_samples, std / total_samples
+
+if __name__ == "__main__":
+    print(get_dataset_mean_std())
