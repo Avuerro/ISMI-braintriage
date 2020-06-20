@@ -18,7 +18,7 @@ from dataset.slice_dataset import SliceDataset
 from dataset.patient_dataset import PatientDataset
 from train.train import Trainer
 from models.lstm import LSTM
-from models.resnet import ResNet
+from models.omnipotent_resnet import Net
 from models.combined_net import CombinedNet
 
 ### DEFAULT PARAMETERS ###
@@ -72,7 +72,8 @@ if __name__ == "__main__":
     print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
 
     # Load in model
-    resnet = ResNet(n_features=args.n_features)
+    model = models.resnet34(pretrained=args.pretrained)
+    resnet = Net(model, args.name, args.n_features)
     resnet.load_state_dict(torch.load(CNN_DIR))
     lstm_net = LSTM(n_features=args.n_features, n_hidden=64, n_layers=2)
     combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
