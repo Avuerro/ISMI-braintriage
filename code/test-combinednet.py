@@ -24,7 +24,7 @@ from models.combined_net import CombinedNet
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
 DATA_DIR = '../data/train'
-MODEL_DIR = '../models/restnet34_014.npz'
+CNN_DIR = '../models/restnet34_014.npz'
 TARGET_SLICES = (0, 31)  # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9  # Percentage of data that will be used for training
 ### Model parameters ###
@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     # Load in model
     resnet = ResNet(n_features=args.n_features)
-    resnet.load_state_dict(torch.load(MODEL_DIR))
+    resnet.load_state_dict(torch.load(CNN_DIR))
     lstm_net = LSTM(n_features=args.n_features, n_hidden=64, n_layers=2)
     combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
 
