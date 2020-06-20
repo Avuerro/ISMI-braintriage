@@ -25,7 +25,7 @@ class Trainer(object):
 
 
     def train(self):   
-        epoch_loss, epoch_acc = 0., 0. #epoch_auc = 0.
+        epoch_loss, epoch_acc = 0., 0.
 
         epoch_start_time = batch_start_time = time.time()
         avg_component_times = {"load-batch" : 0., "forward" : 0., "backward" : 0., "metrics" : 0.}
@@ -61,7 +61,6 @@ class Trainer(object):
             predictions = (probabilities > 0.5).float()
 
             accuracy = _compute_accuracy(predictions, targets); epoch_acc += accuracy
-            # auc = _compute_auc(probabilities, targets);         epoch_auc += auc
             loss = loss.detach().cpu();                         epoch_loss += loss
 
             if self.verbose:
@@ -69,7 +68,6 @@ class Trainer(object):
 
             wandb.log({"Training Loss (per iteration)": loss,
                        "Training Accuracy (per iteration)": accuracy})
-                    #    "Training AUC Score (per iteration)": auc})
 
             batch_start_time = time.time()
 
@@ -82,12 +80,12 @@ class Trainer(object):
         del images, targets; gc.collect()
         torch.cuda.empty_cache()
 
-        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1# epoch_auc /= batch_idx + 1
+        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1
 
-        return epoch_loss, epoch_acc #, epoch_auc
+        return epoch_loss, epoch_acc
     
     def validate(self):
-        epoch_loss, epoch_acc = 0., 0. ## epoch_auc = 0.
+        epoch_loss, epoch_acc = 0., 0.
 
         start_time = time.time()
 
@@ -106,12 +104,10 @@ class Trainer(object):
             predictions = (probabilities > 0.5).float()
 
             accuracy = _compute_accuracy(predictions, targets); epoch_acc += accuracy
-            # auc = _compute_auc(probabilities, targets);         epoch_auc += auc
             loss = loss.detach().cpu();                         epoch_loss += loss
 
             wandb.log({"Validation Loss (per iteration)": loss,
                        "Validation Accuracy (per iteration)": accuracy})
-                    #    "Validation AUC Score (per iteration)": auc})
 
         print(f"One epoch (validation) took {time.time()-start_time} seconds")
 
@@ -119,9 +115,9 @@ class Trainer(object):
         del images, targets; gc.collect()
         torch.cuda.empty_cache()
 
-        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1 # epoch_auc /= batch_idx + 1
+        epoch_loss /= batch_idx + 1; epoch_acc /= batch_idx + 1
 
-        return epoch_loss, epoch_acc #, epoch_auc
+        return epoch_loss, epoch_acc
 
 
     def train_and_validate(self):
