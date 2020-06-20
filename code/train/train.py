@@ -129,9 +129,9 @@ class Trainer(object):
         best_val_loss = 9999999
 
         for epoch in tqdm(range(self.n_epochs), desc="#epochs"):
-            train_loss, train_acc, train_auc = self.train()
+            train_loss, train_acc = self.train()
 
-            val_loss, val_acc, val_auc = self.validate()
+            val_loss, val_acc = self.validate()
             
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
