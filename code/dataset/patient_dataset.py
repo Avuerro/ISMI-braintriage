@@ -24,11 +24,11 @@ class PatientDataset(data.Dataset):
         patient_nr = self.patient_list[index]
         
         if type(self.target_slices) == tuple:
-            slice_list = [preprocess(self.get_slice_tensor(patient_nr, slice_nr)) for slice_nr in range(*self.target_slices)]
+            slice_list = [self.get_slice_tensor(patient_nr, slice_nr) for slice_nr in range(*self.target_slices)]
         elif type(self.target_slices) == list:
-            slice_list = [preprocess(self.get_slice_tensor(patient_nr, slice_nr)) for slice_nr in self.target_slices]
+            slice_list = [self.get_slice_tensor(patient_nr, slice_nr) for slice_nr in self.target_slices]
         else: # If single integer
-            slice_list = [preprocess(self.get_slice_tensor(patient_nr, self.target_slices))]
+            slice_list = [self.get_slice_tensor(patient_nr, self.target_slices)]
         
         X = torch.stack(slice_list)
         y = self.label_df[self.label_df["patient_nr"] == patient_nr].iloc[0,2]
@@ -36,4 +36,4 @@ class PatientDataset(data.Dataset):
         return X, y
     
     def get_slice_tensor(self, patient_nr, slice_nr):
-        return torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"), map_location=self.DEVICE)
+        return preprocess(torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"), map_location=self.DEVICE))
