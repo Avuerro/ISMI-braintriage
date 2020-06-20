@@ -21,5 +21,5 @@ class LSTM(nn.Module):
         lstm_output, (_, _) = self.lstm(x)
         # Common method for LSTMs is to take the last sequence output and pass that to a dense layer
         last_sequence_output = torch.squeeze(lstm_output[:, -1]) # Shape: batch, n_hidden (after squeeze)
-        output = self.classification_linear(torch.squeeze(last_sequence_output))
-        return output
+        output = self.classification_linear(torch.squeeze(last_sequence_output)) # Shape: (batch_size, 1)
+        return torch.squeeze(output)
