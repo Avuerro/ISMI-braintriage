@@ -125,20 +125,18 @@ class Trainer(object):
         best_val_loss = 9999999
 
         for epoch in tqdm(range(self.n_epochs), desc="#epochs"):
-            train_loss, train_acc= self.train()  # train_auc 
+            train_loss, train_acc = self.train()
 
-            val_loss, val_acc = self.validate() # val_auc
+            val_loss, val_acc = self.validate()
             
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
-                torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.npz'.format(self.model_dir, self.model.name, epoch))
+                torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch))
 
             wandb.log({"Training Loss": train_loss,
                        "Training Accuracy": train_acc,
-                     #  "Training AUC Score": train_auc,
                        "Validation Loss": val_loss,
-                       "Validation Accuracy": val_acc })
-                      # "Validation AUC Score": val_auc})
+                       "Validation Accuracy": val_acc})
 
 
 def _compute_accuracy(predictions, targets):

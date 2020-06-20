@@ -13,15 +13,18 @@ import argparse
 
 ### Local imports ###
 from dataset.slice_dataframes import get_slice_train_val_dataframes
+from dataset.patient_dataframes import get_patient_train_val_dataframes
 from dataset.slice_dataset import SliceDataset
+from dataset.patient_dataset import PatientDataset
 from train.train import Trainer
 from models.lstm import LSTM
-from models.resnet import ResNet
+from models.omnipotent_resnet import Net
 from models.combined_net import CombinedNet
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
 DATA_DIR = '../data/train'
+CNN_DIR = '../models/resnet34_014.pt'
 TARGET_SLICES = (0, 31)  # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9  # Percentage of data that will be used for training
 ### Model parameters ###
@@ -30,7 +33,7 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
 N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will use
 ### Train parameters ###
 EPOCHS = 30
-BATCH_SIZE = 64
+BATCH_SIZE = 16
 LR = 0.0001
 
 ### Argument parser ###
@@ -69,28 +72,30 @@ if __name__ == "__main__":
     print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
 
     # Load in model
-    resnet = ResNet(n_features=args.n_features)
+    model = models.resnet34(pretrained=args.pretrained)
+    resnet = Net(model, args.name, args.n_features)
+    resnet.load_state_dict(torch.load(CNN_DIR))
     lstm_net = LSTM(n_features=args.n_features, n_hidden=64, n_layers=2)
-    combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)  # .to(DEVICE)
-    combined_net.set_learning_cnn_net(True)
+    combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
 
     ### Loss and optimizer ###
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(combined_net.parameters(), lr=args.learning_rate)
 
-    ### Create data generator ###
-    train_df, val_df = get_slice_train_val_dataframes(label_df, train_percentage=args.train_percentage)
+    ### Create dataframes for training and validation ###
+    # Take 10 folds such that we can take 90% training data
+    train_df, val_df, train_patients, val_patients = get_patient_train_val_dataframes(label_df, k=10)
 
     # Set correct target slices
     if args.is_target_tuple:
         args.target_slices = tuple(args.target_slices)
 
-    # Set train/validation loaders and train
-    train_set = SliceDataset(train_df, args.target_slices, args.data_dir)
-    val_set = SliceDataset(val_df, args.target_slices, args.data_dir)
+    # Set train/validation loaders
+    train_set = PatientDataset(train_df, train_patients, args.target_slices, args.data_dir, DEVICE)
+    val_set = PatientDataset(val_df, val_patients, args.target_slices, args.data_dir, DEVICE)
 
-    train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True, num_workers=os.cpu_count())
-    val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False, num_workers=os.cpu_count())
+    train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
+    val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
 
     # Initialise W&B settings
     wandb.init(project="braintriage")
