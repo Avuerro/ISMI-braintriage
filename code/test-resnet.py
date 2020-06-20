@@ -21,7 +21,7 @@ from train.train import Trainer
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
 DATA_DIR = '../data/train'
-TARGET_SLICES = (0,31)                                   # The slices we will train on for each patient
+TARGET_SLICES = (0,32)                                   # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9                                   # Percentage of data that will be used for training
 ### Model parameters ###
 MODEL_DIR = '../models'                                  # Directory where best models are saved
