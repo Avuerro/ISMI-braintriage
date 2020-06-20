@@ -24,7 +24,7 @@ from models.combined_net import CombinedNet
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
 DATA_DIR = '../data/train'
-CNN_DIR = '../models/resnet34_014.npz'
+CNN_DIR = '../models/resnet34_014.pt'
 TARGET_SLICES = (0, 31)  # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9  # Percentage of data that will be used for training
 ### Model parameters ###
