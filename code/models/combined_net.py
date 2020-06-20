@@ -13,17 +13,14 @@ class CombinedNet(nn.Module):
 
     def forward(self, batch_of_patients):
         # Loop over all slices and compute feature vectors with cnn_net
-        print(batch_of_patients.shape)
-        feature_vectors = []
-        for batch_of_slices in batch_of_patients:
-            print(batch_of_slices.shape)
-            feature_vectors.append(self.cnn_net(batch_of_slices))
+        feature_vectors = [self.cnn_net(batch_of_slices) for batch_of_slices in batch_of_patients]
+        # Create tensor with shape (batch, slices, features)
         feature_vectors = torch.stack(feature_vectors)
 
-        # Convert to Tensor and compute predictions with LSTM net
-        prediction = self.lstm_net(feature_vectors)
+        # Compute predictions with LSTM net
+        predictions = self.lstm_net(feature_vectors)
 
-        return prediction
+        return predictions
 
     def set_learning_cnn_net(self, do_learning):
         for param in self.cnn_net.parameters():
