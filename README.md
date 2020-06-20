@@ -3,7 +3,7 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
-| Check LSTM |  | <ul><li>- [ ] </li></ul>
+| ~~Check LSTM~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~Set Verbose to True~~ | Chihab | <ul><li>- [x] </li></ul>
 | ~~Remove code change~~ |  Marlous | <ul><li>- [x] </li></ul>
 | ~~Remove/fix auc~~ | Chihab | <ul><li>- [x] </li></ul>
@@ -11,7 +11,7 @@
 | ~~Center Crop~~ | Jordy | <ul><li>- [x] </li></ul>
 | ~~Gaussian Filter~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
 | ~~Augmentatie~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
-| ResNet + LSTM Script | Marlous | <ul><li>- [ ] </li></ul>
+| ~~ResNet + LSTM Script~~ | Marlous & Freek | <ul><li>- [x] </li></ul>
 | ~~Testcode~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~Add AUC metric~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~Seed all function~~ | Freek | <ul><li>- [x] </li></ul> 
