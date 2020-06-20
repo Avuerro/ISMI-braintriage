@@ -3,18 +3,22 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
-| Apply our own Normalisation |  | <ul><li>- [ ] </li></ul>
-| Center Crop | Jordy | <ul><li>- [ ] </li></ul>
-| Gaussian Filter |  Jordy| <ul><li>- [ ] </li></ul>
-| Augmentatie |  | <ul><li>- [ ] </li></ul>
+| Check LSTM |  | <ul><li>- [ ] </li></ul>
+| ~~Set Verbose to True~~ | Chihab | <ul><li>- [x] </li></ul>
+| ~~Remove code change~~ |  Marlous | <ul><li>- [x] </li></ul>
+| ~~Remove/fix auc~~ | Chihab | <ul><li>- [x] </li></ul>
+| ~~Apply our own standardisation~~ | Jordy & Freek | <ul><li>- [x] </li></ul>
+| ~~Center Crop~~ | Jordy | <ul><li>- [x] </li></ul>
+| ~~Gaussian Filter~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
+| ~~Augmentatie~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
 | ResNet + LSTM Script | Marlous | <ul><li>- [ ] </li></ul>
 | ~~Testcode~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~Add AUC metric~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~Seed all function~~ | Freek | <ul><li>- [x] </li></ul> 
 | ~~Implement Weights and Biases~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~ResNet34 + LSTM~~ | Marlous | <ul><li>- [x] </li></ul>
-| Label & Slices vs Patients & Labels | Chihab + ...| <ul><li>- [ ] </li></ul>
-| EDA | Chihab | <ul><li>- [ ] </li></ul>
+| ~~Label & Slices vs Patients & Labels~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
+| EDA | Chihab & friends | <ul><li>- [ ] </li></ul>
 | Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
 | ~~Compare Networks~~ | De hele mikmak | <ul><li>- [x] </li></ul>
 | ~~Run Networks Longer~~ | Freek | <ul><li>- [x] </li></ul>
