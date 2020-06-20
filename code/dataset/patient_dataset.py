@@ -1,6 +1,6 @@
 import torch
 from torch.utils import data
-from preprocessing import preprocess
+from .preprocessing import preprocess
 
 import os
 
