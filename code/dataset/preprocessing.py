@@ -31,7 +31,7 @@ def preprocess(X, center_crop_target = 425):
     return X_cropped
 
 
-def get_dataset_mean_std():
+def get_dataset_mean_std(dataloader):
     '''
         Retrieves the mean and standard deviation per acquisition over the training set
         Returns:
@@ -42,31 +42,28 @@ def get_dataset_mean_std():
              T1        T2         T2-Flair
             [163.7764, 172.2486,  94.4285]
     '''
-    from .slice_dataset import SliceDataset # Might cause issue due to circular dependency with this file
-    label_df = pd.read_csv(os.path.join(DATA_DIR, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
-    dataloader = data.DataLoader(SliceDataset(label_df, (0,31), DATA_DIR, False), batch_size=1000, num_workers=0)
-
     mean, std, total_samples = 0., 0., 0.
+    # print(dataloader[0].shape)
     for batch,_ in tqdm(dataloader):
         n_batch_samples = batch.size(0)
         batch = batch.view(n_batch_samples, batch.size(1), -1)
-        mean += batch.mean(2).sum(0)
+        mean += batch.mean(2).sum(0)        
         std += batch.std(2).sum(0)
         total_samples += n_batch_samples
-    print(total_samples)
 
     return mean / total_samples, std / total_samples
 
 if __name__ == "__main__":
-    X = torch.load(os.path.join(DATA_DIR, f"3_1.pt"))
-    print(X.shape)
-    out = preprocess(X)
-    print(out.min(), out.max(), out.shape)
-    import matplotlib.pyplot as plt
-    ax = plt.subplot(1, 3, 1)
-    ax.imshow(out[0], cmap="gray")
-    ax = plt.subplot(1, 3, 2)
-    ax.imshow(out[1], cmap="gray")
-    ax = plt.subplot(1, 3, 3)
-    ax.imshow(out[2], cmap="gray")
-    plt.show()
+    # X = torch.load(os.path.join(DATA_DIR, f"3_1.pt"))
+    # print(X.shape)
+    # out = preprocess(X)
+    # print(out.min(), out.max(), out.shape)
+    # import matplotlib.pyplot as plt
+    # ax = plt.subplot(1, 3, 1)
+    # ax.imshow(out[0], cmap="gray")
+    # ax = plt.subplot(1, 3, 2)
+    # ax.imshow(out[1], cmap="gray")
+    # ax = plt.subplot(1, 3, 3)
+    # ax.imshow(out[2], cmap="gray")
+    # plt.show()
+    get_dataset_mean_std()
