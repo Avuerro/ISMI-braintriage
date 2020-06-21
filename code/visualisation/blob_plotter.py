@@ -142,7 +142,7 @@ def bright_blobs_plotter(image,slices,seed_points=None):
         plt.subplot(1,2,2); plt.imshow(ct_slice, cmap='gray')
         fig = plt.gcf()
         ax = fig.gca()
-        ax.set_title("Original slice with red circles around bright spots")
+        ax.set_title("Original slice with red circles around bright spots", y =1.1)
         plotted_circles = []
         for index, group in enumerate(groups_coords):
             center = group[0]
