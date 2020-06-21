@@ -3,8 +3,7 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
-| EDA | Chihab & Marlous &... | <ul><li>- [x] </li></ul>
-| EDA | Chihab & friends | <ul><li>- [ ] </li></ul>
+| EDA | Chihab & Marlous &... | <ul><li>- [ ] </li></ul> 
 | Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
 | CNN failure analysis | Max| <ul><li>- [ ] </li></ul> 
 | LSTM trainen| Marlous| <ul><li>- [ ] </li></ul> 
