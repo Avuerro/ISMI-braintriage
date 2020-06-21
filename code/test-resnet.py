@@ -16,12 +16,13 @@ from dataset.slice_dataframes import get_slice_train_val_dataframes
 from dataset.slice_dataset import SliceDataset
 from models.omnipotent_resnet import Net
 from train.train import Trainer
+from utils import set_seed
 
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
 DATA_DIR = '../data/train'
-TARGET_SLICES = (0,31)                                   # The slices we will train on for each patient
+TARGET_SLICES = (0,32)                                   # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9                                   # Percentage of data that will be used for training
 ### Model parameters ###
 MODEL_DIR = '../models'                                  # Directory where best models are saved
@@ -31,11 +32,14 @@ N_FEATURES = 128                                         # The length of feature
 EPOCHS = 30
 BATCH_SIZE = 64
 LR = 0.0001
+SEED = 420
 
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
 parser.add_argument('name', type=str, help="Name of the pre-trained model")
+parser.add_argument('-s', type=int, nargs='?', dest="seed",
+                    default = SEED, help="Seed for all random generators")
 parser.add_argument('-d', type=str, nargs='?', dest="data_dir",
                     default = DATA_DIR, help="Path to directory with data")
 parser.add_argument('-lr', type=float, nargs='?', dest="learning_rate",
@@ -48,7 +52,7 @@ parser.add_argument('-m', type=str, nargs='?', dest="model_dir",
                     default = MODEL_DIR, help="Where models will be saved")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default = N_FEATURES, help="Number of output features of last FC layer")
-parser.add_argument('-s', nargs='+', dest='target_slices',
+parser.add_argument('-ts', nargs='+', dest='target_slices',
                     default = TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('-tp', type=float, nargs='?', dest="train_percentage",
                     default = TRAIN_PERCENTAGE, help="Percentage of data to use for training")
@@ -59,6 +63,9 @@ parser.add_argument('--pretrained', action="store_true", help="Whether networks 
 
 if __name__ == "__main__":
     args = parser.parse_args()
+
+    # Set seed for reproducibility
+    set_seed(args.seed)
 
     # Load and check data
     label_df = pd.read_csv(os.path.join(args.data_dir,"labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
@@ -97,15 +104,15 @@ if __name__ == "__main__":
     train_set = SliceDataset(train_df, args.target_slices, args.data_dir)
     val_set = SliceDataset(val_df, args.target_slices, args.data_dir)
 
-    train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True, num_workers=os.cpu_count())
-    val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False, num_workers=os.cpu_count())
+    train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
+    val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
 
     # Initialise W&B settings
-    wandb.init(project="braintriage")
+    wandb.init(project="braintriage", entity="angry-chickens")
     wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size, "learning_rate":args.learning_rate,
                          "n_features":args.n_features, "target_slices":args.target_slices, "is_target_tuple":args.is_target_tuple,
                          "train_percentage":args.train_percentage})
     wandb.watch(model)
     trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, device=DEVICE,
-                    train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir)
+                    train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir, verbose=True)
     trainer.train_and_validate()

@@ -1,5 +1,6 @@
 import torch
 from torch.utils import data
+from .preprocessing import preprocess
 
 import os
 
@@ -35,4 +36,4 @@ class PatientDataset(data.Dataset):
         return X, y
     
     def get_slice_tensor(self, patient_nr, slice_nr):
-        return torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"), map_location=self.DEVICE)
+        return preprocess(torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"), map_location=self.DEVICE))
