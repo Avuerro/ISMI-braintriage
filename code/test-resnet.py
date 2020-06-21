@@ -16,7 +16,7 @@ from dataset.slice_dataframes import get_slice_train_val_dataframes
 from dataset.slice_dataset import SliceDataset
 from models.omnipotent_resnet import Net
 from train.train import Trainer
-from .utils import set_seed
+from utils import set_seed
 
 
 ### DEFAULT PARAMETERS ###
