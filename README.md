@@ -3,6 +3,22 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| EDA | Chihab & Marlous &... | <ul><li>- [ ] </li></ul> 
+| Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
+| CNN failure analysis | Max| <ul><li>- [ ] </li></ul> 
+| LSTM trainen| Marlous| <ul><li>- [ ] </li></ul> 
+| Combined Net failure analysis| Marlous + Max | <ul><li>- [ ] </li></ul> 
+| EDA uitbreiden | Marlous + Chihab |  <ul><li>- [ ] </li></ul> 
+| Report | Max + Marlous + Jordy |  <ul><li>- [ ] </li></ul> 
+| Presentation | Everybody ? | <ul><li>- [ ] </li></ul> 
+
+Denk bij het Report ook aan    
+- Keuzes rechtvaardigen (hoort ook bij report)
+    - waarom Resnet + LSTM
+    - waarom geen data augmentation ?
+    - waarom center crop etc.
+    
+<!--
 | ~~Check LSTM~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~Set Verbose to True~~ | Chihab | <ul><li>- [x] </li></ul>
 | ~~Remove code change~~ |  Marlous | <ul><li>- [x] </li></ul>
@@ -17,9 +33,7 @@
 | ~~Seed all function~~ | Freek | <ul><li>- [x] </li></ul> 
 | ~~Implement Weights and Biases~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~ResNet34 + LSTM~~ | Marlous | <ul><li>- [x] </li></ul>
-| ~~Label & Slices vs Patients & Labels~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
-| EDA | Chihab & friends | <ul><li>- [ ] </li></ul>
-| Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
+| ~~Label & Slices vs Patients & Labels~~ | GESCHRAPT | <ul><li>- [x] </li></ul> 
 | ~~Compare Networks~~ | De hele mikmak | <ul><li>- [x] </li></ul>
 | ~~Run Networks Longer~~ | Freek | <ul><li>- [x] </li></ul>
 | ~~CrossValidation~~ | Jordy| <ul><li>- [x] </li></ul>
@@ -33,7 +47,10 @@
 | ~~Presentation: Pre Processing~~| | <ul><li>- [x] </li></ul>
 | ~~Presentation: Explain our Network~~ | | <ul><li>- [x] </li></ul>
 | ~~Presentation: Intermediate Results~~| | <ul><li>- [x] </li></ul>
+-->
 
+### Final Presentation
+The presentation slides can be found on the following link [click here](https://docs.google.com/presentation/d/1Lk2_eKBHEC0RsBwmNfKRvFa7-sp2aLw5EsIMMLdpg7E/edit?usp=sharing)
 
-### Presentation 
+### Intermediate Presentation 
 The presentation can be found on the following link [click here](https://docs.google.com/presentation/d/1yUGkOMMU637ivkhVN_geklRppa8NqIvNW7mUkztQ098/edit?usp=sharing).
