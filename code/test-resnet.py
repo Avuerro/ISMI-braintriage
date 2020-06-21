@@ -32,11 +32,14 @@ N_FEATURES = 128                                         # The length of feature
 EPOCHS = 30
 BATCH_SIZE = 64
 LR = 0.0001
+SEED = 420
 
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
 parser.add_argument('name', type=str, help="Name of the pre-trained model")
+parser.add_argument('-s', type=int, nargs='?', dest="seed",
+                    default = SEED, help="Seed for all random generators")
 parser.add_argument('-d', type=str, nargs='?', dest="data_dir",
                     default = DATA_DIR, help="Path to directory with data")
 parser.add_argument('-lr', type=float, nargs='?', dest="learning_rate",
@@ -62,7 +65,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Set seed for reproducibility
-    set_seed(420)
+    set_seed(args.seed)
 
     # Load and check data
     label_df = pd.read_csv(os.path.join(args.data_dir,"labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
