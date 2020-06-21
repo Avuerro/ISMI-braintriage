@@ -34,6 +34,8 @@
 | ~~Presentation: Explain our Network~~ | | <ul><li>- [x] </li></ul>
 | ~~Presentation: Intermediate Results~~| | <ul><li>- [x] </li></ul>
 
+### Final Presentation
+The presentation slides can be found on the following link [click here](https://docs.google.com/presentation/d/1Lk2_eKBHEC0RsBwmNfKRvFa7-sp2aLw5EsIMMLdpg7E/edit?usp=sharing)
 
-### Presentation 
+### Intermediate Presentation 
 The presentation can be found on the following link [click here](https://docs.google.com/presentation/d/1yUGkOMMU637ivkhVN_geklRppa8NqIvNW7mUkztQ098/edit?usp=sharing).
