@@ -16,6 +16,7 @@ from dataset.slice_dataframes import get_slice_train_val_dataframes
 from dataset.slice_dataset import SliceDataset
 from models.omnipotent_resnet import Net
 from train.train import Trainer
+from .utils import set_seed
 
 
 ### DEFAULT PARAMETERS ###
@@ -59,6 +60,9 @@ parser.add_argument('--pretrained', action="store_true", help="Whether networks 
 
 if __name__ == "__main__":
     args = parser.parse_args()
+
+    # Set seed for reproducibility
+    set_seed(420)
 
     # Load and check data
     label_df = pd.read_csv(os.path.join(args.data_dir,"labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
