@@ -8,28 +8,25 @@ from PIL import Image
 from tqdm import tqdm
 
 DATA_DIR = "../../data/train/"
-MEANS = [96.3782, 106.0149,  58.2791]
-STDS = [163.7764, 172.2486,  94.4285]
+# For convenience convert to tensor so it's ready for preprocess()
+MEANS = torch.Tensor([96.3782, 106.0149,  58.2791])
+STDS = torch.Tensor([163.7764, 172.2486,  94.4285])
 IMG_SIZE = 512
 
 def preprocess(X, center_crop_target = 425):
     '''
     X = PyTorch Tensor
     '''
-    # NOTE: Maybe conversion to numpy is unnecessary?
 
-    # Transform Torch Tensor to NP Array (and convert to shape (512,512,3))
-    X_array = np.rollaxis(X.numpy(), 0, 3)
-    # Standardize data
-    X_standard = (X_array-MEANS)/STDS
-    # Roll axis back
-    X_standard = np.rollaxis(X_standard, 2, 0)
-    
+    # Convert to (512,512,3) for standardising and convert back
+    X = X.view(IMG_SIZE, IMG_SIZE, 3)
+    X_standard = (X - MEANS) / STDS
+    X_standard = X_standard.view(3, IMG_SIZE, IMG_SIZE)
+
     # Center-crop image manually (PIL does not like floats)
     crop_idx = (IMG_SIZE - center_crop_target)//2
     X_cropped = X_standard[:, crop_idx:-crop_idx, crop_idx:-crop_idx]
     return X_cropped
-
 
 def get_dataset_mean_std(dataloader):
     '''
@@ -57,13 +54,13 @@ if __name__ == "__main__":
     # X = torch.load(os.path.join(DATA_DIR, f"3_1.pt"))
     # print(X.shape)
     # out = preprocess(X)
-    # print(out.min(), out.max(), out.shape)
+    # print(out.mean(), out.min(), out.max(), out.shape)
     # import matplotlib.pyplot as plt
     # ax = plt.subplot(1, 3, 1)
-    # ax.imshow(out[0], cmap="gray")
+    # ax.imshow(out[0])
     # ax = plt.subplot(1, 3, 2)
-    # ax.imshow(out[1], cmap="gray")
+    # ax.imshow(out[1])
     # ax = plt.subplot(1, 3, 3)
-    # ax.imshow(out[2], cmap="gray")
+    # ax.imshow(out[2])
     # plt.show()
     get_dataset_mean_std()
