@@ -101,7 +101,7 @@ if __name__ == "__main__":
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
 
     # Initialise W&B settings
-    wandb.init(project="braintriage")
+    wandb.init(project="braintriage", entity="angry-chickens")
     wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size, "learning_rate":args.learning_rate,
                          "n_features":args.n_features, "target_slices":args.target_slices, "is_target_tuple":args.is_target_tuple,
                          "train_percentage":args.train_percentage})
