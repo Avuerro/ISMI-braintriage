@@ -35,4 +35,4 @@ def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 4):
     train_df = label_df[label_df["patient_nr"].isin(train_patients)]
     val_df = label_df[label_df["patient_nr"].isin(val_patients)]
     
-    return train_df, val_df, train_patients, val_patients
+    return train_df, val_df, train_patients, val_patients, folds
