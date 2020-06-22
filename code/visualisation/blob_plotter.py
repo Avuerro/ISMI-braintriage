@@ -72,8 +72,7 @@ def bright_blobs_plotter(image,slices,seed_points=None):
         according to the get_brain() function.
     """
     voxel_size = [0.5, 0.5]
-    sigmas = [0.5,1,5,50] # We choose 5, 8 and 12 because trachea is 10 to 25mm wide 
-                     # and 50 to weaken the effect of large irrelevant areas
+    sigmas = [0.5,1,5,50] 
     if type(slices) == tuple:
         slices = range(slices[0], slices[1])
     if type(slices) == int:
