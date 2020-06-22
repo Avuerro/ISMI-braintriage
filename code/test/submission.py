@@ -10,13 +10,14 @@ from tqdm.notebook import tqdm
 from dataset.patient_dataset import PatientDataset
 
 TEST_DATA_PATH = "../data/test"
+SLICES = (0,32)
 
 def create_submission(net, batch_size, device):
     # Load label dataframe
     label_df = pd.read_csv(os.path.join(TEST_DATA_PATH, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
     # Create dataset and dataloader
     patient_list = np.unique(label_df["patient_nr"])
-    test_set = PatientDataset(label_df, patient_list, (0,31), TEST_DATA_PATH, device)
+    test_set = PatientDataset(label_df, patient_list, SLICES, TEST_DATA_PATH, device)
     test_loader = data.DataLoader(test_set, batch_size=batch_size, shuffle=False, num_workers=os.cpu_count())
 
     net.eval()
