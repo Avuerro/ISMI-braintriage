@@ -17,6 +17,7 @@ def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 4):
     # Sort values to get patient_list in same order as patient_nr col in dataframe
     temp_label_df = temp_label_df.sort_values("patient_nr")
     patient_list = np.unique(temp_label_df["patient_nr"])
+    print(len(patient_list))
 
     abnormal_patients = patient_list[np.where(temp_label_df["class"].values)[0]]
     # Shuffle patient_list for random train/val split (only in-place)
