@@ -68,9 +68,9 @@ if __name__ == "__main__":
 
     if args.do_train:
         print("Extracting train slice data")
-        #generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))
-	generate_slice_data(os.path.join(GOOGLE_CLOUD_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))
-
+        #generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))    
+        generate_slice_data(os.path.join(GOOGLE_CLOUD_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))        
+    
         label_df = pd.read_csv(os.path.join(args.out_path,"train","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
         label_df["class"] = label_df["class"].astype("int8")
         patient_list = np.unique(label_df["patient_nr"])
