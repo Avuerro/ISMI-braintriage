@@ -3,13 +3,13 @@ os.system("python -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
 ### Import packages ###
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.utils import data
 from torchvision import models
 import pandas as pd
 import numpy as np
 import wandb
 import argparse
+import sys
 
 ### Local imports ###
 # Necessary for local imports

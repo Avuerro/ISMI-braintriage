@@ -1,6 +1,5 @@
 import torch
 from tqdm.notebook import tqdm
-import numpy as np
 import wandb
 import os
 import gc
