@@ -24,8 +24,8 @@ from models.combined_net import CombinedNet
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = '../data/train'
-CNN_DIR = '../models/resnet34_011.pt'
+DATA_DIR = '../sliced_data/train'
+CNN_DIR = '../models/resnet34_standardised_011.pt'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
 K = 10  # Number of folds to split the data into (percentage of data that will be used for training = (K-1)/K)
 ### Model parameters ###
