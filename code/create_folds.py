@@ -9,7 +9,9 @@ from dataset.cross_validation import get_train_and_val
 
 ### Directories ###
 DATA_DIR = '../data/train'
-CV_DIR = 'cv'
+CV_DIR = '../cv'
+if not os.path.exists(CV_DIR):
+    os.makedirs(CV_DIR)
 
 ### Read data ###
 label_df = pd.read_csv(os.path.join(DATA_DIR, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])

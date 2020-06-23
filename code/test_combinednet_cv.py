@@ -103,8 +103,7 @@ if __name__ == "__main__":
     if args.is_target_tuple:
         args.target_slices = tuple(args.target_slices)
 
-    # Loop over all folds
-    # TODO: Only do one fold in each script by giving it as argument
+    # Load train and validation dataframs and patients for the current validation fold
     train_df = train_dfs[VAL_FOLD]
     val_df = val_dfs[VAL_FOLD]
     train_patient = train_patients[VAL_FOLD]
