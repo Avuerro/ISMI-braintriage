@@ -17,7 +17,7 @@ import sys
 sys.path.append("..")
 from dataset.patient_dataframes import get_patient_train_val_dataframes
 from dataset.patient_dataset import PatientDataset
-from train.train import Trainer
+from train import Trainer
 from models.lstm import LSTM
 from models.omnipotent_resnet import Net
 from models.combined_net import CombinedNet
@@ -55,9 +55,9 @@ parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default=N_FEATURES, help="Number of output features of last FC layer")
 parser.add_argument('-s', nargs='+', dest='target_slices',
                     default=TARGET_SLICES, help="Which slices to use for training")
-parser.add_argument('-k', type=float, nargs='?', dest="k",
+parser.add_argument('-k', type=int, nargs='?', dest="k",
                     default=K, help="Number of folds to split the data into (percentage of data that will be used for training = (K-1)/K)")
-parser.add_argument('-v', type=float, nargs='?', dest="val_filename",
+parser.add_argument('-v', type=str, nargs='?', dest="val_filename",
                     default=VAL_FILENAME, help="Where to store the validation dataframe (for failure analysis)")
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
