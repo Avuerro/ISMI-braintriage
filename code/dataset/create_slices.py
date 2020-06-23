@@ -81,7 +81,7 @@ if __name__ == "__main__":
     if args.do_test:
         print("Extracting test slice data")
         #generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
-	generate_slice_data(os.path.join(GOOGLE_CLOUD_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
+        generate_slice_data(os.path.join(GOOGLE_CLOUD_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
 
         label_df = pd.read_csv(os.path.join(args.out_path,"test","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
         label_df["class"] = label_df["class"].astype("int8")
