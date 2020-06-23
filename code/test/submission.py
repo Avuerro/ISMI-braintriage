@@ -86,5 +86,7 @@ if __name__ == "__main__":
     # Create submission dataframe and write it to an output file
     submission = pd.DataFrame({"case":patient_list, "probability":all_probabilities, "class":all_classes})
     
+    if not os.path.exists(args.submission_dir):
+        os.makedirs(args.submission_dir)
     submission.to_csv(os.path.join(args.submission_dir, args.filename + "_submission.csv"))
     
