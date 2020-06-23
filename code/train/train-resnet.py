@@ -3,15 +3,17 @@ os.system("python -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
 ### Import packages ###
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.utils import data
 from torchvision import models
 import pandas as pd
 import numpy as np
 import wandb
 import argparse
+import sys
 
 ### Local imports ###
+# Necessary for local imports
+sys.path.append("..")
 from dataset.slice_dataframes import get_slice_train_val_dataframes
 from dataset.slice_dataset import SliceDataset
 from models.omnipotent_resnet import Net
@@ -70,7 +72,6 @@ if __name__ == "__main__":
     # Load and check data
     label_df = pd.read_csv(os.path.join(args.data_dir,"labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
     label_df["class"] = label_df["class"].astype("int8")
-    patient_list = np.unique(label_df["patient_nr"])
     print(label_df.head(), f"Dataframe shape: {label_df.shape}", sep="\n")
     print(f"\nNumber of unique patient numbers: {len(np.unique(label_df['patient_nr']))}")
     print(f"Number of unique slice numbers:   {len(np.unique(label_df['slice_nr']))}")

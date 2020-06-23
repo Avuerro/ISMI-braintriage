@@ -1,20 +1,21 @@
 import os
+
 os.system("python -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
 ### Import packages ###
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 from torch.utils import data
 from torchvision import models
 import pandas as pd
 import numpy as np
 import wandb
 import argparse
+import sys
 
 ### Local imports ###
-from dataset.slice_dataframes import get_slice_train_val_dataframes
+# Necessary for local imports
+sys.path.append("..")
 from dataset.patient_dataframes import get_patient_train_val_dataframes
-from dataset.slice_dataset import SliceDataset
 from dataset.patient_dataset import PatientDataset
 from train.train import Trainer
 from models.lstm import LSTM
@@ -24,14 +25,15 @@ from models.combined_net import CombinedNet
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
 DATA_DIR = '../data/train'
-LSTM_DIR = '../models/lstm_000.pt'
+CNN_DIR = '../models/resnet34_011.pt'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
-TRAIN_PERCENTAGE = 0.9  # Percentage of data that will be used for training
+K = 10  # Number of folds to split the data into (percentage of data that will be used for training = (K-1)/K)
 ### Model parameters ###
 MODEL_DIR = '../models'  # Directory where best models are saved
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
 N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will use
 ### Train parameters ###
+VAL_FILENAME = "val_df_lstm.csv"
 EPOCHS = 30
 BATCH_SIZE = 16
 LR = 0.0001
@@ -53,8 +55,10 @@ parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default=N_FEATURES, help="Number of output features of last FC layer")
 parser.add_argument('-s', nargs='+', dest='target_slices',
                     default=TARGET_SLICES, help="Which slices to use for training")
-parser.add_argument('-tp', type=float, nargs='?', dest="train_percentage",
-                    default=TRAIN_PERCENTAGE, help="Percentage of data to use for training")
+parser.add_argument('-k', type=float, nargs='?', dest="k",
+                    default=K, help="Number of folds to split the data into (percentage of data that will be used for training = (K-1)/K)")
+parser.add_argument('-v', type=float, nargs='?', dest="val_filename",
+                    default=VAL_FILENAME, help="Where to store the validation dataframe (for failure analysis)")
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
 parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
@@ -65,7 +69,6 @@ if __name__ == "__main__":
     # Load and check data
     label_df = pd.read_csv(os.path.join(args.data_dir, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
     label_df["class"] = label_df["class"].astype("int8")
-    patient_list = np.unique(label_df["patient_nr"])
     print(label_df.head(), f"Dataframe shape: {label_df.shape}", sep="\n")
     print(f"\nNumber of unique patient numbers: {len(np.unique(label_df['patient_nr']))}")
     print(f"Number of unique slice numbers:   {len(np.unique(label_df['slice_nr']))}")
@@ -74,10 +77,10 @@ if __name__ == "__main__":
     # Load in model
     model = models.resnet34(pretrained=args.pretrained)
     resnet = Net(model, args.name, args.n_features)
+    resnet.load_state_dict(torch.load(CNN_DIR))
     lstm_net = LSTM(n_features=args.n_features, n_hidden=64, n_layers=2)
     combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
-    combined_net.load_state_dict(torch.load(LSTM_DIR))
-    combined_net.set_learning_cnn_net(True)
+    combined_net.set_learning_cnn_net(False)
 
     ### Loss and optimizer ###
     criterion = nn.BCEWithLogitsLoss()
@@ -85,7 +88,7 @@ if __name__ == "__main__":
 
     ### Create dataframes for training and validation ###
     # Take 10 folds such that we can take 90% training data
-    train_df, val_df, train_patients, val_patients = get_patient_train_val_dataframes(label_df, k=10)
+    train_df, val_df, train_patients, val_patients = get_patient_train_val_dataframes(label_df, k=args.k, val_filename=args.val_filename)
 
     # Set correct target slices
     if args.is_target_tuple:
@@ -104,7 +107,7 @@ if __name__ == "__main__":
                          "learning_rate": args.learning_rate,
                          "n_features": args.n_features, "target_slices": args.target_slices,
                          "is_target_tuple": args.is_target_tuple,
-                         "train_percentage": args.train_percentage})
+                         "train_percentage": float(args.k-1)/float(args.k)})
     wandb.watch(combined_net)
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
                       train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)

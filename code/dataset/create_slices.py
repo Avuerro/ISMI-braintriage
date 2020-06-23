@@ -8,10 +8,12 @@ import csv
 import os
 import pandas as pd
 
-#CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage"
-GOOGLE_CLOUD_BRAINTRIAGE = "../../../data"
+CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage" # When using Cartesius
+GOOGLE_CLOUD_BRAINTRIAGE = "../../../data" # When using google cloud
 
 parser = argparse.ArgumentParser(description='Extract slices for train/test data.')
+parser.add_argument('-d', type=str, nargs='?', dest="data_path",
+                    default=GOOGLE_CLOUD_BRAINTRIAGE, help='data directory')
 parser.add_argument('-o', type=str, nargs='?', dest="out_path",
                     default = "../data/", help='output directory')
 parser.add_argument('--train', dest="do_train", action='store_true',
@@ -68,8 +70,7 @@ if __name__ == "__main__":
 
     if args.do_train:
         print("Extracting train slice data")
-        #generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))    
-        generate_slice_data(os.path.join(GOOGLE_CLOUD_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))        
+        generate_slice_data(os.path.join(args.data_path, "train/full"), os.path.join(args.out_path, "train"))        
     
         label_df = pd.read_csv(os.path.join(args.out_path,"train","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
         label_df["class"] = label_df["class"].astype("int8")
@@ -80,8 +81,7 @@ if __name__ == "__main__":
         print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
     if args.do_test:
         print("Extracting test slice data")
-        #generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
-        generate_slice_data(os.path.join(GOOGLE_CLOUD_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
+        generate_slice_data(os.path.join(args.data_path), os.path.join(args.out_path, "test"), test=True)
 
         label_df = pd.read_csv(os.path.join(args.out_path,"test","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
         label_df["class"] = label_df["class"].astype("int8")
