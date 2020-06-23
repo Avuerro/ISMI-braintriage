@@ -3,12 +3,14 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| Cross Validation Script | Marlous | <ul><li>- [ ] </li></ul> 
 | EDA | Chihab & Marlous &... | <ul><li>- [ ] </li></ul> 
 | Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
 | CNN failure analysis | Max| <ul><li>- [ ] </li></ul> 
 | LSTM trainen| Marlous| <ul><li>- [ ] </li></ul> 
 | Combined Net failure analysis| Marlous + Max | <ul><li>- [ ] </li></ul> 
 | EDA uitbreiden | Marlous + Chihab |  <ul><li>- [ ] </li></ul> 
+| Documentation | Max |  <ul><li>- [ ] </li></ul> 
 | Report | Max + Marlous + Jordy |  <ul><li>- [ ] </li></ul> 
 | Presentation | Everybody ? | <ul><li>- [ ] </li></ul> 
 

@@ -17,7 +17,7 @@ def preprocess(X, center_crop_target = 425):
     '''
     X = PyTorch Tensor
     '''
-
+    
     # Convert to (512,512,3) for standardising and convert back
     X = X.view(IMG_SIZE, IMG_SIZE, 3)
     X_standard = (X - MEANS) / STDS
@@ -50,17 +50,3 @@ def get_dataset_mean_std(dataloader):
 
     return mean / total_samples, std / total_samples
 
-if __name__ == "__main__":
-    # X = torch.load(os.path.join(DATA_DIR, f"3_1.pt"))
-    # print(X.shape)
-    # out = preprocess(X)
-    # print(out.mean(), out.min(), out.max(), out.shape)
-    # import matplotlib.pyplot as plt
-    # ax = plt.subplot(1, 3, 1)
-    # ax.imshow(out[0])
-    # ax = plt.subplot(1, 3, 2)
-    # ax.imshow(out[1])
-    # ax = plt.subplot(1, 3, 3)
-    # ax.imshow(out[2])
-    # plt.show()
-    get_dataset_mean_std()

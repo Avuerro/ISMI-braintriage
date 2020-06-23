@@ -9,7 +9,7 @@ from sklearn.metrics import roc_auc_score
 
 class Trainer(object):
     
-    def __init__(self,model,criterion, optimizer,  train_loader, val_loader, n_epochs, model_dir, device, verbose = False):
+    def __init__(self,model,criterion, optimizer,  train_loader, val_loader, n_epochs, model_dir, device, iteration_number = None, verbose = False):
         self.device = device
         self.model = model.to(device)
         self.optimizer = optimizer
@@ -21,6 +21,7 @@ class Trainer(object):
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
         self.verbose = verbose
+        self.iteration_number = iteration_number
 
 
     def train(self):   
@@ -130,7 +131,10 @@ class Trainer(object):
             
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
-                torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch))
+                if(self.iteration_number is not None):
+                    torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, self.iteration_number))
+                else:
+                    torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch))
 
             wandb.log({"Training Loss": train_loss,
                        "Training Accuracy": train_acc,
