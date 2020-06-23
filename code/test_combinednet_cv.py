@@ -37,8 +37,8 @@ EPOCHS = 30
 BATCH_SIZE = 16
 LR = 0.0001
 ### CV parameters ###
-CV_DIR = "cv"
-VAL_FOLD = 0
+CV_DIR = "../cv"
+VAL_FOLD = 4
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
@@ -62,6 +62,8 @@ parser.add_argument('-tp', type=float, nargs='?', dest="train_percentage",
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
 parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
+parser.add_argument('-vf', type=int, nargs='?', dest="val_fold",
+                    default=VAL_FOLD, help='Validation Fold')
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -103,7 +105,6 @@ if __name__ == "__main__":
 
     # Loop over all folds
     # TODO: Only do one fold in each script by giving it as argument
-    # TODO: Save model with fold identifier
     train_df = train_dfs[VAL_FOLD]
     val_df = val_dfs[VAL_FOLD]
     train_patient = train_patients[VAL_FOLD]
@@ -125,5 +126,6 @@ if __name__ == "__main__":
                          "train_percentage": args.train_percentage})
     wandb.watch(combined_net)
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
-                      train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
+                      train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir,
+                      fold=VAL_FOLD)
     trainer.train_and_validate()
