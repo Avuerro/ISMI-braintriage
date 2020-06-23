@@ -8,7 +8,8 @@ import csv
 import os
 import pandas as pd
 
-CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage"
+#CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage"
+GOOGLE_CLOUD_BRAINTRIAGE = "../../../data"
 
 parser = argparse.ArgumentParser(description='Extract slices for train/test data.')
 parser.add_argument('-o', type=str, nargs='?', dest="out_path",
@@ -27,7 +28,7 @@ def generate_slice_data(in_dir,out_dir, test=False):
     # Work-around for different folder structure of test data
     class_dirs = ["final_test_set"] if test else os.listdir(in_dir)
     for klass in class_dirs:
-        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients"):
+        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients")[:10]:
             
             ## Check if patient has not been processed yet
             if patient not in patients:
@@ -67,7 +68,8 @@ if __name__ == "__main__":
 
     if args.do_train:
         print("Extracting train slice data")
-        generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))
+        #generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))
+	generate_slice_data(os.path.join(GOOGLE_CLOUD_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))
 
         label_df = pd.read_csv(os.path.join(args.out_path,"train","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
         label_df["class"] = label_df["class"].astype("int8")
@@ -78,7 +80,8 @@ if __name__ == "__main__":
         print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
     if args.do_test:
         print("Extracting test slice data")
-        generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
+        #generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
+	generate_slice_data(os.path.join(GOOGLE_CLOUD_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
 
         label_df = pd.read_csv(os.path.join(args.out_path,"test","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
         label_df["class"] = label_df["class"].astype("int8")

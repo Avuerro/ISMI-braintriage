@@ -3,6 +3,7 @@
 ### Todo List
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| Cross Validation Script | Marlous | <ul><li>- [ ] </li></ul> 
 | EDA | Chihab & Marlous &... | <ul><li>- [ ] </li></ul> 
 | Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
 | CNN failure analysis | Max| <ul><li>- [ ] </li></ul> 
