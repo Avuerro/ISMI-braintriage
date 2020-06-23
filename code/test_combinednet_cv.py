@@ -10,6 +10,7 @@ import pandas as pd
 import numpy as np
 import wandb
 import argparse
+import pickle
 
 ### Local imports ###
 from dataset.slice_dataframes import get_slice_train_val_dataframes
@@ -35,6 +36,9 @@ N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will
 EPOCHS = 30
 BATCH_SIZE = 16
 LR = 0.0001
+### CV parameters ###
+CV_DIR = "cv"
+VAL_FOLD = 0
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
@@ -83,16 +87,15 @@ if __name__ == "__main__":
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(combined_net.parameters(), lr=args.learning_rate)
 
-    ### Create dataframes for training and validation ###
-    # Take 5 folds
-    _, _, _, _, folds = get_patient_train_val_dataframes(label_df, k=5)
-
-    # Store information for all folds
-    # TODO: Store as files
-    train_dfs = []
-    val_dfs = []
-    train_patients = []
-    val_patients = []
+    ### Load dataframes for training and validation ###
+    with open(CV_DIR + "/train_dfs.pkl", "rb") as f:
+        train_dfs = pickle.load(f)
+    with open(CV_DIR + "/val_dfs.pkl", "rb") as f:
+        val_dfs = pickle.load(f)
+    with open(CV_DIR + "/train_patients.pkl", "rb") as f:
+        train_patients = pickle.load(f)
+    with open(CV_DIR + "/val_patients.pkl", "rb") as f:
+        val_patients = pickle.load(f)
 
     # Set correct target slices
     if args.is_target_tuple:
@@ -101,31 +104,26 @@ if __name__ == "__main__":
     # Loop over all folds
     # TODO: Only do one fold in each script by giving it as argument
     # TODO: Save model with fold identifier
-    for val_fold in range(len(folds)):
-        train_patient, val_patient = get_train_and_val(folds, val_fold)
-        train_df = label_df[label_df["patient_nr"].isin(train_patient)]
-        val_df = label_df[label_df["patient_nr"].isin(val_patient)]
+    train_df = train_dfs[VAL_FOLD]
+    val_df = val_dfs[VAL_FOLD]
+    train_patient = train_patients[VAL_FOLD]
+    val_patient = val_patients[VAL_FOLD]
 
-        train_patients.append(train_patient)
-        val_patients.append(val_patient)
-        train_dfs.append(train_df)
-        val_dfs.append(val_df)
+    # Set train/validation loaders
+    train_set = PatientDataset(train_df, train_patient, args.target_slices, args.data_dir, DEVICE)
+    val_set = PatientDataset(val_df, val_patient, args.target_slices, args.data_dir, DEVICE)
 
-        # Set train/validation loaders
-        train_set = PatientDataset(train_df, train_patient, args.target_slices, args.data_dir, DEVICE)
-        val_set = PatientDataset(val_df, val_patient, args.target_slices, args.data_dir, DEVICE)
+    train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
+    val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
 
-        train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
-        val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
-
-        # Initialise W&B settings
-        wandb.init(project="braintriage")
-        wandb.config.update({"model_type": args.name, "epochs": args.epochs, "batch_size": args.batch_size,
-                             "learning_rate": args.learning_rate,
-                             "n_features": args.n_features, "target_slices": args.target_slices,
-                             "is_target_tuple": args.is_target_tuple,
-                             "train_percentage": args.train_percentage})
-        wandb.watch(combined_net)
-        trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
-                          train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
-        trainer.train_and_validate()
+    # Initialise W&B settings
+    wandb.init(project="braintriage")
+    wandb.config.update({"model_type": args.name, "epochs": args.epochs, "batch_size": args.batch_size,
+                         "learning_rate": args.learning_rate,
+                         "n_features": args.n_features, "target_slices": args.target_slices,
+                         "is_target_tuple": args.is_target_tuple,
+                         "train_percentage": args.train_percentage})
+    wandb.watch(combined_net)
+    trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
+                      train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
+    trainer.train_and_validate()
