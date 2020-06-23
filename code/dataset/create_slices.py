@@ -28,7 +28,7 @@ def generate_slice_data(in_dir,out_dir, test=False):
     # Work-around for different folder structure of test data
     class_dirs = ["final_test_set"] if test else os.listdir(in_dir)
     for klass in class_dirs:
-        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients")[:10]:
+        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients"):
             
             ## Check if patient has not been processed yet
             if patient not in patients:
