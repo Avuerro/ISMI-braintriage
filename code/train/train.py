@@ -132,8 +132,13 @@ class Trainer(object):
             
             if val_loss < best_val_loss:
                 best_val_loss = val_loss
-                torch.save(self.model.state_dict(), '{:s}/{:s}_{:02d}-{:03d}.pt'.format(self.model_dir, self.model.name,
-                self.fold, epoch))
+                if self.fold < 0:
+                    torch.save(self.model.state_dict(),
+                               '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch))
+                else:
+                    torch.save(self.model.state_dict(),
+                               '{:s}/{:s}_{:02d}-{:03d}.pt'.format(self.model_dir, self.model.name,
+                                                                   self.fold, epoch))
 
             wandb.log({"Training Loss": train_loss,
                        "Training Accuracy": train_acc,

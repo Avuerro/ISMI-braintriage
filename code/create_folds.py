@@ -7,6 +7,9 @@ import pandas as pd
 from dataset.patient_dataframes import get_patient_train_val_dataframes
 from dataset.cross_validation import get_train_and_val
 
+### Parameters ###
+FOLDS = 5
+
 ### Directories ###
 DATA_DIR = '../data/train'
 CV_DIR = '../cv'
@@ -17,7 +20,7 @@ if not os.path.exists(CV_DIR):
 label_df = pd.read_csv(os.path.join(DATA_DIR, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
 
 ### Get folds ###
-_, _, _, _, folds = get_patient_train_val_dataframes(label_df, k=5)
+_, _, _, _, folds = get_patient_train_val_dataframes(label_df, k=FOLDS)
 
 ### Get fold data ###
 train_dfs = []

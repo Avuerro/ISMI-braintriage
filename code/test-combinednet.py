@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     ### Create dataframes for training and validation ###
     # Take 10 folds such that we can take 90% training data
-    train_df, val_df, train_patients, val_patients = get_patient_train_val_dataframes(label_df, k=10)
+    train_df, val_df, train_patients, val_patients, _ = get_patient_train_val_dataframes(label_df, k=10)
 
     # Set correct target slices
     if args.is_target_tuple:

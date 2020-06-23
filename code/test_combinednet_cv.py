@@ -63,7 +63,7 @@ parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
 parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
 parser.add_argument('-vf', type=int, nargs='?', dest="val_fold",
-                    default=VAL_FOLD, help='Validation Fold')
+                    default=VAL_FOLD, help='Validation fold')
 
 if __name__ == "__main__":
     args = parser.parse_args()
