@@ -23,7 +23,8 @@ from utils import set_seed
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = '../data/train'
+DATA_DIR = '../../../sliced_data/train'
+DS_DIR = '../../../data_split'
 TARGET_SLICES = (0,32)                                   # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9                                   # Percentage of data that will be used for training
 ### Model parameters ###
@@ -95,8 +96,8 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     ### Create data generator ###
-    train_df = pd.read_csv(os.path.join('../../../sliced_data/train', "train_df.csv")).sample(frac=1).reset_index(drop=True)
-    val_df = pd.read_csv(os.path.join('../../../sliced_data/train', "val_df.csv")).sample(frac=1).reset_index(drop=True)
+    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv")).sample(frac=1).reset_index(drop=True)
+    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv")).sample(frac=1).reset_index(drop=True)
     
     
     # Set correct target slices

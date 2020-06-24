@@ -25,6 +25,7 @@ from models.combined_net import CombinedNet
 ### Data parameters ###
 DATA_DIR = '../data/train'
 LSTM_DIR = '../models/lstm_000.pt'
+DS_DIR = '../../../data_split'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
 K = 10  # Number of folds to split the data into (percentage of data that will be used for training = (K-1)/K)
 ### Model parameters ###
@@ -86,10 +87,10 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(combined_net.parameters(), lr=args.learning_rate)
 
     ### Load dataframes for training and validation ###
-    train_df = pd.read_csv(os.path.join('../../../sliced_data/train', "train_df.csv"))
-    val_df = pd.read_csv(os.path.join('../../../sliced_data/train', "val_df.csv"))
-    train_patients = pd.read_csv(os.path.join('../../../sliced_data/train', "train_patients.csv"))
-    val_patients = pd.read_csv(os.path.join('../../../sliced_data/train', "val_patients.csv"))
+    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"))
+    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"))
+    train_patients = pd.read_csv(os.path.join(DS_DIR, "train_patients.csv"))
+    val_patients = pd.read_csv(os.path.join(DS_DIR, "val_patients.csv"))
 
     # Set correct target slices
     if args.is_target_tuple:
