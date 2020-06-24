@@ -96,8 +96,8 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     ### Create data generator ###
-    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv")).sample(frac=1).reset_index(drop=True)
-    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv")).sample(frac=1).reset_index(drop=True)
+    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"), index_col = 0).sample(frac=1).reset_index(drop=True)
+    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"), index_col = 0).sample(frac=1).reset_index(drop=True)
     
     
     # Set correct target slices

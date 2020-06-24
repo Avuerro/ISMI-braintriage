@@ -87,10 +87,10 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(combined_net.parameters(), lr=args.learning_rate)
 
     ### Load dataframes for training and validation ###
-    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"))
-    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"))
-    train_patients = pd.read_csv(os.path.join(DS_DIR, "train_patients.csv"))
-    val_patients = pd.read_csv(os.path.join(DS_DIR, "val_patients.csv"))
+    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"), index_col = 0)
+    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"), index_col = 0)
+    train_patients = pd.read_csv(os.path.join(DS_DIR, "train_patients.csv"), index_col = 0)
+    val_patients = pd.read_csv(os.path.join(DS_DIR, "val_patients.csv"), index_col = 0)
 
     # Set correct target slices
     if args.is_target_tuple:
