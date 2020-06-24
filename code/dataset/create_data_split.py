@@ -1,15 +1,9 @@
 ### Imports ###
 import os
-import sys
 import pickle
 import pandas as pd
 import numpy as np
 import argparse
-
-sys.path.append("..")
-### Local imports ###
-from dataset.cross_validation import create_k_strat_folds
-from dataset.cross_validation import get_train_and_val
 
 ### DEFAULT PARAMETERS ###
 ### Fold parameter ###
@@ -24,7 +18,8 @@ parser.add_argument("-k", type=int, nargs = "?", dest="k",
 parser.add_argument("-d", type=str, nargs='?', dest="data_dir",
                     default=DATA_DIR, help="Path to directory with slice data")
 parser.add_argument("-ds", type=str, nargs='?', dest="ds_dir",
-                    default=DS_DIR, help="Path to directory where split dataframes will be stored")      
+                    default=DS_DIR, help="Path to directory where split dataframes will be stored")    
+
 
 def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 0):
     """
@@ -61,6 +56,39 @@ def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 0):
     val_df = label_df[label_df["patient_nr"].isin(val_patients)]
     
     return train_df, val_df, pd.DataFrame(train_patients), pd.DataFrame(val_patients)
+
+def create_k_strat_folds(normal_patients, abnormal_patients, k = 5):
+    """
+    Creates k stratified folds by creating 5 folds of each array.
+    
+        - normal_patients: array with IDs of normal classified patients
+        - abnormal_patients: array with IDs of abnormal classified patients
+        - k: number of folds to create
+        
+    If np.split cannot create k folds, it will throw an error
+    """
+    normal_folds = np.split(normal_patients, k)
+    abnormal_folds = np.split(abnormal_patients, k)
+    folds = np.concatenate((normal_folds, abnormal_folds), axis = 1)
+        
+    return folds
+
+def get_train_and_val(folds, val_fold = 0):
+    """
+    From the folds created in create_k_strat_folds, 
+    this function returns a train_set with indices that are in training folds
+    and a val_set with indices from the validation fold.
+    
+        - folds: 2D-array with folds created in create_k_strat_folds
+        - val_fold: integer that indicates which fold is the validation fold
+        
+    Keep in mind that val_fold cannot be larger than k in create_k_strat_folds!!
+    """
+    val_set = folds[val_fold]
+    train_set= folds[np.arange(len(folds))!=val_fold]
+    
+    return train_set.flatten(), val_set
+
 
 if __name__ == "__main__":              
     args = parser.parse_args()
