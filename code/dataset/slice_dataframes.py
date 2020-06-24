@@ -23,3 +23,12 @@ def get_slice_train_val_dataframes(label_df, train_percentage=0.8):
     val_df = temp_label_df.iloc[normal_val_indices].append(temp_label_df.iloc[abnormal_val_indices])
 
     return train_df, val_df
+   
+label_df = pd.read_csv(os.path.join(WAAR_STAAT_DATA, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
+label_df["class"] = label_df["class"].astype("int8")
+
+train_df, val_df = get_slice_train_val_dataframes(label_df, train_percentage = 0.9)
+train_patients = np.unique(train_df["patient_nr"])
+val_patients = np.unique(val_df["patient_nr"])
+intersect = np.intersect(train_patients, val_patients)
+print(intersect)
