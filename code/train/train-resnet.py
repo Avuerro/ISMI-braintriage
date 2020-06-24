@@ -14,7 +14,6 @@ import sys
 ### Local imports ###
 # Necessary for local imports
 sys.path.append("..")
-from dataset.slice_dataframes import get_slice_train_val_dataframes
 from dataset.slice_dataset import SliceDataset
 from models.omnipotent_resnet import Net
 from train.train import Trainer

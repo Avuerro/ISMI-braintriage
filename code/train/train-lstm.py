@@ -15,7 +15,6 @@ import sys
 ### Local imports ###
 # Necessary for local imports
 sys.path.append("..")
-from dataset.patient_dataframes import get_patient_train_val_dataframes
 from dataset.patient_dataset import PatientDataset
 from train import Trainer
 from models.lstm import LSTM
