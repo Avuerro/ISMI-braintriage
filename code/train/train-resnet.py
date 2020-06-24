@@ -95,7 +95,9 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     ### Create data generator ###
-    train_df, val_df = get_slice_train_val_dataframes(label_df, train_percentage = args.train_percentage)
+    train_df = pd.read_csv(os.path.join('../../../sliced_data/train', "train_df.csv")).sample(frac=1).reset_index(drop=True)
+    val_df = pd.read_csv(os.path.join('../../../sliced_data/train', "val_df.csv")).sample(frac=1).reset_index(drop=True)
+    
     
     # Set correct target slices
     if args.is_target_tuple:

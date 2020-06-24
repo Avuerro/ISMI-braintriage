@@ -1,9 +1,8 @@
 import numpy as np
 from dataset.cross_validation import create_k_strat_folds
 from dataset.cross_validation import get_train_and_val
-import os
 
-def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 4, val_filename = "val_df.csv", val_save_loc = "../failure_analysis/validation_sets"):
+def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 4):
     """
         Creates an evenly class-distributed train/val split for all patients in the dataset.
         Target slices are taken into account in the Dataset classes.
@@ -37,9 +36,4 @@ def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 4, val_filename
     train_df = label_df[label_df["patient_nr"].isin(train_patients)]
     val_df = label_df[label_df["patient_nr"].isin(val_patients)]
     
-    # Save val_df to a csv file for use during failure analysis
-    if not os.path.exists(val_save_loc):
-        os.makedirs(val_save_loc)
-    val_df.to_csv(os.path.join(val_save_loc, val_filename))
-    
-    return train_df, val_df, train_patients, val_patients
+    return train_df, val_df, pd.DataFrame(train_patients), pd.DataFrame(val_patients)

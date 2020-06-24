@@ -86,9 +86,11 @@ if __name__ == "__main__":
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(combined_net.parameters(), lr=args.learning_rate)
 
-    ### Create dataframes for training and validation ###
-    # Take 10 folds such that we can take 90% training data
-    train_df, val_df, train_patients, val_patients = get_patient_train_val_dataframes(label_df, k=args.k, val_filename=args.val_filename)
+    ### Load dataframes for training and validation ###
+    train_df = pd.read_csv(os.path.join('../../../sliced_data/train', "train_df.csv"))
+    val_df = pd.read_csv(os.path.join('../../../sliced_data/train', "val_df.csv"))
+    train_patients = pd.read_csv(os.path.join('../../../sliced_data/train', "train_patients.csv"))
+    val_patients = pd.read_csv(os.path.join('../../../sliced_data/train', "val_patients.csv"))
 
     # Set correct target slices
     if args.is_target_tuple:
