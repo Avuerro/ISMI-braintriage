@@ -1,10 +1,12 @@
 ### Imports ###
 import os
+import sys
 import pickle
 import pandas as pd
 import numpy as np
 import argparse
 
+sys.path.append("..")
 ### Local imports ###
 from dataset.cross_validation import create_k_strat_folds
 from dataset.cross_validation import get_train_and_val
@@ -13,7 +15,7 @@ from dataset.cross_validation import get_train_and_val
 ### Fold parameter ###
 K = 10 # How many folds to split the data into (train percentage = (k-1)/k)
 ### Directories ###
-DATA_DIR = '../../../sliced_data/train'
+DATA_DIR = '../../../data_sliced/train'
 DS_DIR = '../../../data_split'
 
 parser = argparse.ArgumentParser(description='Split the train data into train and validation sets.')
