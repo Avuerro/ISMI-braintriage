@@ -3,6 +3,7 @@ import os
 import pickle
 import pandas as pd
 import numpy as np
+import argparse
 
 ### Local imports ###
 from dataset.cross_validation import create_k_strat_folds
@@ -14,6 +15,14 @@ K = 10 # How many folds to split the data into (train percentage = (k-1)/k)
 ### Directories ###
 DATA_DIR = '../../../sliced_data/train'
 DS_DIR = '../../../data_split'
+
+parser = argparse.ArgumentParser(description='Split the train data into train and validation sets.')
+parser.add_argument("-k", type=int, nargs = "?", dest="k", 
+                    default=K, help = "How many folds to split the data into (train percentage = (k-1)/k)")
+parser.add_argument("-d", type=str, nargs='?', dest="data_dir",
+                    default=DATA_DIR, help="Path to directory with slice data")
+parser.add_argument("-ds", type=str, nargs='?', dest="ds_dir",
+                    default=DS_DIR, help="Path to directory where split dataframes will be stored")      
 
 def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 0):
     """
@@ -51,14 +60,8 @@ def get_patient_train_val_dataframes(label_df, k = 5, val_fold = 0):
     
     return train_df, val_df, pd.DataFrame(train_patients), pd.DataFrame(val_patients)
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Split the train data into train and validation sets.')
-    parser.add_argument("-k", type=int, nargs = "?", dest="k", 
-                        default=K, help = "How many folds to split the data into (train percentage = (k-1)/k)")
-    parser.add_argument("-d", type=str, nargs='?', dest="data_dir",
-                        default=DATA_DIR, help="Path to directory with slice data")
-    parser.add_argument("-ds", type=str, nargs='?', dest="ds_dir",
-                        default=DS_DIR, help="Path to directory where split dataframes will be stored")                    
+if __name__ == "__main__":              
+    args = parser.parse_args()
 
     ### Read data ###
     label_df = pd.read_csv(os.path.join(args.data_dir, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
@@ -69,7 +72,7 @@ if __name__ == "__main__":
     ### Save fold data ###
     if not os.path.exists(DS_DIR):
         os.makedirs(DS_DIR)
-    train_df.to_csv(os.path.join(args.ds_dir, "train_df.csv"))
-    val_df.to_csv(os.path.join(args.ds_dir, "val_df.csv"))
-    train_patients.to_csv(os.path.join(args.ds_dir, "train_patients.csv"))
-    val_patients.to_csv(os.path.join(args.ds_dir, "val_patients.csv"))
+    train_df.to_csv(os.path.join(args.ds_dir, "train_df.csv"), header=False)
+    val_df.to_csv(os.path.join(args.ds_dir, "val_df.csv"), header=False)
+    train_patients.to_csv(os.path.join(args.ds_dir, "train_patients.csv"), header=False)
+    val_patients.to_csv(os.path.join(args.ds_dir, "val_patients.csv"), header=False)
