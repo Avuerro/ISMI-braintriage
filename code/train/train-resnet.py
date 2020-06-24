@@ -1,5 +1,6 @@
 import os
 os.system("python -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
+
 ### Import packages ###
 import torch
 import torch.nn as nn
@@ -25,7 +26,6 @@ from utils import set_seed
 DATA_DIR = '../../../data_sliced/train'
 DS_DIR = '../../../data_split'
 TARGET_SLICES = (0,32)                                   # The slices we will train on for each patient
-TRAIN_PERCENTAGE = 0.9                                   # Percentage of data that will be used for training
 ### Model parameters ###
 MODEL_DIR = '../models'                                  # Directory where best models are saved
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
@@ -56,8 +56,6 @@ parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default = N_FEATURES, help="Number of output features of last FC layer")
 parser.add_argument('-ts', nargs='+', dest='target_slices',
                     default = TARGET_SLICES, help="Which slices to use for training")
-parser.add_argument('-tp', type=float, nargs='?', dest="train_percentage",
-                    default = TRAIN_PERCENTAGE, help="Percentage of data to use for training")
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
 parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
@@ -70,12 +68,14 @@ if __name__ == "__main__":
     set_seed(args.seed)
 
     # Load and check data
-    label_df = pd.read_csv(os.path.join(args.data_dir,"labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
-    label_df["class"] = label_df["class"].astype("int8")
-    print(label_df.head(), f"Dataframe shape: {label_df.shape}", sep="\n")
-    print(f"\nNumber of unique patient numbers: {len(np.unique(label_df['patient_nr']))}")
-    print(f"Number of unique slice numbers:   {len(np.unique(label_df['slice_nr']))}")
-    print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
+    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"), names=["patient_nr", "slice_nr", "class"] ).sample(frac=1).reset_index(drop=True)
+    print(f"\nNumber of unique patient numbers in training set: {len(np.unique(train_df['patient_nr']))}")
+    print(f"Number of unique slice numbers in training set:   {len(np.unique(train_df['slice_nr']))}")
+    print(f"Number of unique class values in training set:    {len(np.unique(train_df['class']))}")
+    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"),  names=["patient_nr", "slice_nr", "class"]).sample(frac=1).reset_index(drop=True)
+    print(f"\nNumber of unique patient numbers in validation set: {len(np.unique(val_df['patient_nr']))}")
+    print(f"Number of unique slice numbers in validation set:   {len(np.unique(val_df['slice_nr']))}")
+    print(f"Number of unique class values in validation set:    {len(np.unique(val_df['class']))}")
 
     # Load in correct model
     if args.name == "resnet50":
@@ -95,10 +95,6 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
 
     ### Create data generator ###
-    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"), names=["patient_nr", "slice_nr", "class"] ).sample(frac=1).reset_index(drop=True)
-    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"),  names=["patient_nr", "slice_nr", "class"]).sample(frac=1).reset_index(drop=True)
-    
-    
     # Set correct target slices
     if args.is_target_tuple:
         args.target_slices = tuple(args.target_slices)
@@ -111,10 +107,11 @@ if __name__ == "__main__":
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
 
     # Initialise W&B settings
+    train_percentage = float(len(np.unique(train_df['patient_nr']))) / float(len(np.unique(train_df['patient_nr'])) + len(np.unique(val_df['patient_nr'])))
     wandb.init(project="braintriage", entity="angry-chickens")
     wandb.config.update({"model_type":args.name, "epochs":args.epochs, "batch_size":args.batch_size, "learning_rate":args.learning_rate,
                          "n_features":args.n_features, "target_slices":args.target_slices, "is_target_tuple":args.is_target_tuple,
-                         "train_percentage":args.train_percentage})
+                         "train_percentage":train_percentage})
     wandb.watch(model)
     trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, device=DEVICE,
                     train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir, verbose=True)

@@ -1,5 +1,6 @@
 import os
 os.system("python -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
+
 ### Import packages ###
 import torch
 import torch.nn as nn
@@ -23,10 +24,9 @@ from models.combined_net import CombinedNet
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
 DATA_DIR = '../data/train'
-LSTM_DIR = '../models/lstm_000.pt'
+LSTM_LOC = '../models/lstm_000.pt'
 DS_DIR = '../../../data_split'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
-K = 10  # Number of folds to split the data into (percentage of data that will be used for training = (K-1)/K)
 ### Model parameters ###
 MODEL_DIR = '../models'  # Directory where best models are saved
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
@@ -42,6 +42,8 @@ parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
 parser.add_argument('name', type=str, help="Name of the pre-trained model")
 parser.add_argument('-d', type=str, nargs='?', dest="data_dir",
                     default=DATA_DIR, help="Path to directory with data")
+parser.add_argument('-l', type=str, nargs='?', dest="lstm_loc",
+                    default=LSTM_LOC, help="Path to the ResNet + LSTM weights file")
 parser.add_argument('-lr', type=float, nargs='?', dest="learning_rate",
                     default=LR, help='Learning rate')
 parser.add_argument('-e', type=int, nargs='?', dest="epochs",
@@ -54,8 +56,6 @@ parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default=N_FEATURES, help="Number of output features of last FC layer")
 parser.add_argument('-s', nargs='+', dest='target_slices',
                     default=TARGET_SLICES, help="Which slices to use for training")
-parser.add_argument('-k', type=float, nargs='?', dest="k",
-                    default=K, help="Number of folds to split the data into (percentage of data that will be used for training = (K-1)/K)")
 parser.add_argument('-v', type=float, nargs='?', dest="val_filename",
                     default=VAL_FILENAME, help="Where to store the validation dataframe (for failure analysis)")
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
@@ -66,12 +66,19 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load and check data
-    label_df = pd.read_csv(os.path.join(args.data_dir, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
-    label_df["class"] = label_df["class"].astype("int8")
-    print(label_df.head(), f"Dataframe shape: {label_df.shape}", sep="\n")
-    print(f"\nNumber of unique patient numbers: {len(np.unique(label_df['patient_nr']))}")
-    print(f"Number of unique slice numbers:   {len(np.unique(label_df['slice_nr']))}")
-    print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
+    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"), names=["patient_nr", "slice_nr", "class"])
+    print(f"\nNumber of unique patient numbers in training set: {len(np.unique(train_df['patient_nr']))}")
+    print(f"Number of unique slice numbers in training set:   {len(np.unique(train_df['slice_nr']))}")
+    print(f"Number of unique class values in training set:    {len(np.unique(train_df['class']))}")
+    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"), names=["patient_nr", "slice_nr", "class"]0)
+    print(f"\nNumber of unique patient numbers in validation set: {len(np.unique(val_df['patient_nr']))}")
+    print(f"Number of unique slice numbers in validation set:   {len(np.unique(val_df['slice_nr']))}")
+    print(f"Number of unique class values in validation set:    {len(np.unique(val_df['class']))}")
+    
+    train_patients = pd.read_csv(os.path.join(DS_DIR, "train_patients.csv"), names=["patient_nr"])
+    print(f"Number of patient numbers in the train patients list:      {len(train_patients['patient_nr'])}")
+    val_patients = pd.read_csv(os.path.join(DS_DIR, "val_patients.csv"), names=["patient_nr"])
+    print(f"Number of patient numbers in the validation patients list: {len(val_patients['patient_nr'])}")
 
     # Load in model
     model = models.resnet34(pretrained=args.pretrained)
@@ -85,12 +92,7 @@ if __name__ == "__main__":
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(combined_net.parameters(), lr=args.learning_rate)
 
-    ### Load dataframes for training and validation ###
-    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"), index_col = 0)
-    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"), index_col = 0)
-    train_patients = pd.read_csv(os.path.join(DS_DIR, "train_patients.csv"), index_col = 0)
-    val_patients = pd.read_csv(os.path.join(DS_DIR, "val_patients.csv"), index_col = 0)
-
+    ### Create dataframes for training and validation ###
     # Set correct target slices
     if args.is_target_tuple:
         args.target_slices = tuple(args.target_slices)
@@ -103,12 +105,13 @@ if __name__ == "__main__":
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
 
     # Initialise W&B settings
+    train_percentage = float(len(train_patients['patient_nr'])) / float(len(train_patients['patient_nr']) + len(val_patients['patient_nr']))
     wandb.init(project="braintriage")
     wandb.config.update({"model_type": args.name, "epochs": args.epochs, "batch_size": args.batch_size,
                          "learning_rate": args.learning_rate,
                          "n_features": args.n_features, "target_slices": args.target_slices,
                          "is_target_tuple": args.is_target_tuple,
-                         "train_percentage": float(args.k-1)/float(args.k)})
+                         "train_percentage": train_percentage})
     wandb.watch(combined_net)
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
                       train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
