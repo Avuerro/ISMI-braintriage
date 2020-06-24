@@ -32,7 +32,7 @@ DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
 N_FEATURES = 128                                         # The length of feature vectors that the CNN outputs/LSTM will use
 ### Train parameters ###
 EPOCHS = 15
-BATCH_SIZE = 64
+BATCH_SIZE = 16
 LR = 0.0001
 SEED = 420
 
