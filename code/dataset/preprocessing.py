@@ -6,6 +6,8 @@ from torch.utils import data
 from torchvision import transforms
 from PIL import Image
 from tqdm import tqdm
+from scipy import ndimage, misc
+import random
 
 DATA_DIR = "../../data/train/"
 # For convenience convert to tensor so it's ready for preprocess()
@@ -27,6 +29,26 @@ def preprocess(X, center_crop_target = 425):
     crop_idx = (IMG_SIZE - center_crop_target)//2
     X_cropped = X_standard[:, crop_idx:-crop_idx, crop_idx:-crop_idx]
     return X_cropped
+
+def augment(X, flipprob = 0.5, rotateprob = 0.5):
+
+    augmentation = False
+    randomrotate = random.random() < rotateprob
+    randomflip = random.random() < flipprob
+
+    if randomrotate:
+        augmentation = True
+        angle = random.randint(-10,10)
+        X = ndimage.rotate(X, angle, axes = (1,2))
+
+    if randomflip:
+        augmentation = True
+        X = np.flip(X, axis = 2).copy()
+
+    if augmentation:
+        X = torch.tensor(X)
+
+    return X
 
 def get_dataset_mean_std(dataloader):
     '''
