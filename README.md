@@ -1,6 +1,32 @@
 # ISMI-braintriage
 
 ### Todo List
+| Task           | Finished | 
+|----------------|---------------|
+| Documentation | <ul><li>- [ ] </li></ul> 
+| Failure Analysis | <ul><li>- [ ] </li></ul> 
+| EDA | <ul><li>- [ ] </li></ul> 
+| Programming: | <ul><li>- [ ] </li></ul> 
+| + Data augmentation | <ul><li>- [x] </li></ul> 
+| + Save results every epoch | <ul><li>- [ ] </li></ul> 
+| + Create full-pipeline script | <ul><li>- [ ] </li></ul> 
+| + Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
+| Training w/ data augmentation: | <ul><li>- [ ] </li></ul> 
+| + Resnet34 (insert_code_name) | <ul><li>- [ ] </li></ul> 
+| + Resnet18 (insert_code_name) |  <ul><li>- [ ] </li></ul> 
+| + LSTM (insert_code_name) |  <ul><li>- [ ] </li></ul> 
+| + CombinedNet (insert_code_name) | <ul><li>- [ ] </li></ul> 
+| Presentation: | <ul><li>- [ ] </li></ul> 
+| + Slides | <ul><li>- [ ] </li></ul> 
+| + Script | <ul><li>- [ ] </li></ul> 
+| + Recording | <ul><li>- [ ] </li></ul> 
+| + Create video | <ul><li>- [ ] </li></ul> 
+
+Important for presentation:
++ Justify decisions (ResNet + LSTM, center crop, data augmentation
++ Reasons for overfitting
+
+<!--
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
 | Cross Validation Script | Marlous | <ul><li>- [ ] </li></ul> 
@@ -13,12 +39,7 @@
 | Documentation | Max |  <ul><li>- [ ] </li></ul> 
 | Report | Max + Marlous + Jordy |  <ul><li>- [ ] </li></ul> 
 | Presentation | Everybody ? | <ul><li>- [ ] </li></ul> 
-
-Denk bij het Report ook aan    
-- Keuzes rechtvaardigen (hoort ook bij report)
-    - waarom Resnet + LSTM
-    - waarom geen data augmentation ?
-    - waarom center crop etc.
+-->
     
 <!--
 | ~~Check LSTM~~ | Freek | <ul><li>- [x] </li></ul>
