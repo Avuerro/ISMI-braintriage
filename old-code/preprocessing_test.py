@@ -11,27 +11,24 @@ import random
 
 DATA_DIR = "../../data/train/"
 # For convenience convert to tensor so it's ready for preprocess()
-MEANS = [96.3782, 106.0149,  58.2791]
-STDS = [163.7764, 172.2486,  94.4285]
+MEANS = torch.Tensor([96.3782, 106.0149,  58.2791])
+STDS = torch.Tensor([163.7764, 172.2486,  94.4285])
 IMG_SIZE = 512
 
 def preprocess(X, center_crop_target = 425):
     '''
     X = PyTorch Tensor
     '''
-    # NOTE: Maybe conversion to numpy is unnecessary?
-
-    # Transform Torch Tensor to NP Array (and convert to shape (512,512,3))
-    X_array = np.rollaxis(X.numpy(), 0, 3)
-    # Standardize data
-    X_standard = (X_array-MEANS)/STDS
-    # Roll axis back
-    X_standard = np.rollaxis(X_standard, 2, 0)
     
+    # Convert to (512,512,3) for standardising and convert back
+    X = X.view(IMG_SIZE, IMG_SIZE, 3)
+    X_standard = (X - MEANS) / STDS
+    X_standard = X_standard.view(3, IMG_SIZE, IMG_SIZE)
+
     # Center-crop image manually (PIL does not like floats)
     crop_idx = (IMG_SIZE - center_crop_target)//2
     X_cropped = X_standard[:, crop_idx:-crop_idx, crop_idx:-crop_idx]
-    return torch.tensor(X_cropped)
+    return X_cropped
 
 def augment(X, flipprob = 0.5, rotateprob = 0.5):
     
