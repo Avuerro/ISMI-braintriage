@@ -41,7 +41,7 @@ def augment(X, flipprob = 0.5, rotateprob = 0.5):
 
     if randomrotate:
         angle = random.randint(-10,10)
-        output = ndimage.rotate(output, angle, axes = (1,2))
+        output = ndimage.rotate(output, angle, axes = (1,2), mode = 'nearest')
 
     if randomflip:
         output = np.flip(output, axis = 2).copy()
