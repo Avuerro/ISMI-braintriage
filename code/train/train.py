@@ -121,16 +121,13 @@ class Trainer(object):
 
     def train_and_validate(self):
         print(f'Running {self.model.name}')
-        best_val_loss = 9999999
 
         for epoch in tqdm(range(self.n_epochs), desc="#epochs"):
             train_loss, train_acc = self.train()
 
             val_loss, val_acc = self.validate()
             
-            if val_loss < best_val_loss:
-                best_val_loss = val_loss
-                torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch))
+            torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch))
 
             wandb.log({"Training Loss": train_loss,
                        "Training Accuracy": train_acc,
