@@ -70,14 +70,14 @@ if __name__ == "__main__":
     print(f"\nNumber of unique patient numbers in training set: {len(np.unique(train_df['patient_nr']))}")
     print(f"Number of unique slice numbers in training set:   {len(np.unique(train_df['slice_nr']))}")
     print(f"Number of unique class values in training set:    {len(np.unique(train_df['class']))}")
-    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"), names=["patient_nr", "slice_nr", "class"]0)
+    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"), names=["patient_nr", "slice_nr", "class"])
     print(f"\nNumber of unique patient numbers in validation set: {len(np.unique(val_df['patient_nr']))}")
     print(f"Number of unique slice numbers in validation set:   {len(np.unique(val_df['slice_nr']))}")
     print(f"Number of unique class values in validation set:    {len(np.unique(val_df['class']))}")
     
-    train_patients = pd.read_csv(os.path.join(DS_DIR, "train_patients.csv"), names=["patient_nr"])
+    train_patients = pd.read_csv(os.path.join(DS_DIR, "train_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
     print(f"Number of patient numbers in the train patients list:      {len(train_patients['patient_nr'])}")
-    val_patients = pd.read_csv(os.path.join(DS_DIR, "val_patients.csv"), names=["patient_nr"])
+    val_patients = pd.read_csv(os.path.join(DS_DIR, "val_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
     print(f"Number of patient numbers in the validation patients list: {len(val_patients['patient_nr'])}")
 
     # Load in model
