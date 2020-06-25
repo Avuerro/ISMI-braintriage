@@ -1,15 +1,17 @@
 import torch
 from torch.utils import data
-from .preprocessing import preprocess
+from .preprocessing import preprocess, augment
 import os
 
 class SliceDataset(data.Dataset):
     """
         Used only for CNN training
     """
-    def __init__(self, label_df, target_slices, DATA_DIR, do_preprocess=True):
+    def __init__(self, label_df, target_slices, DATA_DIR, do_preprocess=True, flip = 0.5, rotate = 0.5):
         self.do_preprocess = do_preprocess
         self.DATA_DIR = DATA_DIR
+        self.flip = flip
+        self.rotate = rotate
         if type(target_slices) == tuple:
             self.label_df = label_df[label_df["slice_nr"].isin(range(*target_slices))]
         elif type(target_slices) == list:
@@ -25,4 +27,4 @@ class SliceDataset(data.Dataset):
         y = cls
         X = torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"))
         
-        return preprocess(X) if self.do_preprocess else X, y
+        return augment(preprocess(X), self.flop, self.rotate) if self.do_preprocess else augment(X, self.flip, self.rotate), y

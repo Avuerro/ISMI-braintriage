@@ -1,6 +1,6 @@
 import torch
 from torch.utils import data
-from .preprocessing import preprocess
+from .preprocessing import preprocess, augment
 
 import os
 
@@ -10,12 +10,14 @@ class PatientDataset(data.Dataset):
             (1) LSTM separately and 
             (2) finetuning phase of CNN and LSTM together
     """
-    def __init__(self, label_df, patient_list, target_slices,DATA_DIR,DEVICE):
+    def __init__(self, label_df, patient_list, target_slices, DATA_DIR,DEVICE,flip = 0.5, rotate = 0.5):
         self.DATA_DIR = DATA_DIR
         self.DEVICE = DEVICE
         self.label_df = label_df
         self.patient_list = patient_list
         self.target_slices = target_slices
+        self.flip = flip
+        self.rotate = rotate
         
     def __len__(self):
         return self.patient_list.shape[0]
@@ -36,4 +38,4 @@ class PatientDataset(data.Dataset):
         return X, y
     
     def get_slice_tensor(self, patient_nr, slice_nr):
-        return preprocess(torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt")))
+        return augment(preprocess(torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"))), self.flip, self.rotate)
