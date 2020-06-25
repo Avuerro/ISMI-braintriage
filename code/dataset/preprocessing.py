@@ -19,8 +19,8 @@ def preprocess(X, center_crop_target = 425):
     '''
     X = PyTorch Tensor
     '''
-    # NOTE: Maybe conversion to numpy is unnecessary?
-
+    
+    # Convert to NumPy, because weird artefacts appear when using only PyTorch Tensor
     # Transform Torch Tensor to NP Array (and convert to shape (512,512,3))
     X_array = np.rollaxis(X.numpy(), 0, 3)
     # Standardize data
