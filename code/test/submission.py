@@ -45,10 +45,7 @@ parser.add_argument('-b', type=int, nargs='?', dest="batch_size",
 parser.add_argument('-s', nargs='+', dest='target_slices',
                     default=TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
-                    default = N_FEATURES, help="Number of output features of last FC layer")                    
-parser.add_argument('-r', type=str, nargs='?', dest="resnet_model_type",
-                    default=RESNET_MODEL_TYPE, help="Which resnet type the model uses (resnet18, resnet34, resnet50)")
-parser.add_argument('--pretrained', action="store_true", default=PRETRAINED, help="Whether networks are pretrained")
+                    default = N_FEATURES, help="Number of output features of last FC layer")                   
     
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -57,20 +54,14 @@ if __name__ == "__main__":
     label_df = pd.read_csv(os.path.join(args.test_data_dir, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
     
     # Initialize model
-    if args.resnet_model_type == "resnet50":
-        model = models.resnet50(pretrained=args.pretrained)
-    elif args.resnet_model_type == "resnet34":
-        model = models.resnet34(pretrained=args.pretrained)
-    elif args.resnet_model_type == "resnet18":
-        model = models.resnet18(pretrained=args.pretrained)
-    else:
-        print(f'No model with name {args.resnet_model_type}')
-        exit()
+    model = models.resnet34()
+
     # Change the Pre-Trained Model to our own Defined Model
     resnet = Net(model, args.name, args.n_features)
     lstm_net = LSTM(n_features=args.n_features, n_hidden=64, n_layers=2)
     combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
     combined_net.load_state_dict(torch.load(os.path.join(args.model_dir, args.filename), map_location=DEVICE))
+    combined_net.to(DEVICE)
 
     # Create dataset and dataloader
     patient_list = np.unique(label_df["patient_nr"])
@@ -96,5 +87,5 @@ if __name__ == "__main__":
     
     if not os.path.exists(args.submission_dir):
         os.makedirs(args.submission_dir)
-    submission.to_csv(os.path.join(args.submission_dir, args.filename + "_submission.csv"))
+    submission.to_csv(os.path.join(args.submission_dir, args.filename + "_submission.csv"), index=False)
     
