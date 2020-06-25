@@ -6,17 +6,17 @@
 | Documentation | <ul><li>- [ ] </li></ul> 
 | Failure Analysis | <ul><li>- [ ] </li></ul> 
 | EDA | <ul><li>- [ ] </li></ul> 
-| Programming: | <ul><li>- [ ] </li></ul> 
-| + Data augmentation | <ul><li>- [x] </li></ul> 
+| __Programming__: | <ul><li>- [ ] </li></ul> 
+| <li>Data augmentation</li> | <ul><li>- [x] </li></ul> 
 | + Save results every epoch | <ul><li>- [ ] </li></ul> 
 | + Create full-pipeline script | <ul><li>- [ ] </li></ul> 
 | + Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
-| Training w/ data augmentation: | <ul><li>- [ ] </li></ul> 
+| __Training w/ data augmentation__: | <ul><li>- [ ] </li></ul> 
 | + Resnet34 (insert_code_name) | <ul><li>- [ ] </li></ul> 
 | + Resnet18 (insert_code_name) |  <ul><li>- [ ] </li></ul> 
 | + LSTM (insert_code_name) |  <ul><li>- [ ] </li></ul> 
 | + CombinedNet (insert_code_name) | <ul><li>- [ ] </li></ul> 
-| Presentation: | <ul><li>- [ ] </li></ul> 
+| __Presentation__: | <ul><li>- [ ] </li></ul> 
 | + Slides | <ul><li>- [ ] </li></ul> 
 | + Script | <ul><li>- [ ] </li></ul> 
 | + Recording | <ul><li>- [ ] </li></ul> 
