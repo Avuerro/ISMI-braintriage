@@ -4,7 +4,6 @@ import wandb
 import os
 import gc
 import time
-from sklearn.metrics import roc_auc_score
 
 
 class Trainer(object):
@@ -137,6 +136,3 @@ class Trainer(object):
 
 def _compute_accuracy(predictions, targets):
     return (predictions == targets).float().sum() / predictions.shape[0]
-
-def _compute_auc(probabilities, targets):
-    return roc_auc_score(targets, probabilities)
