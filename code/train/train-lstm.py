@@ -38,13 +38,18 @@ N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will
 EPOCHS = 30
 BATCH_SIZE = 2
 LR = 0.0001
+SEED = 420
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
 parser.add_argument('name', type=str, help="Name of the model")
 parser.add_argument('resnet', type=str, help = "Type of ResNet to use (resnet18 or resnet34)")
+parser.add_argument('-s', type=int, nargs='?', dest="seed",
+                    default = SEED, help="Seed for all random generators")
 parser.add_argument('-d', type=str, nargs='?', dest="data_dir",
                     default=DATA_DIR, help="Path to directory with data")
+parser.add_argument('-ds', type=str, nargs='?', dest="ds_dir",
+                    default = DS_DIR, help="Path to directory with data split .csv files")    
 parser.add_argument('-c', type=str, nargs='?', dest="cnn_loc",
                     default=CNN_LOC, help="Path to the ResNet weights file")
 parser.add_argument('-lr', type=float, nargs='?', dest="learning_rate",
@@ -57,7 +62,7 @@ parser.add_argument('-m', type=str, nargs='?', dest="model_dir",
                     default=MODEL_DIR, help="Where models will be saved")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default=N_FEATURES, help="Number of output features of last FC layer")
-parser.add_argument('-s', nargs='+', dest='target_slices',
+parser.add_argument('-ts', nargs='+', dest='target_slices',
                     default=TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('-afp', nargs='?', dest='flip_prob', type=float,
                     default = FLIP_PROB, help="Probability of augmenting training data by flipping slices left to right")
@@ -70,18 +75,18 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Load and check data
-    train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"), names=["patient_nr", "slice_nr", "class"])
+    train_df = pd.read_csv(os.path.join(args.ds_dir, "train_df.csv"), names=["patient_nr", "slice_nr", "class"])
     print(f"\nNumber of unique patient numbers in training set: {len(np.unique(train_df['patient_nr']))}")
     print(f"Number of unique slice numbers in training set:   {len(np.unique(train_df['slice_nr']))}")
     print(f"Number of unique class values in training set:    {len(np.unique(train_df['class']))}")
-    val_df = pd.read_csv(os.path.join(DS_DIR, "val_df.csv"), names=["patient_nr", "slice_nr", "class"])
+    val_df = pd.read_csv(os.path.join(args.ds_dir, "val_df.csv"), names=["patient_nr", "slice_nr", "class"])
     print(f"\nNumber of unique patient numbers in validation set: {len(np.unique(val_df['patient_nr']))}")
     print(f"Number of unique slice numbers in validation set:   {len(np.unique(val_df['slice_nr']))}")
     print(f"Number of unique class values in validation set:    {len(np.unique(val_df['class']))}")
     
-    train_patients = pd.read_csv(os.path.join(DS_DIR, "train_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
+    train_patients = pd.read_csv(os.path.join(args.ds_dir, "train_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
     print(f"Number of patient numbers in the train patients list:      {len(train_patients['patient_nr'])}")
-    val_patients = pd.read_csv(os.path.join(DS_DIR, "val_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
+    val_patients = pd.read_csv(os.path.join(args.ds_dir, "val_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
     print(f"Number of patient numbers in the validation patients list: {len(val_patients['patient_nr'])}")
 
     # Load in model
