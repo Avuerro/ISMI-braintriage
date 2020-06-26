@@ -121,11 +121,19 @@ class Trainer(object):
     def train_and_validate(self):
         print(f'Running {self.model.name}')
 
+        best_model_file_name, best_val_loss, best_val_acc = "", 999., 0.
+
         for epoch in tqdm(range(self.n_epochs), desc="#epochs"):
             train_loss, train_acc = self.train()
 
             val_loss, val_acc = self.validate()
             
+            if val_loss < best_val_loss or val_acc < best_val_acc:
+                best_val_loss = val_loss
+                best_val_acc = val_acc
+                best_model_file_name = '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch)
+                _write_best_model_file_name(best_model_file_name)
+
             torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch))
 
             wandb.log({"Training Loss": train_loss,
@@ -136,3 +144,12 @@ class Trainer(object):
 
 def _compute_accuracy(predictions, targets):
     return (predictions == targets).float().sum() / predictions.shape[0]
+
+def _write_best_model_file_name(best_model_file_name):
+    # Save model to tmp directory
+    if not os.path.exists("tmp"):
+        os.makedirs("tmp")
+
+    # Overwrite existing file
+    with open(os.path.join("tmp", self.model.name), 'w') as f:
+        f.write(best_model_file_name)

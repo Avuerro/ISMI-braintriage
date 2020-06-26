@@ -21,6 +21,7 @@ from train import Trainer
 from models.lstm import LSTM
 from models.omnipotent_resnet import Net
 from models.combined_net import CombinedNet
+from utils import set_seed, clean_up
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
@@ -73,6 +74,9 @@ parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
 
 if __name__ == "__main__":
     args = parser.parse_args()
+
+    # Set seed for reproducibility
+    set_seed(args.seed)
 
     # Load and check data
     train_df = pd.read_csv(os.path.join(args.ds_dir, "train_df.csv"), names=["patient_nr", "slice_nr", "class"])
@@ -131,3 +135,5 @@ if __name__ == "__main__":
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
                       train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
     trainer.train_and_validate()
+
+    clean_up()

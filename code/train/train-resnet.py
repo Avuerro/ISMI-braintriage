@@ -19,7 +19,7 @@ sys.path.append("..")
 from dataset.slice_dataset import SliceDataset
 from models.omnipotent_resnet import Net
 from train import Trainer
-from utils import set_seed
+from utils import set_seed, clean_up
 
 
 ### DEFAULT PARAMETERS ###
@@ -126,3 +126,5 @@ if __name__ == "__main__":
     trainer = Trainer(model=model, criterion=criterion, optimizer=optimizer, device=DEVICE,
                     train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir = args.model_dir, verbose=True)
     trainer.train_and_validate()
+
+    clean_up()

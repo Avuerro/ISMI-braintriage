@@ -21,6 +21,7 @@ from train.train import Trainer
 from models.lstm import LSTM
 from models.omnipotent_resnet import Net
 from models.combined_net import CombinedNet
+from utils import set_seed, clean_up
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
@@ -38,13 +39,18 @@ N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will
 EPOCHS = 30
 BATCH_SIZE = 2
 LR = 0.0001
+SEED = 420
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
 parser.add_argument('name', type=str, help="Name of the model")
 parser.add_argument('resnet', type=str, help = "Type of ResNet to use (resnet18 or resnet34)")
+parser.add_argument('-s', type=int, nargs='?', dest="seed",
+                    default = SEED, help="Seed for all random generators")
 parser.add_argument('-d', type=str, nargs='?', dest="data_dir",
                     default=DATA_DIR, help="Path to directory with data")
+parser.add_argument('-ds', type=str, nargs='?', dest="ds_dir",
+                    default = DS_DIR, help="Path to directory with data split .csv files")    
 parser.add_argument('-l', type=str, nargs='?', dest="lstm_loc",
                     default=LSTM_LOC, help="Path to the ResNet + LSTM weights file")
 parser.add_argument('-lr', type=float, nargs='?', dest="learning_rate",
@@ -57,7 +63,7 @@ parser.add_argument('-m', type=str, nargs='?', dest="model_dir",
                     default=MODEL_DIR, help="Where models will be saved")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default=N_FEATURES, help="Number of output features of last FC layer")
-parser.add_argument('-s', nargs='+', dest='target_slices',
+parser.add_argument('-ts', nargs='+', dest='target_slices',
                     default=TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('-afp', nargs='?', dest='flip_prob', type=float,
                     default = FLIP_PROB, help="Probability of augmenting training data by flipping slices left to right")
@@ -68,6 +74,9 @@ parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
 
 if __name__ == "__main__":
     args = parser.parse_args()
+
+    # Set seed for reproducibility
+    set_seed(args.seed)
 
     # Load and check data
     train_df = pd.read_csv(os.path.join(DS_DIR, "train_df.csv"), names=["patient_nr", "slice_nr", "class"])
@@ -95,7 +104,7 @@ if __name__ == "__main__":
     resnet = Net(model, args.name, args.n_features)
     lstm_net = LSTM(n_features=args.n_features, n_hidden=64, n_layers=2)
     combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
-    combined_net.load_state_dict(torch.load(LSTM_DIR))
+    combined_net.load_state_dict(torch.load(args.lstm_loc))
     combined_net.set_learning_cnn_net(True)
 
     ### Loss and optimizer ###
@@ -126,3 +135,5 @@ if __name__ == "__main__":
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
                       train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
     trainer.train_and_validate()
+
+    clean_up()

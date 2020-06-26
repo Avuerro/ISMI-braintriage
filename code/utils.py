@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import torch
+import shutil
 
 def set_seed(seed):
     """
@@ -13,3 +14,9 @@ def set_seed(seed):
     torch.cuda.manual_seed_all(seed)
     np.random.seed(seed)
     random.seed(seed)
+
+def clean_up():
+    try:
+        shutil.rmtree("tmp")
+    except OSError as e:
+        print ("Error: %s - %s." % (e.filename, e.strerror))
