@@ -12,7 +12,7 @@
 | <li>Create full-pipeline script</li> | <ul><li>- [ ] </li></ul> 
 | <li>Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
 | __Training w/ data augmentation__: | <ul><li>- [ ] </li></ul> 
-| <li>Resnet34 (insert_code_name)</li> | <ul><li>- [ ] </li></ul> 
+| <li>Resnet34 (crimson-chin-resnet34)</li> | <ul><li>- [ ] </li></ul> 
 | <li>Resnet18 (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
 | <li>LSTM (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
 | <li>CombinedNet (insert_code_name)</li> | <ul><li>- [ ] </li></ul> 
