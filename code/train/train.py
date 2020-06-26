@@ -128,7 +128,7 @@ class Trainer(object):
 
             val_loss, val_acc = self.validate()
             
-            if val_loss < best_val_loss or val_acc < best_val_acc:
+            if val_loss < best_val_loss or val_acc > best_val_acc:
                 best_val_loss = val_loss
                 best_val_acc = val_acc
                 best_model_file_name = '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch)
