@@ -27,4 +27,4 @@ class SliceDataset(data.Dataset):
         y = cls
         X = torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"))
         
-        return augment(preprocess(X), self.flop, self.rotate) if self.do_preprocess else augment(X, self.flip, self.rotate), y
+        return augment(preprocess(X), self.flip, self.rotate) if self.do_preprocess else augment(X, self.flip, self.rotate), y

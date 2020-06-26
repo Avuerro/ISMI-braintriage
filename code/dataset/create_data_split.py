@@ -100,8 +100,8 @@ if __name__ == "__main__":
     train_df, val_df, train_patients, val_patients = get_patient_train_val_dataframes(label_df, k=args.k)
 
     ### Save fold data ###
-    if not os.path.exists(DS_DIR):
-        os.makedirs(DS_DIR)
+    if not os.path.exists(args.ds_dir):
+        os.makedirs(args.ds_dir)
     train_df.to_csv(os.path.join(args.ds_dir, "train_df.csv"), header=False)
     val_df.to_csv(os.path.join(args.ds_dir, "val_df.csv"), header=False)
     train_patients.to_csv(os.path.join(args.ds_dir, "train_patients.csv"), header=False)

@@ -3,7 +3,7 @@ import argparse
 import torch
 import numpy as np
 import SimpleITK as sitk
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import csv
 import os
 import pandas as pd
@@ -30,7 +30,7 @@ def generate_slice_data(in_dir,out_dir, test=False):
     # Work-around for different folder structure of test data
     class_dirs = ["final_test_set"] if test else os.listdir(in_dir)
     for klass in class_dirs:
-        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients"):
+        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients" if test else f"Patients ({klass})"):
             
             ## Check if patient has not been processed yet
             if patient not in patients:

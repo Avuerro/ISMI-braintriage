@@ -2,7 +2,7 @@ from dataset.slice_dataframes import get_slice_train_val_dataframes
 from dataset.slice_dataset import SliceDataset
 from models.omnipotent_resnet import Net
 from torchvision import models
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 import pandas as pd
 import torch
