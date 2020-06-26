@@ -1,5 +1,5 @@
 import os
-os.system("python -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
+os.system("python3 -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
 
 ### Import packages ###
 import torch
@@ -14,6 +14,7 @@ import sys
 
 ### Local imports ###
 # Necessary for local imports
+sys.path.append(".")
 sys.path.append("..")
 from dataset.patient_dataset import PatientDataset
 from train import Trainer
