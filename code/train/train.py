@@ -132,7 +132,7 @@ class Trainer(object):
                 best_val_loss = val_loss
                 best_val_acc = val_acc
                 best_model_file_name = '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch)
-                _write_best_model_file_name(best_model_file_name)
+                _write_best_model_file_name(best_model_file_name, self.model.name)
 
             torch.save(self.model.state_dict(), '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch))
 
@@ -145,11 +145,11 @@ class Trainer(object):
 def _compute_accuracy(predictions, targets):
     return (predictions == targets).float().sum() / predictions.shape[0]
 
-def _write_best_model_file_name(best_model_file_name):
+def _write_best_model_file_name(best_model_file_name, model_name):
     # Save model to tmp directory
     if not os.path.exists("tmp"):
         os.makedirs("tmp")
 
     # Overwrite existing file
-    with open(os.path.join("tmp", self.model.name), 'w') as f:
+    with open(os.path.join("tmp", model_name), 'w') as f:
         f.write(best_model_file_name)
