@@ -24,6 +24,6 @@ class SliceDataset(data.Dataset):
     def __getitem__(self, index):
         patient_nr, slice_nr, cls = self.label_df.iloc[index].to_numpy()
         y = cls
-        X = torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"))
+        X = torch.load(os.path.join(self.data_dir, f"{patient_nr}_{slice_nr}.pt"))
         
         return augment(preprocess(X), self.flip_prob, self.rotate_prob), y
