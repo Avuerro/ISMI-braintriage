@@ -28,19 +28,21 @@ DATA_DIR = '../data/train'
 LSTM_LOC = '../models/lstm_000.pt'
 DS_DIR = '../../../data_split'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
+FLIP_PROB = 0.5    # Probability of augmenting training data by flipping slices left to right
+ROTATE_PROB = 0.5  # Probability of augmenting training data by randomly slightly rotating slices
 ### Model parameters ###
 MODEL_DIR = '../models'  # Directory where best models are saved
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
 N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will use
 ### Train parameters ###
-VAL_FILENAME = "val_df_combinednet.csv"
-EPOCHS = 15
-BATCH_SIZE = 16
+EPOCHS = 30
+BATCH_SIZE = 2
 LR = 0.0001
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
-parser.add_argument('name', type=str, help="Name of the pre-trained model")
+parser.add_argument('name', type=str, help="Name of the model")
+parser.add_argument('resnet', type=str, help = "Type of ResNet to use (resnet18 or resnet34)")
 parser.add_argument('-d', type=str, nargs='?', dest="data_dir",
                     default=DATA_DIR, help="Path to directory with data")
 parser.add_argument('-l', type=str, nargs='?', dest="lstm_loc",
@@ -57,11 +59,12 @@ parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default=N_FEATURES, help="Number of output features of last FC layer")
 parser.add_argument('-s', nargs='+', dest='target_slices',
                     default=TARGET_SLICES, help="Which slices to use for training")
-parser.add_argument('-v', type=float, nargs='?', dest="val_filename",
-                    default=VAL_FILENAME, help="Where to store the validation dataframe (for failure analysis)")
+parser.add_argument('-afp', nargs='?', dest='flip_prob', type=float,
+                    default = FLIP_PROB, help="Probability of augmenting training data by flipping slices left to right")
+parser.add_argument('-arp', nargs='?', dest='rotate_prob', type=float,
+                    default = ROTATE_PROB, help="Probability of augmenting training data by randomly slightly rotating slices")
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
-parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
 
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -82,7 +85,13 @@ if __name__ == "__main__":
     print(f"Number of patient numbers in the validation patients list: {len(val_patients['patient_nr'])}")
 
     # Load in model
-    model = models.resnet34(pretrained=args.pretrained)
+    if args.resnet == "resnet34":
+        model = models.resnet34()
+    elif args.resnet == "resnet18":
+        model = models.resnet18()
+    else:
+        print(f'No resnet with name {args.resnet}')
+        exit()
     resnet = Net(model, args.name, args.n_features)
     lstm_net = LSTM(n_features=args.n_features, n_hidden=64, n_layers=2)
     combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
@@ -99,8 +108,8 @@ if __name__ == "__main__":
         args.target_slices = tuple(args.target_slices)
 
     # Set train/validation loaders
-    train_set = PatientDataset(train_df, train_patients, args.target_slices, args.data_dir, DEVICE)
-    val_set = PatientDataset(val_df, val_patients, args.target_slices, args.data_dir, DEVICE)
+    train_set = PatientDataset(train_df, train_patients, args.target_slices, args.data_dir, args.flip_prob, args.rotate_prob) # Train dataset should perform augmentation
+    val_set = PatientDataset(val_df, val_patients, args.target_slices, args.data_dir) # Validation dataset should not perform augmentation
 
     train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)

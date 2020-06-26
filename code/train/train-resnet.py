@@ -27,12 +27,14 @@ from utils import set_seed
 DATA_DIR = '../../../data_sliced/train'
 DS_DIR = '../../../data_split'
 TARGET_SLICES = (0,32)                                   # The slices we will train on for each patient
+FLIP_PROB = 0.5                                          # Probability of augmenting training data by flipping slices left to right
+ROTATE_PROB = 0.5                                        # Probability of augmenting training data by randomly slightly rotating slices
 ### Model parameters ###
 MODEL_DIR = '../models'                                  # Directory where best models are saved
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
 N_FEATURES = 128                                         # The length of feature vectors that the CNN outputs/LSTM will use
 ### Train parameters ###
-EPOCHS = 15
+EPOCHS = 30
 BATCH_SIZE = 16
 LR = 0.0001
 SEED = 420
@@ -40,7 +42,8 @@ SEED = 420
 
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
-parser.add_argument('name', type=str, help="Name of the pre-trained model")
+parser.add_argument('name', type=str, help="Name of the model")
+parser.add_argument('resnet', type=str, help = "Type of ResNet to use (resnet18, resnet34 or resnet50)")
 parser.add_argument('-s', type=int, nargs='?', dest="seed",
                     default = SEED, help="Seed for all random generators")
 parser.add_argument('-d', type=str, nargs='?', dest="data_dir",
@@ -57,8 +60,12 @@ parser.add_argument('-m', type=str, nargs='?', dest="model_dir",
                     default = MODEL_DIR, help="Where models will be saved")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default = N_FEATURES, help="Number of output features of last FC layer")
-parser.add_argument('-ts', nargs='+', dest='target_slices', type = int,
+parser.add_argument('-ts', nargs='+', dest='target_slices', type=int,
                     default = TARGET_SLICES, help="Which slices to use for training")
+parser.add_argument('-afp', nargs='?', dest='flip_prob', type=float,
+                    default = FLIP_PROB, help="Probability of augmenting training data by flipping slices left to right")
+parser.add_argument('-arp', nargs='?', dest='rotate_prob', type=float,
+                    default = ROTATE_PROB, help="Probability of augmenting training data by randomly slightly rotating slices")
 parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
 parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
@@ -81,14 +88,14 @@ if __name__ == "__main__":
     print(f"Number of unique class values in validation set:    {len(np.unique(val_df['class']))}")
 
     # Load in correct model
-    if args.name == "resnet50":
+    if args.resnet == "resnet50":
         model = models.resnet50(pretrained=args.pretrained)
-    elif args.name == "resnet34":
+    elif args.resnet == "resnet34":
         model = models.resnet34(pretrained=args.pretrained)
-    elif args.name == "resnet18":
+    elif args.resnet == "resnet18":
         model = models.resnet18(pretrained=args.pretrained)
     else:
-        print(f'No model with name {args.name}')
+        print(f'No resnet with name {args.resnet}')
         exit()
     # Change the Pre-Trained Model to our own Defined Model
     model = Net(model, args.name, args.n_features)
@@ -103,8 +110,8 @@ if __name__ == "__main__":
         args.target_slices = tuple(args.target_slices)
 
     # Set train/validation loaders and train    
-    train_set = SliceDataset(train_df, args.target_slices, args.data_dir)
-    val_set = SliceDataset(val_df, args.target_slices, args.data_dir)
+    train_set = SliceDataset(train_df, args.target_slices, args.data_dir, args.flip_prob, args.rotate_prob) # Train dataset should perform augmentation
+    val_set = SliceDataset(val_df, args.target_slices, args.data_dir) # Validation dataset should not perform augmentation
 
     train_loader = data.DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)

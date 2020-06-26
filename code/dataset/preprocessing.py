@@ -33,17 +33,17 @@ def preprocess(X, center_crop_target = 425):
     X_cropped = X_standard[:, crop_idx:-crop_idx, crop_idx:-crop_idx]
     return torch.tensor(X_cropped)
 
-def augment(X, flipprob = 0.5, rotateprob = 0.5):
+def augment(X, flip_prob = 0.5, rotate_prob = 0.5):
     
     output = X.data.numpy()
-    randomrotate = random.random() < rotateprob
-    randomflip = random.random() < flipprob
+    random_rotate = random.random() < rotate_prob
+    random_flip = random.random() < flip_prob
 
-    if randomrotate:
+    if random_rotate:
         angle = random.randint(-10,10)
         output = ndimage.rotate(output, angle, axes = (1,2), mode = 'nearest', reshape = False)
 
-    if randomflip:
+    if random_flip:
         output = np.flip(output, axis = 2).copy()
     
     return torch.tensor(output)

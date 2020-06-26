@@ -8,14 +8,16 @@ import csv
 import os
 import pandas as pd
 
+### DEFAULT PARAMETERS ###
 CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage" # When using Cartesius
 GOOGLE_CLOUD_BRAINTRIAGE = "../../../data" # When using google cloud
+OUT_DIR = '../../../data_sliced/train'
 
 parser = argparse.ArgumentParser(description='Extract slices for train/test data.')
 parser.add_argument('-d', type=str, nargs='?', dest="data_path",
                     default=GOOGLE_CLOUD_BRAINTRIAGE, help='data directory')
 parser.add_argument('-o', type=str, nargs='?', dest="out_path",
-                    default = "../data/", help='output directory')
+                    default = OUT_DIR, help='output directory')
 parser.add_argument('--train', dest="do_train", action='store_true',
                     help='whether to extract slices for train data')
 parser.add_argument('--test', dest="do_test", action='store_true',

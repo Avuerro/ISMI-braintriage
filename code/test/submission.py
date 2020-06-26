@@ -33,6 +33,7 @@ SUBMISSION_DIR = "../submissions"
 ### Argument parser ###
 parser = argparse.ArgumentParser(description='Create a submission using a specified pretrained model.')
 parser.add_argument('name', type=str, help="Name of the model (resnet, lstm, combinednet")
+parser.add_argument('resnet', type=str, help = "Type of ResNet to use (resnet18 or resnet34)")
 parser.add_argument('filename', type=str, help="Name of the file where the trained model's parameters are stored")
 parser.add_argument('-d', type=str, nargs='?', dest="test_data_dir",
                     default=TEST_DATA_DIR, help="Path to directory with test data")
@@ -53,8 +54,14 @@ if __name__ == "__main__":
     # Load label dataframe
     label_df = pd.read_csv(os.path.join(args.test_data_dir, "labels_slices.csv"), names=["patient_nr", "slice_nr", "class"])
     
-    # Initialize model
-    model = models.resnet34()
+    # Initialize ResNet
+    if args.resnet == "resnet34":
+        model = models.resnet34()
+    elif args.resnet == "resnet18":
+        model = models.resnet18()
+    else:
+        print(f'No resnet with name {args.resnet}')
+        exit()
 
     # Change the Pre-Trained Model to our own Defined Model
     resnet = Net(model, args.name, args.n_features)

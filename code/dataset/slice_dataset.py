@@ -7,11 +7,10 @@ class SliceDataset(data.Dataset):
     """
         Used only for CNN training
     """
-    def __init__(self, label_df, target_slices, DATA_DIR, do_preprocess=True, flip = 0.5, rotate = 0.5):
-        self.do_preprocess = do_preprocess
-        self.DATA_DIR = DATA_DIR
-        self.flip = flip
-        self.rotate = rotate
+    def __init__(self, label_df, target_slices, data_dir, flip_prob=0, rotate_prob=0):
+        self.data_dir = data_dir
+        self.flip_prob = flip_prob
+        self.rotate_prob = rotate_prob
         if type(target_slices) == tuple:
             self.label_df = label_df[label_df["slice_nr"].isin(range(*target_slices))]
         elif type(target_slices) == list:
@@ -27,4 +26,4 @@ class SliceDataset(data.Dataset):
         y = cls
         X = torch.load(os.path.join(self.DATA_DIR, f"{patient_nr}_{slice_nr}.pt"))
         
-        return augment(preprocess(X), self.flip, self.rotate) if self.do_preprocess else augment(X, self.flip, self.rotate), y
+        return augment(preprocess(X), self.flip_prob, self.rotate_prob), y
