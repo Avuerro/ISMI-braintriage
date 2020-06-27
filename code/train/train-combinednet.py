@@ -89,9 +89,9 @@ if __name__ == "__main__":
     print(f"Number of unique class values in validation set:    {len(np.unique(val_df['class']))}")
     
     train_patients = pd.read_csv(os.path.join(args.ds_dir, "train_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
-    print(f"Number of patient numbers in the train patients list:      {len(train_patients['patient_nr'])}")
+    print(f"Number of patient numbers in the train patients list:      {len(train_patients)}")
     val_patients = pd.read_csv(os.path.join(args.ds_dir, "val_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
-    print(f"Number of patient numbers in the validation patients list: {len(val_patients['patient_nr'])}")
+    print(f"Number of patient numbers in the validation patients list: {len(val_patients)}")
 
     # Load in model
     if args.resnet == "resnet34":
