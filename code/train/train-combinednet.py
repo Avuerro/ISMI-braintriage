@@ -17,7 +17,7 @@ import sys
 sys.path.append(".")
 sys.path.append("..")
 from dataset.patient_dataset import PatientDataset
-from train.train import Trainer
+from train import Trainer
 from models.lstm import LSTM
 from models.omnipotent_resnet import Net
 from models.combined_net import CombinedNet
