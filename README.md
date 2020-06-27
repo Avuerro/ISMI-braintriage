@@ -3,19 +3,22 @@
 ### Todo List
 | Task           | Finished | 
 |----------------|---------------|
-| Documentation | <ul><li>- [ ] </li></ul> 
+| Documentation | <ul><li>- [x] </li></ul> 
 | Failure Analysis | <ul><li>- [ ] </li></ul> 
 | EDA | <ul><li>- [ ] </li></ul> 
 | __Programming__: | <ul><li>- [ ] </li></ul> 
 | <li>Data augmentation</li> | <ul><li>- [x] </li></ul> 
 | <li>Save results every epoch</li> | <ul><li>- [x] </li></ul> 
 | <li>Create full-pipeline script</li> | <ul><li>- [ ] </li></ul> 
-| <li>Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
 | __Training w/ data augmentation__: | <ul><li>- [ ] </li></ul> 
 | <li>Resnet34 (crimson-chin-resnet34)</li> | <ul><li>- [ ] </li></ul> 
 | <li>Resnet18 (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
 | <li>LSTM (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
 | <li>CombinedNet (insert_code_name)</li> | <ul><li>- [ ] </li></ul> 
+| __Wrapping up__: | <ul><li>- [ ] </li></ul> 
+| <li>Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
+| <li>Finalize Wiki/documentation | <ul><li>- [ ] </li></ul> 
+| <li>Turn Wiki into PDF | <ul><li>- [ ] </li></ul> 
 | __Presentation__: | <ul><li>- [ ] </li></ul> 
 | <li>Slides</li> | <ul><li>- [ ] </li></ul> 
 | <li>Script</li> | <ul><li>- [ ] </li></ul> 
