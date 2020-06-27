@@ -63,7 +63,7 @@ parser.add_argument('-m', type=str, nargs='?', dest="model_dir",
                     default=MODEL_DIR, help="Where models will be saved")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default=N_FEATURES, help="Number of output features of last FC layer")
-parser.add_argument('-ts', nargs='+', dest='target_slices',
+parser.add_argument('-ts', nargs='+', dest='target_slices', type=int,
                     default=TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('-afp', nargs='?', dest='flip_prob', type=float,
                     default = FLIP_PROB, help="Probability of augmenting training data by flipping slices left to right")
