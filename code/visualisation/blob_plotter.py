@@ -3,6 +3,9 @@ import scipy
 from scipy import signal,ndimage 
 import matplotlib.pyplot as plt
 import math
+import os 
+import SimpleITK as sitk
+
 
 def gaussian_2d(sigma_mm, voxel_size):
     """
@@ -56,7 +59,7 @@ def euclidean_dist(p1, p2):
     return np.sqrt((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2)
 
 
-def notincircle(plotted_circles, newcoords,r):
+def not_in_circle(plotted_circles, newcoords,r):
     for circle in plotted_circles:
         center_coord = circle[0]
         radius = circle[1]
@@ -65,93 +68,100 @@ def notincircle(plotted_circles, newcoords,r):
             return False
     return True
 
-def bright_blobs_plotter(image,slices,seed_points=None):
 
-    """
-        This function plots blue blobs at the locations with high intensity
-        according to the get_brain() function.
-    """
+
+def bright_blobs_plotter(patient,klass, slices, DATA_DIR):
+
+    acquisitions = ["T1", "T2", "T2-FLAIR"]
     voxel_size = [0.5, 0.5]
-    sigmas = [0.5,1,5,50] 
-    if type(slices) == tuple:
-        slices = range(slices[0], slices[1])
-    if type(slices) == int:
-        slices = [slices]
-    for slice_idx in slices:
-        ct_slice = image[slice_idx,:,:]
-        ct_slice_conv = np.zeros(ct_slice.shape)
-        # Compute indices of image that are part of the body
-        body_idcs = get_brain(ct_slice)
+    sigmas = [0.5,2.5,5,50] 
 
-        # Loop over all sigma values and create average convolved image
-        for sigma in sigmas:
-            gaussian_blob = gaussian_2d(sigma,voxel_size)[0]
-            LoG = laplacian_of_gaussian(gaussian_blob)[0]
-            # Use method="same" to avoid size conflict error
-            ct_slice_conv += scipy.signal.convolve(ct_slice, LoG,  mode="same")
+    ## normal, t1 , t2 ,t2flair
+    patient = str(patient)
+    for slice_number in slices:
+        fig, axs = plt.subplots(3,2, figsize=(8,16))
+        for acquisition_index,acquisition in enumerate(acquisitions):
+            # load the mha files
+            acquisiton_path = os.path.join(DATA_DIR, klass, patient,'{}.mha'.format(acquisition))
+            ## Load all images as numpy arrays
+            acquisition_array = sitk.GetArrayFromImage(sitk.ReadImage(acquisiton_path))
+            ct_slice = acquisition_array[slice_number,:,:]
 
-        ct_slice_conv_avg = ct_slice_conv/float(len(sigmas))
-        # Normalize the convolved slice
-        ct_slice_conv_avg = (ct_slice_conv_avg - ct_slice_conv_avg.flatten().min())/(ct_slice_conv_avg.flatten().max() - ct_slice_conv_avg.flatten().min())
+            ct_slice_conv = np.zeros(ct_slice.shape)
+            # Compute indices of image that are part of the body
+            body_idcs = get_brain(ct_slice)
 
-        # Show original slice
-        plt.subplot(1,2,1); plt.imshow(ct_slice, cmap='gray')
-        fig = plt.gcf()
-        ax = fig.gca()
-        ax.set_title("Original slice")
+            # Loop over all sigma values and create average convolved image
+            for sigma in sigmas:
+                gaussian_blob = gaussian_2d(sigma,voxel_size)[0]
+                LoG = laplacian_of_gaussian(gaussian_blob)[0]
+                # Use method="same" to avoid size conflict error
+                ct_slice_conv += scipy.signal.convolve(ct_slice, LoG,  mode="same")
 
-        # Find all indices that are above threshold and part of body
-        threshold = 0.15
-        max_idcs_y, max_idcs_x = np.where(ct_slice_conv_avg < threshold)
-        max_idcs = list(zip(max_idcs_x,max_idcs_y))
-        max_idcs_filtered = [idx for idx in max_idcs if body_idcs[idx[0],idx[1]]]
-        max_idcs_filtered = sorted(max_idcs_filtered)
+            ct_slice_conv_avg = ct_slice_conv/float(len(sigmas))
+            # Normalize the convolved slice
+            ct_slice_conv_avg = (ct_slice_conv_avg - ct_slice_conv_avg.flatten().min())/(ct_slice_conv_avg.flatten().max() - ct_slice_conv_avg.flatten().min())
 
-        ## We need to create groups, we loop through the coordinates and compare them to eachother
-        ## If the difference is smaller than 7 we consider the two points a group.
-        groups =[[]]
-        group_number = 0
-        for p1,p2 in zip(max_idcs_filtered[:-1],max_idcs_filtered[1:]):
-            if (euclidean_dist(p1,p2) < 7):
-                groups[group_number].append(p1)
-                groups[group_number].append(p2)
-            else:
-                group_number += 1
-                groups.append([])
-        groups = [x for x in groups if x != []]
-        groups = sorted(groups, key = len, reverse=True)
+            # Show original slice
+            # plt.subplot(1,2,1); 
 
-        ## now we would like to draw a box around each group
-        ## we need to find max x difference and max y difference
-        ## the biggest will be the radius of the circle
+            axs[acquisition_index][0].imshow(ct_slice, cmap='gray')
+            # fig = plt.gcf()
+            # ax = fig.gca()
+            axs[acquisition_index][0].set_title("Original, slice number {} with Acquisition {}" .format(slice_number, acquisition), y=1.1)
 
-        groups_coords = []
-        for group in groups:
-            group = sorted(group)
-            p1 = group[0]
-            p2 = group[-1]
-            x_difference = np.abs(p1[0]-p2[0])
-            y_difference = np.abs(p1[1]-p2[1])
+            # Find all indices that are above threshold and part of body
+            threshold = 0.15
+            max_idcs_y, max_idcs_x = np.where(ct_slice_conv_avg < threshold)
+            max_idcs = list(zip(max_idcs_x,max_idcs_y))
+            max_idcs_filtered = [idx for idx in max_idcs if body_idcs[idx[0],idx[1]]]
+            max_idcs_filtered = sorted(max_idcs_filtered)
 
-            radius = x_difference if x_difference > y_difference else y_difference
-            center_point = group[len(group) // 2]
+            ## We need to create groups, we loop through the coordinates and compare them to eachother
+            ## If the difference is smaller than 7 we consider the two points a group.
+            groups =[[]]
+            group_number = 0
+            for p1,p2 in zip(max_idcs_filtered[:-1],max_idcs_filtered[1:]):
+                if (euclidean_dist(p1,p2) < 7):
+                    groups[group_number].append(p1)
+                    groups[group_number].append(p2)
+                else:
+                    group_number += 1
+                    groups.append([])
+            groups = [x for x in groups if x != []]
+            groups = sorted(groups, key = len, reverse=True)
 
-            groups_coords.append([center_point,radius])
+            ## now we would like to draw a box around each group
+            ## we need to find max x difference and max y difference
+            ## the biggest will be the radius of the circle
 
-        plt.subplot(1,2,2); plt.imshow(ct_slice, cmap='gray')
-        fig = plt.gcf()
-        ax = fig.gca()
-        ax.set_title("Original slice with red circles around bright spots", y =1.1)
-        plotted_circles = []
-        for index, group in enumerate(groups_coords):
-            center = group[0]
-            radius = group[1]
-            if (radius < 20):
-                radius += 10
-            if ( notincircle(plotted_circles, center,radius) or index == 0):
-                ax.add_artist(plt.Circle(center,radius,color="red", fill = False, linewidth=2))
-                plotted_circles.append([center, radius ])
+            groups_coords = []
+            for group in groups:
+                group = sorted(group)
+                p1 = group[0]
+                p2 = group[-1]
+                x_difference = np.abs(p1[0]-p2[0])
+                y_difference = np.abs(p1[1]-p2[1])
+
+                radius = x_difference if x_difference > y_difference else y_difference
+                center_point = group[len(group) // 2]
+
+                groups_coords.append([center_point,radius])
+
+            # plt.subplot(1,2,2); 
+            axs[acquisition_index][1].imshow(ct_slice, cmap='gray')
+            # fig = plt.gcf()
+            # ax = fig.gca()
+            axs[acquisition_index][1].set_title("Original {} slice with \n red circles around bright spots".format(acquisition), y =1.1)
+            plotted_circles = []
+            for index, group in enumerate(groups_coords):
+                center = group[0]
+                radius = group[1]
+                if (radius < 20):
+                    radius += 10
+                if ( not_in_circle(plotted_circles, center,radius) or index == 0):
+                    axs[acquisition_index][1].add_artist(plt.Circle(center,radius,color="red", fill = False, linewidth=2))
+                    plotted_circles.append([center, radius ])
+        fig.suptitle("Overview of the Acquisitions for certain slices \n of patient {} with abnormalities".format(patient),fontsize=18, y= 1.01)
         plt.show()
-        
-
-
+            

@@ -3,16 +3,21 @@ import argparse
 import torch
 import numpy as np
 import SimpleITK as sitk
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import csv
 import os
 import pandas as pd
 
-CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage"
+### DEFAULT PARAMETERS ###
+CARTESIUS_TRAIN_BRAINTRIAGE = "/projects/0/ismi2018/BrainTriage" # When using Cartesius
+GOOGLE_CLOUD_BRAINTRIAGE = "../../../data" # When using google cloud
+OUT_DIR = '../../../data_sliced/train'
 
 parser = argparse.ArgumentParser(description='Extract slices for train/test data.')
+parser.add_argument('-d', type=str, nargs='?', dest="data_path",
+                    default=GOOGLE_CLOUD_BRAINTRIAGE, help='data directory')
 parser.add_argument('-o', type=str, nargs='?', dest="out_path",
-                    default = "../data/", help='output directory')
+                    default = OUT_DIR, help='output directory')
 parser.add_argument('--train', dest="do_train", action='store_true',
                     help='whether to extract slices for train data')
 parser.add_argument('--test', dest="do_test", action='store_true',
@@ -27,7 +32,7 @@ def generate_slice_data(in_dir,out_dir, test=False):
     # Work-around for different folder structure of test data
     class_dirs = ["final_test_set"] if test else os.listdir(in_dir)
     for klass in class_dirs:
-        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients"):
+        for patient in tqdm(os.listdir(os.path.join(in_dir, klass)), desc="Patients" if test else f"Patients ({klass})"):
             
             ## Check if patient has not been processed yet
             if patient not in patients:
@@ -67,8 +72,8 @@ if __name__ == "__main__":
 
     if args.do_train:
         print("Extracting train slice data")
-        generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE, "train/full"), os.path.join(args.out_path, "train"))
-
+        generate_slice_data(os.path.join(args.data_path, "train/full"), os.path.join(args.out_path, "train"))        
+    
         label_df = pd.read_csv(os.path.join(args.out_path,"train","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
         label_df["class"] = label_df["class"].astype("int8")
         patient_list = np.unique(label_df["patient_nr"])
@@ -78,7 +83,7 @@ if __name__ == "__main__":
         print(f"Number of unique class values:    {len(np.unique(label_df['class']))}")
     if args.do_test:
         print("Extracting test slice data")
-        generate_slice_data(os.path.join(CARTESIUS_TRAIN_BRAINTRIAGE), os.path.join(args.out_path, "test"), test=True)
+        generate_slice_data(os.path.join(args.data_path), os.path.join(args.out_path, "test"), test=True)
 
         label_df = pd.read_csv(os.path.join(args.out_path,"test","labels_slices.csv"), names = ["patient_nr", "slice_nr", "class"])
         label_df["class"] = label_df["class"].astype("int8")

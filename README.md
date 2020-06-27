@@ -1,22 +1,45 @@
 # ISMI-braintriage
 
 ### Todo List
+| Task           | Finished | 
+|----------------|---------------|
+| Documentation | <ul><li>- [ ] </li></ul> 
+| Failure Analysis | <ul><li>- [ ] </li></ul> 
+| EDA | <ul><li>- [ ] </li></ul> 
+| __Programming__: | <ul><li>- [ ] </li></ul> 
+| <li>Data augmentation</li> | <ul><li>- [x] </li></ul> 
+| <li>Save results every epoch</li> | <ul><li>- [x] </li></ul> 
+| <li>Create full-pipeline script</li> | <ul><li>- [ ] </li></ul> 
+| <li>Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
+| __Training w/ data augmentation__: | <ul><li>- [ ] </li></ul> 
+| <li>Resnet34 (crimson-chin-resnet34)</li> | <ul><li>- [ ] </li></ul> 
+| <li>Resnet18 (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
+| <li>LSTM (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
+| <li>CombinedNet (insert_code_name)</li> | <ul><li>- [ ] </li></ul> 
+| __Presentation__: | <ul><li>- [ ] </li></ul> 
+| <li>Slides</li> | <ul><li>- [ ] </li></ul> 
+| <li>Script</li> | <ul><li>- [ ] </li></ul> 
+| <li>Recording</li> | <ul><li>- [ ] </li></ul> 
+| <li>Create video</li> | <ul><li>- [ ] </li></ul> 
+
+Important for presentation:
++ Justify decisions (ResNet + LSTM, center crop, data augmentation
++ Reasons for overfitting
+
+<!--
 | Task           | Owner  | Finished | 
 |----------------|---------------|---------------|
+| Cross Validation Script | Marlous | <ul><li>- [ ] </li></ul> 
 | EDA | Chihab & Marlous &... | <ul><li>- [ ] </li></ul> 
 | Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
 | CNN failure analysis | Max| <ul><li>- [ ] </li></ul> 
 | LSTM trainen| Marlous| <ul><li>- [ ] </li></ul> 
 | Combined Net failure analysis| Marlous + Max | <ul><li>- [ ] </li></ul> 
 | EDA uitbreiden | Marlous + Chihab |  <ul><li>- [ ] </li></ul> 
+| Documentation | Max |  <ul><li>- [ ] </li></ul> 
 | Report | Max + Marlous + Jordy |  <ul><li>- [ ] </li></ul> 
 | Presentation | Everybody ? | <ul><li>- [ ] </li></ul> 
-
-Denk bij het Report ook aan    
-- Keuzes rechtvaardigen (hoort ook bij report)
-    - waarom Resnet + LSTM
-    - waarom geen data augmentation ?
-    - waarom center crop etc.
+-->
     
 <!--
 | ~~Check LSTM~~ | Freek | <ul><li>- [x] </li></ul>

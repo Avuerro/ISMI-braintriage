@@ -6,27 +6,47 @@ from torch.utils import data
 from torchvision import transforms
 from PIL import Image
 from tqdm import tqdm
+from scipy import ndimage, misc
+import random
 
 DATA_DIR = "../../data/train/"
 # For convenience convert to tensor so it's ready for preprocess()
-MEANS = torch.Tensor([96.3782, 106.0149,  58.2791])
-STDS = torch.Tensor([163.7764, 172.2486,  94.4285])
+MEANS = [96.3782, 106.0149,  58.2791]
+STDS = [163.7764, 172.2486,  94.4285]
 IMG_SIZE = 512
 
 def preprocess(X, center_crop_target = 425):
     '''
     X = PyTorch Tensor
     '''
-
-    # Convert to (512,512,3) for standardising and convert back
-    X = X.view(IMG_SIZE, IMG_SIZE, 3)
-    X_standard = (X - MEANS) / STDS
-    X_standard = X_standard.view(3, IMG_SIZE, IMG_SIZE)
-
+    
+    # Convert to NumPy, because weird artefacts appear when using only PyTorch Tensor
+    # Transform Torch Tensor to NP Array (and convert to shape (512,512,3))
+    X_array = np.rollaxis(X.numpy(), 0, 3)
+    # Standardize data
+    X_standard = (X_array-MEANS)/STDS
+    # Roll axis back
+    X_standard = np.rollaxis(X_standard, 2, 0)
+    
     # Center-crop image manually (PIL does not like floats)
     crop_idx = (IMG_SIZE - center_crop_target)//2
     X_cropped = X_standard[:, crop_idx:-crop_idx, crop_idx:-crop_idx]
-    return X_cropped
+    return torch.tensor(X_cropped)
+
+def augment(X, flip_prob = 0.5, rotate_prob = 0.5):
+    
+    output = X.data.numpy()
+    random_rotate = random.random() < rotate_prob
+    random_flip = random.random() < flip_prob
+
+    if random_rotate:
+        angle = random.randint(-10,10)
+        output = ndimage.rotate(output, angle, axes = (1,2), mode = 'nearest', reshape = False)
+
+    if random_flip:
+        output = np.flip(output, axis = 2).copy()
+    
+    return torch.tensor(output)
 
 def get_dataset_mean_std(dataloader):
     '''
@@ -50,17 +70,3 @@ def get_dataset_mean_std(dataloader):
 
     return mean / total_samples, std / total_samples
 
-if __name__ == "__main__":
-    # X = torch.load(os.path.join(DATA_DIR, f"3_1.pt"))
-    # print(X.shape)
-    # out = preprocess(X)
-    # print(out.mean(), out.min(), out.max(), out.shape)
-    # import matplotlib.pyplot as plt
-    # ax = plt.subplot(1, 3, 1)
-    # ax.imshow(out[0])
-    # ax = plt.subplot(1, 3, 2)
-    # ax.imshow(out[1])
-    # ax = plt.subplot(1, 3, 3)
-    # ax.imshow(out[2])
-    # plt.show()
-    get_dataset_mean_std()

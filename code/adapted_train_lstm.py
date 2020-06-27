@@ -1,4 +1,7 @@
+
+import subprocess
 import os
+
 os.system("python -m wandb.cli login 8d7601a3f5545dac156785dbc02523182dcf0458")
 ### Import packages ###
 import torch
@@ -21,14 +24,16 @@ from models.lstm import LSTM
 from models.omnipotent_resnet import Net
 from models.combined_net import CombinedNet
 
+
+
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
 DATA_DIR = '../data/train'
-CNN_DIR = '../models/resnet34_014.pt'
+CNN_DIR = '../models/resnet34_011.pt'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
 TRAIN_PERCENTAGE = 0.9  # Percentage of data that will be used for training
 ### Model parameters ###
-MODEL_DIR = '../models'  # Directory where best models are saved
+MODEL_DIR = '../multiple_short_jobs_models'  # Directory where best models are saved        ## MODIFIED FOR SAFETY...
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
 N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will use
 ### Train parameters ###
@@ -59,6 +64,12 @@ parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
                     help="Whether slices argument is tuple or not")
 parser.add_argument('--pretrained', action="store_true", help="Whether networks are pretrained")
 
+parser.add_argument('-iteration', type=int, nargs='?',dest="iteration", help="Specify the current iteration") # current iteration, which should always be given..
+
+parser.add_argument('-previous_weights_location', type=str, nargs='?', dest="previous_weights", help="The location of the weights of the previous epoch")
+
+
+
 if __name__ == "__main__":
     args = parser.parse_args()
 
@@ -73,11 +84,17 @@ if __name__ == "__main__":
 
     # Load in model
     model = models.resnet34(pretrained=args.pretrained)
+
     resnet = Net(model, args.name, args.n_features)
     resnet.load_state_dict(torch.load(CNN_DIR))
     lstm_net = LSTM(n_features=args.n_features, n_hidden=64, n_layers=2)
     combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
+    combined_net.set_learning_cnn_net(False)
 
+
+    ## if this is not the first iteration then load the weights of the previous iteration
+    if (args.iteration >0):
+        combined_net.load_state_dict(torch.load(args.previous_weights))
     ### Loss and optimizer ###
     criterion = nn.BCEWithLogitsLoss()
     optimizer = torch.optim.Adam(combined_net.parameters(), lr=args.learning_rate)
@@ -105,6 +122,13 @@ if __name__ == "__main__":
                          "is_target_tuple": args.is_target_tuple,
                          "train_percentage": args.train_percentage})
     wandb.watch(combined_net)
+    
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
-                      train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
+                      train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, iteration_number= args.iteration, model_dir=args.model_dir)
     trainer.train_and_validate()
+    
+    
+
+
+
+
