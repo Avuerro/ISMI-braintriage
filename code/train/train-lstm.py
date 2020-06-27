@@ -124,7 +124,7 @@ if __name__ == "__main__":
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
 
     # Initialise W&B settings
-    train_percentage = float(len(train_patients['patient_nr'])) / float(len(train_patients['patient_nr']) + len(val_patients['patient_nr']))
+    train_percentage = float(len(train_patients)) / float(len(train_patients) + len(val_patients))
     wandb.init(project="braintriage")
     wandb.config.update({"model_type": args.name, "epochs": args.epochs, "batch_size": args.batch_size,
                          "learning_rate": args.learning_rate,
