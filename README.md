@@ -12,7 +12,7 @@
 | <li>Create full-pipeline script</li> | <ul><li>- [ ] </li></ul> 
 | __Training w/ data augmentation__: | <ul><li>- [ ] </li></ul> 
 | <li>Resnet34 (crimson-chin-resnet34)</li> | <ul><li>- [ ] </li></ul> 
-| <li>Resnet18 (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
+| <li>Resnet18 (bronze-kneecap-resnet18)</li> |  <ul><li>- [ ] </li></ul> 
 | <li>LSTM (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
 | <li>CombinedNet (insert_code_name)</li> | <ul><li>- [ ] </li></ul> 
 | __Wrapping up__: | <ul><li>- [ ] </li></ul> 
