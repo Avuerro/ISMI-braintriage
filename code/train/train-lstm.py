@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     # Initialise W&B settings
     train_percentage = float(len(train_patients)) / float(len(train_patients) + len(val_patients))
-    wandb.init(project="braintriage")
+    wandb.init(project="braintriage", entity="angry-chickens")
     wandb.config.update({"model_type": args.name, "epochs": args.epochs, "batch_size": args.batch_size,
                          "learning_rate": args.learning_rate,
                          "n_features": args.n_features, "target_slices": args.target_slices,
