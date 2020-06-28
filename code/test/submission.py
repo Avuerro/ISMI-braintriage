@@ -43,10 +43,12 @@ parser.add_argument('-sd', type=str, nargs='?', dest="submission_dir",
                     default=SUBMISSION_DIR, help="Where submission will be stored")
 parser.add_argument('-b', type=int, nargs='?', dest="batch_size",
                     default=BATCH_SIZE, help="Batch size")
-parser.add_argument('-s', nargs='+', dest='target_slices',
+parser.add_argument('-ts', nargs='+', dest='target_slices', type=int,
                     default=TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
-                    default = N_FEATURES, help="Number of output features of last FC layer")                   
+                    default = N_FEATURES, help="Number of output features of last FC layer")           
+parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
+                    help="Whether slices argument is tuple or not")        
     
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -69,6 +71,10 @@ if __name__ == "__main__":
     combined_net = CombinedNet(name=args.name, cnn_net=resnet, lstm_net=lstm_net)
     combined_net.load_state_dict(torch.load(os.path.join(args.model_dir, args.filename), map_location=DEVICE))
     combined_net.to(DEVICE)
+
+    # Set correct target slices
+    if args.is_target_tuple:
+        args.target_slices = tuple(args.target_slices)
 
     # Create dataset and dataloader
     patient_list = np.unique(label_df["patient_nr"])
@@ -94,5 +100,5 @@ if __name__ == "__main__":
     
     if not os.path.exists(args.submission_dir):
         os.makedirs(args.submission_dir)
-    submission.to_csv(os.path.join(args.submission_dir, args.filename + "_submission.csv"), index=False)
+    submission.to_csv(os.path.join(args.submission_dir, args.filename[:-3] + "_submission.csv"), index=False)
     
