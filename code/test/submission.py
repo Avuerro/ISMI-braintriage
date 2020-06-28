@@ -11,6 +11,9 @@ import torch
 from torch.utils import data
 from torchvision import models
 
+# Necessary for local imports
+sys.path.append(".")
+sys.path.append("..")
 from dataset.patient_dataset import PatientDataset
 from models.combined_net import CombinedNet
 from models.lstm import LSTM
