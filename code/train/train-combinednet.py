@@ -135,5 +135,3 @@ if __name__ == "__main__":
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
                       train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
     trainer.train_and_validate()
-
-    clean_up()
