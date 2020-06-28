@@ -1,6 +1,44 @@
 import torch
 import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+import seaborn as sn
 
+
+def plot_confusion_matrix(targets, predictions):
+    """
+        This functions plots a confusion matrix based on targets and predictions made by the network
+
+        Params:
+            targets: list containing target values [0 or 1]
+            predictions: list containing predicted values [0 or 1]
+
+    """
+    cm = confusion_matrix(targets, predictions)
+    labels = ['Abnormal', 'Normal']
+    sn.heatmap(cm, annot=True, cmap='RdPu', yticklabels=labels, xticklabels=labels)
+    plt.xlabel("Predicted")
+    plt.ylabel("Target")
+    plt.title('Patient Labels Predicted by Network')
+    plt.show()
+    
+    
+def plot_patient_slices(patient_slices):
+    """
+        This functions plots the T2-Flair images of 1 patient, given all slices
+
+        Params:
+            patient_slices: all slices of a patient (shape: [32, 3, 426, 426])
+
+    """
+    t2_flair_slices = patient_slices[:,2,:,:]
+    fig, axs = plt.subplots(8,4, figsize=(30, 30))
+    fig.subplots_adjust(hspace = .2, wspace=0.2, left=0.5)
+    axs = axs.ravel()
+    for i in range(len(axs)):
+        axs[i].set_title("T2_Flair Slice Number {}".format(i))
+        axs[i].axis('off')
+        axs[i].imshow(t2_flair_slices[i], cmap='gray')
+        
 
 def plot_slices(patient,range_of_slices,DATA_DIR,row_col_number):
     """
