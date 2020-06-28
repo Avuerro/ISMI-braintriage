@@ -81,7 +81,7 @@ if __name__ == "__main__":
 
     # Create dataset and dataloader
     patient_list = np.unique(label_df["patient_nr"])
-    test_set = PatientDataset(label_df, patient_list, args.target_slices, args.test_data_dir, DEVICE)
+    test_set = PatientDataset(label_df, patient_list, args.target_slices, args.test_data_dir)
     test_loader = data.DataLoader(test_set, batch_size=args.batch_size, shuffle=False, num_workers=os.cpu_count())
 
     # Run the model on all testing data
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     all_probabilities, all_classes = [], []
     # Batch-wise process all test data (all patient numbers are processed in ascending order)
     for images, _ in tqdm(test_loader):
-        images = images.to(DEVICE)
+        images = images.to(DEVICE).float()
         output = combined_net(images).detach().cpu()
         # Compute probabilities (requirement: round to 5 decimals)
         probabilities = np.round(torch.sigmoid(output).numpy(), 5)
