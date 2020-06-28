@@ -7,7 +7,7 @@
 | EDA | <ul><li>- [ ] </li></ul> 
 | __Failure Analysis__: | <ul><li>- [ ] </li></ul> 
 | <li>ResNet</li> | <ul><li>- [x] </li></ul> 
-| <li>Full Network</li> | <ul><li>- [] </li></ul> 
+| <li>Full Network</li> | <ul><li>- [ ] </li></ul> 
 | __Programming__: | <ul><li>- [ ] </li></ul> 
 | <li>Data augmentation</li> | <ul><li>- [x] </li></ul> 
 | <li>Save results every epoch</li> | <ul><li>- [x] </li></ul> 
