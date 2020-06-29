@@ -42,7 +42,7 @@ LR = 0.0001
 SEED = 420
 
 ### Argument parser ###
-parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
+parser = argparse.ArgumentParser(description='Train the LSTM model.')
 parser.add_argument('name', type=str, help="Name of the model")
 parser.add_argument('resnet', type=str, help = "Type of ResNet to use (resnet18 or resnet34)")
 parser.add_argument('-s', type=int, nargs='?', dest="seed",
