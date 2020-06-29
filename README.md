@@ -4,7 +4,7 @@
 | Task           | Finished | 
 |----------------|---------------|
 | Documentation | <ul><li>- [x] </li></ul> 
-| EDA | <ul><li>- [ ] </li></ul> 
+| EDA | <ul><li>- [x] </li></ul> 
 | __Failure Analysis__: | <ul><li>- [ ] </li></ul> 
 | <li>ResNet</li> | <ul><li>- [x] </li></ul> 
 | <li>Full Network</li> | <ul><li>- [x] </li></ul> 
@@ -76,7 +76,8 @@ Important for presentation:
 | ~~Presentation: Explain our Network~~ | | <ul><li>- [x] </li></ul>
 | ~~Presentation: Intermediate Results~~| | <ul><li>- [x] </li></ul>
 -->
-
+### EDA
+The EDA notebooks do not contain output because the notebook file size would be too big for Github. The notebooks can be found on google drive, [click here](https://drive.google.com/drive/folders/1spe5uzaxuAWm_Les6Fyl_Y5BEq9CoS6D?usp=sharing)
 ### Final Presentation
 The presentation slides can be found on the following link [click here](https://docs.google.com/presentation/d/1Lk2_eKBHEC0RsBwmNfKRvFa7-sp2aLw5EsIMMLdpg7E/edit?usp=sharing)
 
