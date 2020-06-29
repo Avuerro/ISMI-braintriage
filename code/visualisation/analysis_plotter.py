@@ -3,7 +3,7 @@ from sklearn.metrics import confusion_matrix
 import seaborn as sn
 import numpy as np
 
-def plot_roc_curve(fpr, tpr, roc_auc, color='deeppink'):
+def plot_roc_curve(fpr, tpr, roc_auc, color='cornflowerblue'):
     """
         This functions plots the ROC-curve and shows its corresponding AUC
 
@@ -31,7 +31,6 @@ def plot_confusion_matrix(targets, predictions, title, show_cbar=True, show_anno
             targets: list containing target values [0 or 1]
             predictions: list containing predicted values [0 or 1]
             title: title to put at the top of the confusion matrix
-            xticklabels/yticklabels: labels to use on the x/y axis
 
     """
     plt.figure()
