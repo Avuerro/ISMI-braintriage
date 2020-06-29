@@ -25,7 +25,7 @@ from utils import set_seed, clean_up
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = '../data/train'
+DATA_DIR = '../../../data_sliced/train'
 LSTM_LOC = '../models/lstm_000.pt'
 DS_DIR = '../../../data_split'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
@@ -42,7 +42,7 @@ LR = 0.0001
 SEED = 420
 
 ### Argument parser ###
-parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
+parser = argparse.ArgumentParser(description='Train the combined network')
 parser.add_argument('name', type=str, help="Name of the model")
 parser.add_argument('resnet', type=str, help = "Type of ResNet to use (resnet18 or resnet34)")
 parser.add_argument('-s', type=int, nargs='?', dest="seed",
