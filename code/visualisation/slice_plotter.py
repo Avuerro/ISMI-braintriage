@@ -1,5 +1,39 @@
 import torch
 import matplotlib.pyplot as plt
+import SimpleITK as sitk
+import os
+import numpy as np
+
+def compare_slices(normal,abnormal,range_of_slices,DATA_DIR):
+    ## for each slice 3 rows and 2  cols
+
+    if ( type(range_of_slices) == int ):
+        range_of_slices =[range_of_slices]
+    
+    nr_of_rows = len(range_of_slices) * 3
+    nr_of_cols = 2
+
+    fig,axs = plt.subplots(nr_of_rows,nr_of_cols, figsize=(16,40), squeeze=False)
+
+    
+    klasses = ["normal", "abnormal"]
+    acquisitions = ["T1", "T2", "T2-FLAIR"]
+
+
+    for i, patient in enumerate([normal,abnormal]):
+        for j,slice_number in enumerate(range_of_slices):
+            for k, acquisiton in enumerate(acquisitions):   
+                # load the mha files
+                acquisiton_path = os.path.join(DATA_DIR, klasses[i], patient,'{}.mha'.format(acquisiton))
+                ## Load all images as numpy arrays
+                acquisition_array = sitk.GetArrayFromImage(sitk.ReadImage(acquisiton_path))
+                acquisition_slice = acquisition_array[slice_number,:,:]
+
+                axs[k + (j * 3)][i].imshow(acquisition_slice, cmap="gray")
+                axs[k + (j * 3)][i].set_title("{} Patient {} slice number {} \n Acquistion {} ".format(klasses[i],patient,slice_number, acquisiton))
+
+    fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65, wspace=0.35)
+    fig.tight_layout()
 
     
 def plot_patient_slices(patient_slices):
@@ -35,7 +69,7 @@ def plot_slices(patient,range_of_slices,DATA_DIR,row_col_number):
 
         size_of_range, nr_of_rows, nr_of_cols, subplots_to_delete ,slices = plot_slices_helper(range_of_slices,row_col_number) 
 
-        fig,axs = plt.subplots(nr_of_rows,nr_of_cols, figsize=(16,16))
+        fig,axs = plt.subplots(nr_of_rows,nr_of_cols,  figsize=(18,12))
 
 
         for index,slice_number in enumerate(slices): #inclusive..
@@ -62,8 +96,24 @@ def plot_slices(patient,range_of_slices,DATA_DIR,row_col_number):
         plt.title("Patient {} slice number {}".format(patient,slice_number))
     plt.show()
 
+def get_acquisitions(patient,klass, slice_number,DATA_DIR):
+    patient = str(patient)
+    t1_path = os.path.join(DATA_DIR, klass, patient,'T1.mha')
+    t2_path = os.path.join(DATA_DIR, klass, patient,'T2.mha')
+    t2_flair_path = os.path.join(DATA_DIR, klass, patient,'T2-FLAIR.mha')
 
-def plot_slices_by_acquisition(patient,range_of_slices,DATA_DIR):
+    ## Load all images as numpy arrays
+    t1_array = sitk.GetArrayFromImage(sitk.ReadImage(t1_path))
+    t2_array = sitk.GetArrayFromImage(sitk.ReadImage(t2_path))
+    t2_flair_array = sitk.GetArrayFromImage(sitk.ReadImage(t2_flair_path))
+
+    t1_slice = t1_array[slice_number,:,:]
+    t2_slice = t2_array[slice_number,:,:]
+    t2_flair_slice = t2_flair_array[slice_number,:,:]
+    comb_data = np.array([t1_slice, t2_slice, t2_flair_slice])
+    return comb_data
+
+def plot_slices_by_acquisition(patient,klass,range_of_slices,DATA_DIR):
 
     """
         This function plots the acquisitions for each slice by calling 
@@ -72,12 +122,12 @@ def plot_slices_by_acquisition(patient,range_of_slices,DATA_DIR):
     """
     if(type(range_of_slices) == int):
         slice_number = range_of_slices
-        X = torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
+        X = get_acquisitions(patient,klass,slice_number,DATA_DIR)#torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
         plot_slice_by_acquisition(X, slice_number)
     else:
         size_of_range, nr_of_rows, nr_of_cols, subplots_to_delete ,slices = plot_slices_helper(range_of_slices,3) # cols are always three
         for index,slice_number in enumerate(slices): #inclusive..
-            X = torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
+            X = get_acquisitions(patient,klass,slice_number,DATA_DIR)#torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
             plot_slice_by_acquisition(X, slice_number)
 
 def plot_slice_by_acquisition(data,slice_number):
