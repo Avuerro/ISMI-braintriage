@@ -17,7 +17,7 @@ import sys
 sys.path.append(".")
 sys.path.append("..")
 from dataset.patient_dataset import PatientDataset
-from train.train import Trainer
+from train import Trainer
 from models.lstm import LSTM
 from models.omnipotent_resnet import Net
 from models.combined_net import CombinedNet
@@ -25,7 +25,7 @@ from utils import set_seed, clean_up
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = '../data/train'
+DATA_DIR = '../../../data_sliced/train'
 LSTM_LOC = '../models/lstm_000.pt'
 DS_DIR = '../../../data_split'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
@@ -42,7 +42,7 @@ LR = 0.0001
 SEED = 420
 
 ### Argument parser ###
-parser = argparse.ArgumentParser(description='Train a specified ResNet model.')
+parser = argparse.ArgumentParser(description='Train the combined network')
 parser.add_argument('name', type=str, help="Name of the model")
 parser.add_argument('resnet', type=str, help = "Type of ResNet to use (resnet18 or resnet34)")
 parser.add_argument('-s', type=int, nargs='?', dest="seed",
@@ -63,7 +63,7 @@ parser.add_argument('-m', type=str, nargs='?', dest="model_dir",
                     default=MODEL_DIR, help="Where models will be saved")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
                     default=N_FEATURES, help="Number of output features of last FC layer")
-parser.add_argument('-ts', nargs='+', dest='target_slices',
+parser.add_argument('-ts', nargs='+', dest='target_slices', type=int,
                     default=TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('-afp', nargs='?', dest='flip_prob', type=float,
                     default = FLIP_PROB, help="Probability of augmenting training data by flipping slices left to right")
@@ -89,9 +89,9 @@ if __name__ == "__main__":
     print(f"Number of unique class values in validation set:    {len(np.unique(val_df['class']))}")
     
     train_patients = pd.read_csv(os.path.join(args.ds_dir, "train_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
-    print(f"Number of patient numbers in the train patients list:      {len(train_patients['patient_nr'])}")
+    print(f"Number of patient numbers in the train patients list:      {len(train_patients)}")
     val_patients = pd.read_csv(os.path.join(args.ds_dir, "val_patients.csv"), names=["patient_nr"]).to_numpy().flatten()
-    print(f"Number of patient numbers in the validation patients list: {len(val_patients['patient_nr'])}")
+    print(f"Number of patient numbers in the validation patients list: {len(val_patients)}")
 
     # Load in model
     if args.resnet == "resnet34":
@@ -124,8 +124,8 @@ if __name__ == "__main__":
     val_loader = data.DataLoader(val_set, batch_size=args.batch_size, shuffle=False)
 
     # Initialise W&B settings
-    train_percentage = float(len(train_patients['patient_nr'])) / float(len(train_patients['patient_nr']) + len(val_patients['patient_nr']))
-    wandb.init(project="braintriage")
+    train_percentage = float(len(train_patients)) / float(len(train_patients) + len(val_patients))
+    wandb.init(project="braintriage", entity="angry-chickens")
     wandb.config.update({"model_type": args.name, "epochs": args.epochs, "batch_size": args.batch_size,
                          "learning_rate": args.learning_rate,
                          "n_features": args.n_features, "target_slices": args.target_slices,
@@ -135,5 +135,3 @@ if __name__ == "__main__":
     trainer = Trainer(model=combined_net, criterion=criterion, optimizer=optimizer, device=DEVICE,
                       train_loader=train_loader, val_loader=val_loader, n_epochs=args.epochs, model_dir=args.model_dir)
     trainer.train_and_validate()
-
-    clean_up()

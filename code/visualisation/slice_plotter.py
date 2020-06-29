@@ -35,6 +35,24 @@ def compare_slices(normal,abnormal,range_of_slices,DATA_DIR):
     fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65, wspace=0.35)
     fig.tight_layout()
 
+    
+def plot_patient_slices(patient_slices):
+    """
+        This functions plots the T2-Flair images of 1 patient, given all slices
+
+        Params:
+            patient_slices: all slices of a patient (shape: [32, 3, 426, 426])
+
+    """
+    t2_flair_slices = patient_slices[:,2,:,:]
+    fig, axs = plt.subplots(8,4, figsize=(30, 30))
+    fig.subplots_adjust(hspace = .2, wspace=0.2, left=0.5)
+    axs = axs.ravel()
+    for i in range(len(axs)):
+        axs[i].set_title("T2_Flair Slice Number {}".format(i))
+        axs[i].axis('off')
+        axs[i].imshow(t2_flair_slices[i], cmap='gray')
+        
 
 def plot_slices(patient,range_of_slices,DATA_DIR,row_col_number):
     """
@@ -130,6 +148,7 @@ def plot_slices_helper(range_of_slices,row_col_number):
 
     """
         Helper function that takes over general functionality for the plot_slices function
+        
         Params:
             range_of_slices: integer slice or list or tuple of slices you want to plot. 
             row_col_number: amount that dictates the amount of colomns and rows.

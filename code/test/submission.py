@@ -11,6 +11,9 @@ import torch
 from torch.utils import data
 from torchvision import models
 
+# Necessary for local imports
+sys.path.append(".")
+sys.path.append("..")
 from dataset.patient_dataset import PatientDataset
 from models.combined_net import CombinedNet
 from models.lstm import LSTM
@@ -43,10 +46,12 @@ parser.add_argument('-sd', type=str, nargs='?', dest="submission_dir",
                     default=SUBMISSION_DIR, help="Where submission will be stored")
 parser.add_argument('-b', type=int, nargs='?', dest="batch_size",
                     default=BATCH_SIZE, help="Batch size")
-parser.add_argument('-s', nargs='+', dest='target_slices',
+parser.add_argument('-ts', nargs='+', dest='target_slices', type=int,
                     default=TARGET_SLICES, help="Which slices to use for training")
 parser.add_argument('-f', type=int, nargs='?', dest="n_features",
-                    default = N_FEATURES, help="Number of output features of last FC layer")                   
+                    default = N_FEATURES, help="Number of output features of last FC layer")           
+parser.add_argument('--tuple', action="store_true", dest="is_target_tuple",
+                    help="Whether slices argument is tuple or not")        
     
 if __name__ == "__main__":
     args = parser.parse_args()
@@ -70,9 +75,13 @@ if __name__ == "__main__":
     combined_net.load_state_dict(torch.load(os.path.join(args.model_dir, args.filename), map_location=DEVICE))
     combined_net.to(DEVICE)
 
+    # Set correct target slices
+    if args.is_target_tuple:
+        args.target_slices = tuple(args.target_slices)
+
     # Create dataset and dataloader
     patient_list = np.unique(label_df["patient_nr"])
-    test_set = PatientDataset(label_df, patient_list, args.target_slices, args.test_data_dir, DEVICE)
+    test_set = PatientDataset(label_df, patient_list, args.target_slices, args.test_data_dir)
     test_loader = data.DataLoader(test_set, batch_size=args.batch_size, shuffle=False, num_workers=os.cpu_count())
 
     # Run the model on all testing data
@@ -80,7 +89,7 @@ if __name__ == "__main__":
     all_probabilities, all_classes = [], []
     # Batch-wise process all test data (all patient numbers are processed in ascending order)
     for images, _ in tqdm(test_loader):
-        images = images.to(DEVICE)
+        images = images.to(DEVICE).float()
         output = combined_net(images).detach().cpu()
         # Compute probabilities (requirement: round to 5 decimals)
         probabilities = np.round(torch.sigmoid(output).numpy(), 5)
@@ -94,5 +103,5 @@ if __name__ == "__main__":
     
     if not os.path.exists(args.submission_dir):
         os.makedirs(args.submission_dir)
-    submission.to_csv(os.path.join(args.submission_dir, args.filename + "_submission.csv"), index=False)
+    submission.to_csv(os.path.join(args.submission_dir, args.filename[:-3] + "_submission.csv"), index=False)
     
