@@ -5,17 +5,18 @@
 |----------------|---------------|
 | Documentation | <ul><li>- [x] </li></ul> 
 | EDA | <ul><li>- [x] </li></ul> 
-| __Failure Analysis__: | <ul><li>- [ ] </li></ul> 
+| __Failure Analysis__: | <ul><li>- [x] </li></ul> 
 | <li>ResNet</li> | <ul><li>- [x] </li></ul> 
 | <li>Full Network</li> | <ul><li>- [x] </li></ul> 
-| __Programming__: | <ul><li>- [ ] </li></ul> 
+| __Programming__: | <ul><li>- [x] </li></ul> 
 | <li>Data augmentation</li> | <ul><li>- [x] </li></ul> 
 | <li>Save results every epoch</li> | <ul><li>- [x] </li></ul> 
 | <li>Create full-pipeline script</li> | <ul><li>- [x] </li></ul> 
 | __Training w/ data augmentation__: | <ul><li>- [ ] </li></ul> 
-| <li>Resnet34 (crimson-chin-resnet34)</li> | <ul><li>- [x] </li></ul> 
-| <li>Resnet18 (bronze-kneecap-resnet18)</li> |  <ul><li>- [ ] </li></ul> 
-| <li>LSTM (insert_code_name)</li> |  <ul><li>- [ ] </li></ul> 
+| <li>ResNet34 (crimson-chin-resnet34)</li> | <ul><li>- [x] </li></ul> 
+| <li>ResNet18 (bronze-kneecap-resnet18)</li> |  <ul><li>- [x] </li></ul>
+| <li>Choose best ResNet (best: resnet18_008)</li> |  <ul><li>- [x] </li></ul>
+| <li>LSTM (crash-nebula-lstm)</li> |  <ul><li>- [ ] </li></ul> 
 | <li>CombinedNet (insert_code_name)</li> | <ul><li>- [ ] </li></ul> 
 | __Wrapping up__: | <ul><li>- [ ] </li></ul> 
 | <li>Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
