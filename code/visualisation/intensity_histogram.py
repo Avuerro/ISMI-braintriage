@@ -18,13 +18,13 @@ def zscore_normalize(img):
 
 
 
-def get_acquisition_histogram(in_dir,slices):
+def get_acquisition_histogram(in_dir,slices, klass=None):
 
     """
         this function will plot the histogram bins for each aquisition 
-        for a certain slice FOR ALL PATIENTS of both classes. 
-        The histograms of the normal patients will be plotted next to the abnormal patients.
-        
+        for a certain slice FOR ALL PATIENTS of both classes or of the specified class. 
+        If no class parameter is provided then the Histograms for both normal and abnormal patients
+        will be plotted in an overlapping manner.
 
         it loops over the slices, sums the intensities and afterwards divides 
         each intensity by the number of patients * the nr of slices
@@ -33,8 +33,11 @@ def get_acquisition_histogram(in_dir,slices):
     count_t1 = {"normal": [], "abnormal": []}
     count_t2 = {"normal": [], "abnormal": []}
     count_t2_flair = {"normal": [], "abnormal": []}
-    
-    klasses= ["normal", "abnormal"]
+
+    if (klass == None or len(klass)>1 ):
+        klasses= ["normal", "abnormal"]
+    else:
+        klasses =[klass]
     
     acquisitions = {"t1":count_t1, "t2": count_t2, "t2_flair": count_t2_flair}
 
@@ -90,30 +93,33 @@ def get_acquisition_histogram(in_dir,slices):
 
 
     for i,acquisition in enumerate(acquisitions.keys()):
-        # for j,klass in  enumerate(acquisitions[acquisition].keys()):      
-        normal_data = acquisitions[acquisition]["normal"].flatten()
-        normal_max_value = normal_data.max() 
-        normal_counts,normal_bins = remove_outliers(normal_data)
-        
-        abnormal_data = acquisitions[acquisition]["abnormal"].flatten()
-        abnormal_max_value = abnormal_data.max() 
-        abnormal_counts,abnormal_bins = remove_outliers(abnormal_data)
+        # for j,klass in  enumerate(acquisitions[acquisition].keys()):
+        max_value = 0
+        alpha_value = 1 / len(klasses)
+        for klass in klasses:
+            data  = acquisitions[acquisition][klass].flatten()    
+            data_max_value = data.max()
+            data_counts, data_bins = remove_outliers(data)
+            max_value = data_max_value if data_max_value > max_value else max_value
 
-        max_value = normal_max_value if normal_max_value > abnormal_max_value else abnormal_max_value
-        
-        # highest_peak = normal_counts[3] if normal_counts[3] > abnormal_counts[3] else abnormal_counts[3]
+            
 
-        ax[i].hist(normal_bins[3:-1], bins = normal_bins, weights=normal_counts[3:],range=(-0.5,normal_max_value), label="normal", alpha=0.5)
-        ax[i].hist(abnormal_bins[3:-1], bins = abnormal_bins, weights=abnormal_counts[3:],range=(-0.5,abnormal_max_value), label="abnormal", alpha=0.5)
+            ax[i].hist(data_bins[3:-1], bins = data_bins, weights=data_counts[3:],range=(-0.5,max_value), label=klass, alpha=alpha_value)
         ax[i].set_xticks(np.arange(-0.5,max_value, 0.5))
-
-        ax[i].set_title("Average pixel intensities for {} Acquistion \n of patients with and without abnormalities and {} slices".format(acquisition, str(len(slices))))
-        ax[i].legend(loc='upper right')
+        if len(klasses)>1:
+            ax[i].set_title("Average pixel intensities for {} Acquistion \n of patients with and without abnormalities and {} slices".format(acquisition, str(len(slices))))
+            ax[i].legend(loc='upper right')
+        else:
+            ax[i].set_title("Average pixel intensities for {} Acquistion \n of {} patients  and {} slices".format(acquisition, klasses[0], str(len(slices))))
+            # ax[i].legend(loc='upper right')            
         
 
     fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
                     wspace=0.35)
-    fig.suptitle("Overview of Average Pixel Intensities \n of the three aquisitions for patiens with and without abnormalities  ".format(klass), y=1.06)
+    if (len(klasses) > 1 ):                
+        fig.suptitle("Overview of Average Pixel Intensities \n of the three aquisitions for patiens with and without abnormalities  ", y=1.06)
+    else:
+        fig.suptitle("Overview of Average Pixel Intensities \n of the three aquisitions for {} patiens".format(klass), y=1.06)
     fig.tight_layout()
     plt.show()
 
