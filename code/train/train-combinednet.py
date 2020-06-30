@@ -38,7 +38,7 @@ N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will
 ### Train parameters ###
 EPOCHS = 30
 BATCH_SIZE = 2
-LR = 0.0001
+LR = 0.00001 # LR is 10x smaller than during ResNet and LSTM training, as this is fine-tuning
 SEED = 420
 
 ### Argument parser ###
