@@ -121,15 +121,14 @@ class Trainer(object):
     def train_and_validate(self):
         print(f'Running {self.model.name}')
 
-        best_model_file_name, best_val_loss, best_val_acc = "", 999., 0.
+        best_model_file_name, best_val_acc = "", 0.
 
         for epoch in tqdm(range(self.n_epochs), desc="#epochs"):
             train_loss, train_acc = self.train()
 
             val_loss, val_acc = self.validate()
             
-            if val_loss < best_val_loss or val_acc > best_val_acc:
-                best_val_loss = val_loss
+            if val_acc > best_val_acc:
                 best_val_acc = val_acc
                 best_model_file_name = '{:s}/{:s}_{:03d}.pt'.format(self.model_dir, self.model.name, epoch)
                 _write_best_model_file_name(best_model_file_name, self.model.name)
