@@ -1,6 +1,29 @@
 
 # ISMI-braintriage
 
+This is the GitHub repository for our project for the Intelligent Systems in Medical Imaging course, in which we worked on the Brain Triage challenge. 
+
+All of our code is contained within the `code` folder; the `images` folder contains some images that are relevant to our project. The contents of these folders are explained in our [Wiki](https://github.com/fbergh/ISMI-braintriage/wiki). The Wiki also contains an explanation of how to run our code in order to reproduce our results.
+
+### Intermediate Presentation 
+The recording of our intermediate presentation can be found [here](https://drive.google.com/file/d/1DiB4p-GpzQ28waAmcRNFXDTw-MOryfH2/view?usp=sharing).
+
+The slides for this presentation can be found [here](https://docs.google.com/presentation/d/1yUGkOMMU637ivkhVN_geklRppa8NqIvNW7mUkztQ098/edit?usp=sharing).
+
+### Final Presentation
+The recording of our final presentation has not been uploaded yet at the time of writing, so we cannot link to it here; we will hand in the recording of our final presentation before the deadline.
+
+The slides for this presentation can be found [here](https://docs.google.com/presentation/d/1Lk2_eKBHEC0RsBwmNfKRvFa7-sp2aLw5EsIMMLdpg7E/edit?usp=sharing).
+
+
+### EDA
+The notebooks for exploratory data analysis (EDA) do not contain outputs, because the notebook file size would be too big for GitHub. These notebooks (with outputs) can be found in [this Google Drive](https://drive.google.com/drive/folders/1spe5uzaxuAWm_Les6Fyl_Y5BEq9CoS6D?usp=sharing).
+
+
+
+
+
+
 ### Todo List
 | Task           | Finished | 
 |----------------|---------------|
@@ -20,7 +43,8 @@
 | <li>LSTM (crash-nebula-lstm)</li> |  <ul><li>- [ ] </li></ul> 
 | <li>CombinedNet (insert_code_name)</li> | <ul><li>- [ ] </li></ul> 
 | __Wrapping up__: | <ul><li>- [ ] </li></ul> 
-| <li>Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
+| <li>Clean up GitHub Repo | <ul><li>- [x] </li></ul> 
+| <li>Final check of code (defaults etc.) | <ul><li>- [ ] </li></ul> 
 | <li>Finalize Wiki/documentation | <ul><li>- [ ] </li></ul> 
 | <li>Turn Wiki into PDF | <ul><li>- [ ] </li></ul> 
 | <li>Remove Todo list | <ul><li>- [ ] </li></ul> 
@@ -33,56 +57,3 @@
 Important for presentation:
 + Justify decisions (ResNet + LSTM, center crop, data augmentation
 + Reasons for overfitting
-
-<!--
-| Task           | Owner  | Finished | 
-|----------------|---------------|---------------|
-| Cross Validation Script | Marlous | <ul><li>- [ ] </li></ul> 
-| EDA | Chihab & Marlous &... | <ul><li>- [ ] </li></ul> 
-| Failure Analysis | Max| <ul><li>- [ ] </li></ul> 
-| CNN failure analysis | Max| <ul><li>- [ ] </li></ul> 
-| LSTM trainen| Marlous| <ul><li>- [ ] </li></ul> 
-| Combined Net failure analysis| Marlous + Max | <ul><li>- [ ] </li></ul> 
-| EDA uitbreiden | Marlous + Chihab |  <ul><li>- [ ] </li></ul> 
-| Documentation | Max |  <ul><li>- [ ] </li></ul> 
-| Report | Max + Marlous + Jordy |  <ul><li>- [ ] </li></ul> 
-| Presentation | Everybody ? | <ul><li>- [ ] </li></ul> 
--->
-    
-<!--
-| ~~Check LSTM~~ | Freek | <ul><li>- [x] </li></ul>
-| ~~Set Verbose to True~~ | Chihab | <ul><li>- [x] </li></ul>
-| ~~Remove code change~~ |  Marlous | <ul><li>- [x] </li></ul>
-| ~~Remove/fix auc~~ | Chihab | <ul><li>- [x] </li></ul>
-| ~~Apply our own standardisation~~ | Jordy & Freek | <ul><li>- [x] </li></ul>
-| ~~Center Crop~~ | Jordy | <ul><li>- [x] </li></ul>
-| ~~Gaussian Filter~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
-| ~~Augmentatie~~ | GESCHRAPT | <ul><li>- [x] </li></ul>
-| ~~ResNet + LSTM Script~~ | Marlous & Freek | <ul><li>- [x] </li></ul>
-| ~~Testcode~~ | Freek | <ul><li>- [x] </li></ul>
-| ~~Add AUC metric~~ | Freek | <ul><li>- [x] </li></ul>
-| ~~Seed all function~~ | Freek | <ul><li>- [x] </li></ul> 
-| ~~Implement Weights and Biases~~ | Freek | <ul><li>- [x] </li></ul>
-| ~~ResNet34 + LSTM~~ | Marlous | <ul><li>- [x] </li></ul>
-| ~~Label & Slices vs Patients & Labels~~ | GESCHRAPT | <ul><li>- [x] </li></ul> 
-| ~~Compare Networks~~ | De hele mikmak | <ul><li>- [x] </li></ul>
-| ~~Run Networks Longer~~ | Freek | <ul><li>- [x] </li></ul>
-| ~~CrossValidation~~ | Jordy| <ul><li>- [x] </li></ul>
-| ~~Bidirectional LSTM~~ | Marlous | <ul><li>- [x] </li></ul>
-| ~~Split notebook into different scripts~~   | Chihab | <ul><li>- [x] </li></ul>
-| ~~ResNet-50 too complex: try to train ResNet-34~~| Jordy| <ul><li>- [x] </li></ul>
-| ~~ResNet-50 too complex: try to train ResNet-18~~| Max | <ul><li>- [x] </li></ul>
-| ~~Dataloader fix~~| Freek | <ul><li>- [x] </li></ul>
-| ~~Combine LSTM and CNN in one notebook~~ | Marlous | <ul><li>- [x] </li></ul>
-| ~~GPU fix on Cartesius~~| Chihab | <ul><li>- [x] </li></ul>
-| ~~Presentation: Pre Processing~~| | <ul><li>- [x] </li></ul>
-| ~~Presentation: Explain our Network~~ | | <ul><li>- [x] </li></ul>
-| ~~Presentation: Intermediate Results~~| | <ul><li>- [x] </li></ul>
--->
-### EDA
-The EDA notebooks do not contain output because the notebook file size would be too big for Github. The notebooks can be found on google drive, [click here](https://drive.google.com/drive/folders/1spe5uzaxuAWm_Les6Fyl_Y5BEq9CoS6D?usp=sharing)
-### Final Presentation
-The presentation slides can be found on the following link [click here](https://docs.google.com/presentation/d/1Lk2_eKBHEC0RsBwmNfKRvFa7-sp2aLw5EsIMMLdpg7E/edit?usp=sharing)
-
-### Intermediate Presentation 
-The presentation can be found on the following link [click here](https://docs.google.com/presentation/d/1yUGkOMMU637ivkhVN_geklRppa8NqIvNW7mUkztQ098/edit?usp=sharing).
