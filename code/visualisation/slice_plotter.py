@@ -139,6 +139,7 @@ def plot_slice_by_acquisition(data,slice_number):
     for index,acquisition in enumerate(acquisitions):
         axs[index].imshow(data[index], cmap="gray")
         axs[index].set_title("Acquisition {}".format(acquisition))
+        axs[index].grid(False)
     fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
                     wspace=0.35)
     fig.suptitle('Slice {}'.format(slice_number), fontsize=12, x=0, y = 0.5,ha='left' )
