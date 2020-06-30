@@ -1,3 +1,4 @@
+
 # ISMI-braintriage
 
 ### Todo List
@@ -22,6 +23,7 @@
 | <li>Clean up GitHub Repo | <ul><li>- [ ] </li></ul> 
 | <li>Finalize Wiki/documentation | <ul><li>- [ ] </li></ul> 
 | <li>Turn Wiki into PDF | <ul><li>- [ ] </li></ul> 
+| <li>Remove Todo list | <ul><li>- [ ] </li></ul> 
 | __Presentation__: | <ul><li>- [ ] </li></ul> 
 | <li>Slides</li> | <ul><li>- [ ] </li></ul> 
 | <li>Script</li> | <ul><li>- [ ] </li></ul> 
