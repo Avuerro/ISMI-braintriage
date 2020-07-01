@@ -25,7 +25,7 @@ from utils import set_seed, clean_up
 
 ### DEFAULT PARAMETERS ###
 ### Data parameters ###
-DATA_DIR = '../../../data_sliced/train'
+DATA_DIR = '../../../sliced_data/train'
 LSTM_LOC = '../models/lstm_000.pt'
 DS_DIR = '../../../data_split'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
