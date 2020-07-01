@@ -34,10 +34,12 @@ def get_acquisition_histogram(in_dir,slices, klass=None):
     count_t2 = {"normal": [], "abnormal": []}
     count_t2_flair = {"normal": [], "abnormal": []}
 
+    if (type(klass) == str): klass = [klass] # klass should be a list
+
     if (klass == None or len(klass)>1 ):
         klasses= ["normal", "abnormal"]
     else:
-        klasses =[klass]
+        klasses = klass
     
     acquisitions = {"t1":count_t1, "t2": count_t2, "t2_flair": count_t2_flair}
 
