@@ -29,8 +29,8 @@ DATA_DIR = '../../../sliced_data/train'
 LSTM_LOC = '../models/lstm_000.pt'
 DS_DIR = '../../../data_split'
 TARGET_SLICES = (0, 32)  # The slices we will train on for each patient
-FLIP_PROB = 0.5    # Probability of augmenting training data by flipping slices left to right
-ROTATE_PROB = 0.5  # Probability of augmenting training data by randomly slightly rotating slices
+FLIP_PROB = 0.0    # Probability of augmenting training data by flipping slices left to right
+ROTATE_PROB = 0.0  # Probability of augmenting training data by randomly slightly rotating slices
 ### Model parameters ###
 MODEL_DIR = '../models'  # Directory where best models are saved
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
