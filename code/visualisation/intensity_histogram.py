@@ -102,11 +102,14 @@ def get_acquisition_histogram(in_dir,slices, klass=None):
             data  = acquisitions[acquisition][klass].flatten()    
             data_max_value = data.max()
             data_counts, data_bins = remove_outliers(data)
-            max_value = data_max_value if data_max_value > max_value else max_value
-
+            if ( len(klasses)> 1 ):
+                max_value = max(data_max_value,max_value)
+            else:
+                max_value = data_max_value
             
 
             ax[i].hist(data_bins[3:-1], bins = data_bins, weights=data_counts[3:],range=(-0.5,max_value), label=klass, alpha=alpha_value)
+    
         ax[i].set_xticks(np.arange(-0.5,max_value, 0.5))
         if len(klasses)>1:
             ax[i].set_title("Average pixel intensities for {} Acquistion \n of patients with and without abnormalities and {} slices".format(acquisition, str(len(slices))))
