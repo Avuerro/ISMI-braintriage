@@ -130,7 +130,7 @@ def plot_slices_by_acquisition(patient,klass,range_of_slices,DATA_DIR):
             X = get_acquisitions(patient,klass,slice_number,DATA_DIR)
             plot_slice_by_acquisition(X, slice_number)
 
-def plot_slice_by_acquisition(data,slice_number):
+def plot_slice_by_acquisition(data,slice_number,show_axis=True):
     """
         This function plots the acquisitions for a single slice.
     """
@@ -140,6 +140,7 @@ def plot_slice_by_acquisition(data,slice_number):
         axs[index].imshow(data[index], cmap="gray")
         axs[index].set_title("Acquisition {}".format(acquisition))
         axs[index].grid(False)
+        axs[index].axis('off')
     fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
                     wspace=0.35)
     fig.suptitle('Slice {}'.format(slice_number), fontsize=12, x=0, y = 0.5,ha='left' )
