@@ -1,6 +1,5 @@
 
-# ISMI-braintriage
-### Team 3
+# ISMI-braintriage: Team 3
 
 This is the GitHub repository for our project for the Intelligent Systems in Medical Imaging course, in which we worked on the Brain Triage challenge. 
 
