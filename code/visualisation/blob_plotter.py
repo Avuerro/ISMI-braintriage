@@ -108,7 +108,7 @@ def bright_blobs_plotter(patient,klass, slices, DATA_DIR):
             axs[acquisition_index][0].imshow(ct_slice, cmap='gray')
             # fig = plt.gcf()
             # ax = fig.gca()
-            axs[acquisition_index][0].set_title("Original, slice number {} with Acquisition {}" .format(slice_number, acquisition), y=1.1)
+            axs[acquisition_index][0].set_title("Original, slice number {} \n with Acquisition {}" .format(slice_number, acquisition), y=1.1)
 
             # Find all indices that are above threshold and part of body
             threshold = 0.15
@@ -152,7 +152,7 @@ def bright_blobs_plotter(patient,klass, slices, DATA_DIR):
             axs[acquisition_index][1].imshow(ct_slice, cmap='gray')
             # fig = plt.gcf()
             # ax = fig.gca()
-            axs[acquisition_index][1].set_title("Original {} slice with \n red circles around bright spots".format(acquisition), y =1.1)
+            axs[acquisition_index][1].set_title("Slice {} and acquisition {} with \n red circles around bright spots".format(slice_number, acquisition), y =1.1)
             plotted_circles = []
             for index, group in enumerate(groups_coords):
                 center = group[0]
