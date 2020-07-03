@@ -5,7 +5,7 @@ This is the GitHub repository for our project for the Intelligent Systems in Med
 
 All of our code is contained within the `code` folder; the `images` folder contains some images that are relevant to our project. The `submission` folder contains the `.csv` files of our submissions to Grand Challenge.
 
-The contents of the `code` and `images` folders are explained in our [Wiki](https://github.com/fbergh/ISMI-braintriage/wiki). The Wiki also contains an explanation of how to run our code in order to reproduce our results. An offline version is included in `ISMI-braintriage Wiki.pdf`.
+The contents of the `code` and `images` folders are explained in our [Wiki](https://github.com/fbergh/ISMI-braintriage/wiki). The Wiki also contains an explanation of how to run our code in order to reproduce our results. An offline version is included in `ISMI-braintriage Wiki.pdf` (Note: the pages in this offline version are out of order, due to the conversion method we used).
 
 
 ### Intermediate Presentation 
