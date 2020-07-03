@@ -36,7 +36,7 @@ MODEL_DIR = '../models'  # Directory where best models are saved
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'  # Train on GPU or CPU
 N_FEATURES = 128  # The length of feature vectors that the CNN outputs/LSTM will use
 ### Train parameters ###
-EPOCHS = 30
+EPOCHS = 15
 BATCH_SIZE = 2
 LR = 0.00001 # LR is 10x smaller than during ResNet and LSTM training, as this is fine-tuning
 SEED = 420
