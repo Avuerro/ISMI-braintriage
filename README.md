@@ -4,9 +4,9 @@
 
 This is the GitHub repository for our project for the Intelligent Systems in Medical Imaging course, in which we worked on the Brain Triage challenge. 
 
-All of our code is contained within the `code` folder; the `images` folder contains some images that are relevant to our project. The `submission` folder contains our best submission to Grand Challenge.
+All of our code is contained within the `code` folder; the `images` folder contains some images that are relevant to our project. The `submission` folder contains the `.csv` file of our best submission to Grand Challenge.
 
-The contents of the `code` and `images` folders are explained in our [Wiki](https://github.com/fbergh/ISMI-braintriage/wiki). The Wiki also contains an explanation of how to run our code in order to reproduce our results. An offline version is also included in `ISMI-braintriage Wiki.pdf`.
+The contents of the `code` and `images` folders are explained in our [Wiki](https://github.com/fbergh/ISMI-braintriage/wiki). The Wiki also contains an explanation of how to run our code in order to reproduce our results. An offline version is included in `ISMI-braintriage Wiki.pdf`.
 
 
 ### Intermediate Presentation 
