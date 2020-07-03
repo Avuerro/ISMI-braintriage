@@ -40,8 +40,10 @@ The notebooks for exploratory data analysis (EDA) do not contain outputs, becaus
 | <li>ResNet34 (crimson-chin-resnet34)</li> | <ul><li>- [x] </li></ul> 
 | <li>ResNet18 (bronze-kneecap-resnet18)</li> |  <ul><li>- [x] </li></ul>
 | <li>Choose best ResNet (best: resnet18_008)</li> |  <ul><li>- [x] </li></ul>
-| <li>LSTM (crash-nebula-lstm)</li> |  <ul><li>- [ ] </li></ul> 
-| <li>CombinedNet (insert_code_name)</li> | <ul><li>- [ ] </li></ul> 
+| <li>LSTM (crash-nebula-lstm)</li> |  <ul><li>- [x] </li></ul> 
+| <li>Choose best LSTM (best: resnet18_lstm_018)</li> |  <ul><li>- [x] </li></ul>
+| <li>CombinedNet (nega_chin_combinednet)</li> | <ul><li>- [x] </li></ul> 
+| <li>Choose best CombinedNet (best: combinednet_006)</li> |  <ul><li>- [x] </li></ul>
 | __Wrapping up__: | <ul><li>- [ ] </li></ul> 
 | <li>Clean up GitHub Repo | <ul><li>- [x] </li></ul> 
 | <li>Final check of code (defaults etc.) | <ul><li>- [ ] </li></ul> 

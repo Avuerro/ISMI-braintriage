@@ -122,15 +122,15 @@ def plot_slices_by_acquisition(patient,klass,range_of_slices,DATA_DIR):
     """
     if(type(range_of_slices) == int):
         slice_number = range_of_slices
-        X = get_acquisitions(patient,klass,slice_number,DATA_DIR)#torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
+        X = get_acquisitions(patient,klass,slice_number,DATA_DIR)
         plot_slice_by_acquisition(X, slice_number)
     else:
         size_of_range, nr_of_rows, nr_of_cols, subplots_to_delete ,slices = plot_slices_helper(range_of_slices,3) # cols are always three
         for index,slice_number in enumerate(slices): #inclusive..
-            X = get_acquisitions(patient,klass,slice_number,DATA_DIR)#torch.load(DATA_DIR + '/' + str(patient) + '_' + str(slice_number) + '.pt')
+            X = get_acquisitions(patient,klass,slice_number,DATA_DIR)
             plot_slice_by_acquisition(X, slice_number)
 
-def plot_slice_by_acquisition(data,slice_number):
+def plot_slice_by_acquisition(data,slice_number,show_axis=True):
     """
         This function plots the acquisitions for a single slice.
     """
@@ -140,6 +140,7 @@ def plot_slice_by_acquisition(data,slice_number):
         axs[index].imshow(data[index], cmap="gray")
         axs[index].set_title("Acquisition {}".format(acquisition))
         axs[index].grid(False)
+        axs[index].axis('off')
     fig.subplots_adjust(top=0.92, bottom=0.08, left=0.10, right=0.95, hspace=.65,
                     wspace=0.35)
     fig.suptitle('Slice {}'.format(slice_number), fontsize=12, x=0, y = 0.5,ha='left' )
